@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "178141008314",
+    "firebase_url": "https://onstage-970ae.firebaseio.com",
+    "project_id": "onstage-970ae",
+    "storage_bucket": "onstage-970ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178141008314:android:252afa85d233b090",
+        "android_client_info": {
+          "package_name": "com.pdrogfer.onstage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178141008314-2e185po64g8fso75mt8u70nqd75k4c2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR9OFUSYfGpHwwFH3_IZ1Yvt1ryPNpUVM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">OnStage</string>
+    <string name="title_activity_new_gig">NewGig</string>
+    <string name="log_in">Log In</string>
+    <string name="register">Register</string>
+    <string name="hint_password">password</string>
+    <string name="hint_email">email</string>
+    <string name="title_activity_gigs_list">GigsListActivity</string>
+    <string name="menu_logout">Log out</string>
+</resources>
