@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pdrogfer.onstage.CreateGig;
+import com.pdrogfer.onstage.Gig;
+import com.pdrogfer.onstage.MyPresenter;
+import com.pdrogfer.onstage.R;
+import com.pdrogfer.onstage.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_gigs_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

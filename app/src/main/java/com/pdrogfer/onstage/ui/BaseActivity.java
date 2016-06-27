@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.ui;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;

@@ -1,9 +1,11 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.pdrogfer.onstage.R;
 
 /**
  * Created by pedrogonzalezferrandez on 26/06/16.

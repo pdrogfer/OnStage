@@ -8,24 +8,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignInActivity">
+        <activity android:name=".ui.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
+
         <activity android:name=".CreateGig"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.MainActivity">
         </activity>
-=======
-        <activity android:name=".CreateGig" />
+
         <activity
-            android:name=".GigsListActivity"
+            android:name=".ui.GigsListActivity"
             android:label="@string/title_activity_gigs_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
->>>>>>> 4186c0f759885f31d12ff8b400a87df82eb864a0
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
