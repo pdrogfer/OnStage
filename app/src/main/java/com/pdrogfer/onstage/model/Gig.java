@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.model;
 
 /**
  * Created by pedrogonzalezferrandez on 06/06/16.

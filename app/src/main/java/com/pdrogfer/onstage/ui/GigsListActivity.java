@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.CreateGig;
-import com.pdrogfer.onstage.Gig;
-import com.pdrogfer.onstage.MyPresenter;
+import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 
@@ -26,7 +26,7 @@ public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    MyPresenter myPresenter;
+    DatabaseFirebaseClient databaseFirebaseClient;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
 
 

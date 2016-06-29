@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pdrogfer.onstage.model.Gig;
 
 import java.util.Calendar;
 

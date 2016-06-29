@@ -20,7 +20,7 @@
 
     <LinearLayout
         android:id="@+id/layout_email_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
@@ -28,48 +28,63 @@
 
         <EditText
             android:id="@+id/field_email"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center_horizontal"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
             android:maxLines="1" />
 
         <EditText
             android:id="@+id/field_password"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center_horizontal"
             android:hint="@string/hint_password"
             android:inputType="textPassword"
             android:maxLines="1" />
 
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/field_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_email_password"
+        android:hint="@string/hint_artistic_band_name"
+        android:layout_centerHorizontal="true"
+        android:inputType="textPersonName"
+        android:ems="14" />
+
+
     <LinearLayout
         android:id="@+id/layout_buttons"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_email_password"
+        android:layout_below="@+id/field_name"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_log_in"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
             android:layout_height="wrap_content"
             android:text="@string/log_in" />
 
 
         <Button
             android:id="@+id/button_register"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
             android:layout_height="wrap_content"
             android:text="@string/register" />
 
     </LinearLayout>
+
+
 
 
 </RelativeLayout>

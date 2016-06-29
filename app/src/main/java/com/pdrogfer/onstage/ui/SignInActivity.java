@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
-import com.pdrogfer.onstage.User;
+import com.pdrogfer.onstage.model.User;
 import com.pdrogfer.onstage.Utils;
 
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
@@ -28,6 +28,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private EditText mEmailField;
     private EditText mPasswordField;
+    private EditText mArtisticNameField;
     private Button mLogInButton;
     private Button mRegisterButton;
 
@@ -42,6 +43,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         // Views
         mEmailField = (EditText) findViewById(R.id.field_email);
         mPasswordField = (EditText) findViewById(R.id.field_password);
+        mArtisticNameField = (EditText) findViewById(R.id.field_name);
         mLogInButton = (Button) findViewById(R.id.button_log_in);
         mRegisterButton = (Button) findViewById(R.id.button_register);
 
@@ -115,10 +117,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void onAuthSuccess(FirebaseUser user) {
-        String username = usernameFromEmail(user.getEmail());
+        // String username = usernameFromEmail(user.getEmail());
+        String artisticUserName = mArtisticNameField.getText().toString();
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail());
+        writeNewUser(user.getUid(), artisticUserName, user.getEmail());
 
         // Go to GigsListActivity
         startActivity(new Intent(SignInActivity.this, GigsListActivity.class));
@@ -136,25 +139,32 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private boolean validateForm() {
         boolean result = true;
         if (TextUtils.isEmpty(mEmailField.getText().toString())) {
-            mEmailField.setError("Required");
+            mEmailField.setError(getString(R.string.field_required_warning));
             result = false;
         } else {
             mEmailField.setError(null);
         }
 
         if (TextUtils.isEmpty(mPasswordField.getText().toString())) {
-            mPasswordField.setError("Required");
+            mPasswordField.setError(getString(R.string.field_required_warning));
             result = false;
         } else {
             mPasswordField.setError(null);
+        }
+
+        if (TextUtils.isEmpty(mArtisticNameField.getText().toString())) {
+            mArtisticNameField.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            mArtisticNameField.setError(null);
         }
 
         return result;
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
+    private void writeNewUser(String userId, String artisticName, String email) {
+        User user = new User(artisticName, email);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

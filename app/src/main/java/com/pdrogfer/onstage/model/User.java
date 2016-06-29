@@ -1,19 +1,19 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.model;
 
 /**
  * Created by pdro on 11/06/2016.
  */
 public class User {
 
-    public String username;
+    public String name;
     public String email;
 
     public User() {
         // Default constructor required for calls to Firebase DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email) {
-        this.username = username;
+    public User(String name, String email) {
+        this.name = name;
         this.email = email;
     }
 }

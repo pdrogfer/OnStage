@@ -5,6 +5,8 @@
     <string name="register">Register</string>
     <string name="hint_password">password</string>
     <string name="hint_email">email</string>
-    <string name="title_activity_gigs_list">GigsListActivity</string>
+    <string name="title_activity_gigs_list">Latest Gigs</string>
     <string name="menu_logout">Log out</string>
+    <string name="hint_artistic_band_name">Artistic/Band name</string>
+    <string name="field_required_warning">Required</string>
 </resources>
