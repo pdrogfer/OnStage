@@ -1,10 +1,8 @@
 package com.pdrogfer.onstage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,8 +12,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.model.User;
-import com.pdrogfer.onstage.ui.GigsListActivity;
-import com.pdrogfer.onstage.ui.SignInActivity;
 
 /**
  * Created by pedrogonzalezferrandez on 29/06/16.
@@ -29,14 +25,21 @@ public class UserAuthFirebaseClient {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private UserAuthFirebaseClient() {
+    private final OnAuthenticationCompleted listener;
+    private final Context context;
+    private String artisticName;
+
+    private UserAuthFirebaseClient(Context context,OnAuthenticationCompleted listener) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        this.context = context;
+        this.listener = listener;
+
     }
 
-    public static synchronized UserAuthFirebaseClient getInstance() {
+    public static synchronized UserAuthFirebaseClient getInstance(Context context, OnAuthenticationCompleted listener) {
         if (uniqueInstance == null) {
-            uniqueInstance = new UserAuthFirebaseClient();
+            uniqueInstance = new UserAuthFirebaseClient(context, listener);
         }
         return uniqueInstance;
     }
@@ -47,37 +50,34 @@ public class UserAuthFirebaseClient {
         }
     }
 
-    public void signIn(final Context context, String email, String password, final String artisticName) {
+    public void signIn(String email, String password, final String artisticName) {
 
+        this.artisticName = artisticName;
+        Boolean success;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(Utils.LOG_IN, "LogIn:onComplete:" + task.isSuccessful());
-                        
+
                         if (task.isSuccessful()) {
-                            onAuthSuccess(context, task.getResult().getUser(), artisticName);
+                            onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Toast.makeText(context, "Log In Failed",
-                                    Toast.LENGTH_SHORT).show();
+                            // return result to SignInActivity
+                            listener.onAuthenticationCompleted(false);
                         }
                     }
                 });
     }
 
-    private void onAuthSuccess(Context context, FirebaseUser user, String artisticName) {
-        // String username = usernameFromEmail(user.getEmail());
-        String artisticUserName = artisticName;
+    private void onAuthSuccess(FirebaseUser user) {
+        // String username = usernameFromEmail(user.getEmail());  // using artisticName instead
 
         // Write new user
-        writeNewUser(user.getUid(), artisticUserName, user.getEmail());
+        writeNewUser(user.getUid(), artisticName, user.getEmail());
 
-
-        // TODO: 29/06/16
-        // Go to GigsListActivity
-        startActivity(new Intent(context, GigsListActivity.class));
-        finish();
-
+        // return result to SignInActivity
+        listener.onAuthenticationCompleted(true);
     }
 
     // [START basic_write]
@@ -86,7 +86,6 @@ public class UserAuthFirebaseClient {
         mDatabase.child("users").child(userId).setValue(user);
     }
     // [END basic_write]
-
 
 
     // not used in my implementation, storing artisticName instead

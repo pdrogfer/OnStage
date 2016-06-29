@@ -1,18 +1,22 @@
 package com.pdrogfer.onstage.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.pdrogfer.onstage.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.Utils;
 
-public class SignInActivity extends BaseActivity implements View.OnClickListener {
+// Using an Interface to receive updates from UserAuthFirebaseClient
+public class SignInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private EditText mEmailField;
     private EditText mPasswordField;
@@ -29,7 +33,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        userAuth = UserAuthFirebaseClient.getInstance();
+        userAuth = UserAuthFirebaseClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -76,7 +80,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         String password = mPasswordField.getText().toString();
         String artisticName = mArtisticNameField.getText().toString();
 
-        userAuth.signIn(context, email, password, artisticName);
+        userAuth.signIn(email, password, artisticName);
     }
 
 
@@ -118,6 +122,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             case R.id.button_register:
                 register();
                 break;
+        }
+    }
+
+    @Override
+    public void onAuthenticationCompleted(Boolean success) {
+        hideProgressDialog();
+        if (success) {
+            startActivity(new Intent(SignInActivity.this, GigsListActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Authentication failed", Toast.LENGTH_LONG).show();
         }
     }
 }
