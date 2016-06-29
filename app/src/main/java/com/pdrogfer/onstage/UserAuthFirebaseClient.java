@@ -20,28 +20,28 @@ import com.pdrogfer.onstage.model.User;
  */
 public class UserAuthFirebaseClient {
 
-    private static UserAuthFirebaseClient uniqueInstance;
+    private static UserAuthFirebaseClient uniqueAuthInstance;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private final OnAuthenticationCompleted listener;
+    private final OnAuthenticationCompleted authListener;
     private final Context context;
     private String artisticName;
 
-    private UserAuthFirebaseClient(Context context,OnAuthenticationCompleted listener) {
+    private UserAuthFirebaseClient(Context context,OnAuthenticationCompleted authListener) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         this.context = context;
-        this.listener = listener;
+        this.authListener = authListener;
 
     }
 
     public static synchronized UserAuthFirebaseClient getInstance(Context context, OnAuthenticationCompleted listener) {
-        if (uniqueInstance == null) {
-            uniqueInstance = new UserAuthFirebaseClient(context, listener);
+        if (uniqueAuthInstance == null) {
+            uniqueAuthInstance = new UserAuthFirebaseClient(context, listener);
         }
-        return uniqueInstance;
+        return uniqueAuthInstance;
     }
 
     public void checkAuth() {
@@ -53,18 +53,37 @@ public class UserAuthFirebaseClient {
     public void signIn(String email, String password, final String artisticName) {
 
         this.artisticName = artisticName;
-        Boolean success;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Utils.LOG_IN, "LogIn:onComplete:" + task.isSuccessful());
+                        Log.d(Utils.LOG_IN, "LogIn:onComplete: " + task.isSuccessful());
 
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
                             // return result to SignInActivity
-                            listener.onAuthenticationCompleted(false);
+                            Log.e(Utils.LOG_IN, "onComplete: SignIn error");
+                            authListener.onAuthenticationCompleted(false, "LogIn error");
+                        }
+                    }
+                });
+    }
+
+    public void registerUser(String email, String password, final String artisticName) {
+
+        this.artisticName = artisticName;
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(Utils.LOG_IN, "createUser:onComplete:" + task.isSuccessful());
+
+                        if (task.isSuccessful()) {
+                            onAuthSuccess(task.getResult().getUser());
+                        } else {
+                            Log.e(Utils.LOG_IN, "onComplete: Register error");
+                            authListener.onAuthenticationCompleted(false, "Registration error");
                         }
                     }
                 });
@@ -77,7 +96,7 @@ public class UserAuthFirebaseClient {
         writeNewUser(user.getUid(), artisticName, user.getEmail());
 
         // return result to SignInActivity
-        listener.onAuthenticationCompleted(true);
+        authListener.onAuthenticationCompleted(true, "You are logged in");
     }
 
     // [START basic_write]

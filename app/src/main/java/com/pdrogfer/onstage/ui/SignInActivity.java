@@ -21,11 +21,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private EditText mEmailField;
     private EditText mPasswordField;
     private EditText mArtisticNameField;
+    private String email, password, artisticName;
     private Button mLogInButton;
     private Button mRegisterButton;
 
     private UserAuthFirebaseClient userAuth;
-
     Context context;
 
     @Override
@@ -58,50 +58,52 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private void logIn() {
         Log.d(Utils.LOG_IN, "LogIn");
-        if (!validateForm()) {
-            return;
-        }
-
-        showProgressDialog();
-        String email = mEmailField.getText().toString();
-        String password = mPasswordField.getText().toString();
-
-
-    }
-
-    private void register() {
-        Log.d(Utils.LOG_IN, "Register");
-        if (!validateForm()) {
-            return;
-        }
-
-        showProgressDialog();
-        String email = mEmailField.getText().toString();
-        String password = mPasswordField.getText().toString();
-        String artisticName = mArtisticNameField.getText().toString();
 
         userAuth.signIn(email, password, artisticName);
     }
 
+    private void register() {
+        Log.d(Utils.LOG_IN, "Register");
 
+        userAuth.registerUser(email, password, artisticName);
+    }
 
-    private boolean validateForm() {
+    @Override
+    public void onClick(View v) {
+        email = mEmailField.getText().toString();
+        password = mPasswordField.getText().toString();
+        artisticName = mArtisticNameField.getText().toString();
+        if (!validateForm(email, password, artisticName)) {
+            return;
+        }
+        showProgressDialog();
+        switch (v.getId()) {
+            case R.id.button_log_in:
+                logIn();
+                break;
+            case R.id.button_register:
+                register();
+                break;
+        }
+    }
+
+    private boolean validateForm(String email, String password, String artisticName) {
         boolean result = true;
-        if (TextUtils.isEmpty(mEmailField.getText().toString())) {
+        if (TextUtils.isEmpty(email)) {
             mEmailField.setError(getString(R.string.field_required_warning));
             result = false;
         } else {
             mEmailField.setError(null);
         }
 
-        if (TextUtils.isEmpty(mPasswordField.getText().toString())) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordField.setError(getString(R.string.field_required_warning));
             result = false;
         } else {
             mPasswordField.setError(null);
         }
 
-        if (TextUtils.isEmpty(mArtisticNameField.getText().toString())) {
+        if (TextUtils.isEmpty(artisticName)) {
             mArtisticNameField.setError(getString(R.string.field_required_warning));
             result = false;
         } else {
@@ -114,25 +116,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_log_in:
-                logIn();
-                break;
-            case R.id.button_register:
-                register();
-                break;
-        }
-    }
-
-    @Override
-    public void onAuthenticationCompleted(Boolean success) {
+    public void onAuthenticationCompleted(Boolean success, String message) {
         hideProgressDialog();
         if (success) {
             startActivity(new Intent(SignInActivity.this, GigsListActivity.class));
             finish();
         } else {
-            Toast.makeText(this, "Authentication failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
+
 }

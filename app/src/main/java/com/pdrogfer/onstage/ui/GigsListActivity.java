@@ -47,7 +47,7 @@ public class GigsListActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(GigViewHolder viewHolder, Gig model, int position) {
                 viewHolder.setArtist(model.getArtist());
-                viewHolder.setVenue(model.getLocal());
+                viewHolder.setVenue(model.getVenue());
                 viewHolder.setDate(model.getDate());
             }
         };

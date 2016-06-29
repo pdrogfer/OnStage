@@ -3,6 +3,7 @@ package com.pdrogfer.onstage;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,16 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.model.Gig;
 
 import java.util.Calendar;
 
-public class CreateGig extends AppCompatActivity implements View.OnClickListener {
-
-    // TODO: 26/06/16 THIS CLASS IS A UI CLASS, SO SHOULD NOT HANDLE LOGIC. DELEGATE GIG CREATION TO MYPRESENTER!!!
+public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
 
     Button btnTime, btnDate, btnCreateGig;
     protected static TextView tvDate, tvTime;
@@ -30,15 +28,18 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     protected static String venue, price;
 
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mGigsRef = mRootRef.child(Utils.FIREBASE_GIGS);
-    Gig tempGig; // to manipulate temporary gigs
+    private DatabaseFirebaseClient databaseClient;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_gig);
 
+        databaseClient = DatabaseFirebaseClient.getInstance(this, this);
+        context = this;
+
+        // Views
         btnTime = (Button) findViewById(R.id.btnCreateGigTime);
         btnDate = (Button) findViewById(R.id.btnCreateGigDate);
         btnCreateGig = (Button) findViewById(R.id.btnCreateGigCreate);
@@ -46,24 +47,14 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
         etPrice = (EditText) findViewById(R.id.etCreateGigPrice);
+
+        // Click listeners
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
     }
 
-    private void addGig() {
-        venue = etVenue.getText().toString();
-        price = etPrice.getText().toString();
-        long timeNow = System.currentTimeMillis();
 
-        // TODO: 06/06/16 use real user instead of demo 'El camion de la basura'
-        tempGig = new Gig(timeNow, "El Camion de la Basura",
-                gYear + "year " + gMonth + " " + gDay + ", " + gHour + "h " + gMinute + "min",
-                venue, price);
-        // TODO: 26/06/16 INSTEAD OF CREATING THE GIG HERE, PASS VALUES BACK TO MYPRESENTER AND CREATE THERE
-        mGigsRef.child(String.valueOf(timeNow)).setValue(tempGig);
-        finish();
-    }
 
     @Override
     public void onClick(View v) {
@@ -77,8 +68,22 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.btnCreateGigCreate:
-                addGig();
+                venue = etVenue.getText().toString();
+                price = etPrice.getText().toString();
+                long timestamp = System.currentTimeMillis();
+                databaseClient.addGig(timestamp,
+                        "artist name not retrieved yet",
+                        venue,
+                        gYear + "year " + gMonth + " " + gDay,
+                        gHour + "h " + gMinute + "min",
+                        price);
         }
+    }
+
+    @Override
+    public void onDbRequestCompleted(Gig gig) {
+        Toast.makeText(this, gig.getArtist() + " you have a new Gig at " + gig.getVenue(),
+                Toast.LENGTH_LONG).show();
     }
 
     public static class TimePickerFragment extends DialogFragment

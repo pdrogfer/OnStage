@@ -5,6 +5,6 @@ package com.pdrogfer.onstage;
  */
 public interface OnAuthenticationCompleted {
 
-    void onAuthenticationCompleted(Boolean success);
+    void onAuthenticationCompleted(Boolean success, String message);
 
 }

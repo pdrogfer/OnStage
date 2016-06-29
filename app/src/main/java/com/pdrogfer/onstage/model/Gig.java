@@ -12,19 +12,21 @@ public class Gig {
      */
     private long gigID;
     private String artist;
+    private String venue;
     private String date;
-    private String local;
+    private String startTime;
     private String price;
 
     public Gig() {
         // Default constructor required for calls to DataSnapshot.getValue(Gig.class)
     }
 
-    public Gig(long timestamp, String artist, String date, String local, String price) {
+    public Gig(long timestamp, String artistName, String venue, String date, String startTime, String price) {
         this.gigID = timestamp;
-        this.artist = artist;
+        this.artist = artistName;
+        this.venue = venue;
         this.date = date;
-        this.local = local;
+        this.startTime = startTime;
         this.price = price;
     }
 
@@ -44,14 +46,6 @@ public class Gig {
         this.date = date;
     }
 
-    public String getLocal() {
-        return local;
-    }
-
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
     public long getGigID() {
         return gigID;
     }
@@ -68,13 +62,30 @@ public class Gig {
         this.price = price;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
     @Override
     public String toString() {
         return "Gig {" +
-                "gigID=" + gigID +
-                ", artist='" + artist + '\'' +
+                "artist='" + artist + '\'' +
+                ", gigID=" + gigID +
+                ", venue='" + venue + '\'' +
                 ", date='" + date + '\'' +
-                ", local='" + local + '\'' +
+                ", startTime='" + startTime + '\'' +
                 ", price='" + price + '\'' +
                 '}';
     }
