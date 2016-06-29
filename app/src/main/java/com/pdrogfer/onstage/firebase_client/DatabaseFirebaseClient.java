@@ -1,9 +1,10 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.firebase_client;
 
 import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
 
 /**
@@ -35,7 +36,6 @@ public class DatabaseFirebaseClient {
         }
         return uniqueDatabaseInstance;
     }
-
 
     public void addGig(long timestamp,
                         String artisticName,

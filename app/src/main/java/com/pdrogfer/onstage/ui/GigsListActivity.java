@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.CreateGig;
 import com.pdrogfer.onstage.model.Gig;
-import com.pdrogfer.onstage.DatabaseFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 

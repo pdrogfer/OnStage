@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.pdrogfer.onstage.OnAuthenticationCompleted;
+import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.R;
-import com.pdrogfer.onstage.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.Utils;
 
 // Using an Interface to receive updates from UserAuthFirebaseClient

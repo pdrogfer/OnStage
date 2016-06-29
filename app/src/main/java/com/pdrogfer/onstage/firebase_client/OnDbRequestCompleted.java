@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.firebase_client;
 
 import com.pdrogfer.onstage.model.Gig;
 

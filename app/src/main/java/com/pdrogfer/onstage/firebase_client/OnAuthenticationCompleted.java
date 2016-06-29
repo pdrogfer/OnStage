@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.firebase_client;
 
 /**
  * Created by pedrogonzalezferrandez on 29/06/16.

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.ui.GigsListActivity;
 
 import java.util.Calendar;
 
@@ -26,7 +30,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
-    protected static String venue, price;
+    protected static String artisticName, venue, price;
 
     private DatabaseFirebaseClient databaseClient;
     Context context;
@@ -52,6 +56,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
+
     }
 
 
@@ -68,11 +73,12 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.btnCreateGigCreate:
+                artisticName = Utils.getArtisticName(Utils.ARTISTIC_NAME, context);
                 venue = etVenue.getText().toString();
                 price = etPrice.getText().toString();
                 long timestamp = System.currentTimeMillis();
                 databaseClient.addGig(timestamp,
-                        "artist name not retrieved yet",
+                        artisticName,
                         venue,
                         gYear + "year " + gMonth + " " + gDay,
                         gHour + "h " + gMinute + "min",
@@ -84,6 +90,8 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     public void onDbRequestCompleted(Gig gig) {
         Toast.makeText(this, gig.getArtist() + " you have a new Gig at " + gig.getVenue(),
                 Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, GigsListActivity.class));
+        finish();
     }
 
     public static class TimePickerFragment extends DialogFragment

@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.firebase_client;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.User;
 
 /**
@@ -103,6 +104,9 @@ public class UserAuthFirebaseClient {
     private void writeNewUser(String userId, String artisticName, String email) {
         User user = new User(artisticName, email);
         mDatabase.child("users").child(userId).setValue(user);
+
+        // store artisticName in SharedPreferences
+        Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
     }
     // [END basic_write]
 
