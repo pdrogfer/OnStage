@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        fan {
+            applicationId "com.pdrogfer.onstage.fan"
+        }
+        musician {
+            applicationId "com.pdrogfer.onstage.musician"
+        }
+        venue {
+            applicationId "com.pdrogfer.onstage.venue"
+        }
+    }
 }
 
 dependencies {
