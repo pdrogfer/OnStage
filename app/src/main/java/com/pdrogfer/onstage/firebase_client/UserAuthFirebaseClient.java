@@ -29,6 +29,7 @@ public class UserAuthFirebaseClient {
     private final OnAuthenticationCompleted authListener;
     private final Context context;
     private String artisticName;
+    private String userType;
 
     private UserAuthFirebaseClient(Context context,OnAuthenticationCompleted authListener) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -51,9 +52,10 @@ public class UserAuthFirebaseClient {
         }
     }
 
-    public void signIn(String email, String password, final String artisticName) {
+    public void signIn(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;
+        this.userType = userType;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -71,9 +73,10 @@ public class UserAuthFirebaseClient {
                 });
     }
 
-    public void registerUser(String email, String password, final String artisticName) {
+    public void registerUser(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;
+        this.userType = userType;
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -94,19 +97,20 @@ public class UserAuthFirebaseClient {
         // String username = usernameFromEmail(user.getEmail());  // using artisticName instead
 
         // Write new user
-        writeNewUser(user.getUid(), artisticName, user.getEmail());
+        writeNewUser(user.getUid(), artisticName, user.getEmail(), userType);
 
         // return result to SignInActivity
         authListener.onAuthenticationCompleted(true, "You are logged in");
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String artisticName, String email) {
-        User user = new User(artisticName, email);
+    private void writeNewUser(String userId, String artisticName, String email, String userType) {
+        User user = new User(artisticName, email, userType);
         mDatabase.child("users").child(userId).setValue(user);
 
         // store artisticName in SharedPreferences
         Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
+        Utils.storeUserType(Utils.USER_TYPE, userType, context);
     }
     // [END basic_write]
 

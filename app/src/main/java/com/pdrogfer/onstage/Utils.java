@@ -14,19 +14,26 @@ public class Utils {
     public static final int NEW_GIG_RESULT_OK = 200;
     public static final String LOG_IN = "SignInActivity";
     public static final String ARTISTIC_NAME = "ARTISTIC_NAME";
-
+    public static final String USER_TYPE = "USER_TYPE";
 
 
     // Helper functions to get artisticName anywhere
-    public static void storeArtisticName(String key, String value, Context context) {
+    public static void storeArtisticName(String keyName, String value, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, value);
+        editor.putString(keyName, value);
         editor.commit();
     }
 
-    public static String getArtisticName(String key, Context context) {
+    public static String getArtisticName(String keyName, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, null);
+        return preferences.getString(keyName, null);
+    }
+
+    public static void storeUserType(String keyUserType, String userType, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(keyUserType, userType);
+        editor.commit();
     }
 }

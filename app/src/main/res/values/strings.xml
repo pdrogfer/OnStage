@@ -7,6 +7,6 @@
     <string name="hint_email">email</string>
     <string name="title_activity_gigs_list">Latest Gigs</string>
     <string name="menu_logout">Log out</string>
-    <string name="hint_artistic_band_name">Artistic/Band name</string>
+    <string name="hint_name">Name, Band\'s name, or Venue</string>
     <string name="field_required_warning">Required</string>
 </resources>

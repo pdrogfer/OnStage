@@ -8,7 +8,7 @@
     tools:context=".ui.GigsListActivity"
     tools:showIn="@layout/activity_gigs_list">
 
-    <!-- A RecyclerView with some commonly used attributes -->
+    <!-- Recycler View used in Gigs List Activity -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_gigs"
         android:scrollbars="vertical"
