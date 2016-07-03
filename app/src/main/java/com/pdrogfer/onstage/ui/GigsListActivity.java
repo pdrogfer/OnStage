@@ -41,7 +41,7 @@ public class GigsListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new FirebaseRecyclerAdapter<Gig, GigViewHolder>(Gig.class,
-                R.layout.list_item,
+                R.layout.list_item_card,
                 GigViewHolder.class,
                 reference) {
             @Override
@@ -54,12 +54,14 @@ public class GigsListActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewGig(view);
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    createNewGig(view);
+                }
+            });
+        }
     }
 
     @Override
