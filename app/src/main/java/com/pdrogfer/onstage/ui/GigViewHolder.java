@@ -10,13 +10,16 @@ import com.pdrogfer.onstage.R;
 /**
  * Created by pedrogonzalezferrandez on 26/06/16.
  */
-public class GigViewHolder extends RecyclerView.ViewHolder {
+public class GigViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnLongClickListener {
 
     View mView;
     ImageView ivIconArtist;
     TextView tvArtist;
     TextView tvVenue;
     TextView tvDate;
+
+    private OnClickRecyclerViewItemListener clickRecyclerViewItemListener;
 
     public GigViewHolder(View itemView) {
         super(itemView);
@@ -26,6 +29,12 @@ public class GigViewHolder extends RecyclerView.ViewHolder {
         tvVenue = (TextView) mView.findViewById(R.id.tv_list_item_venue);
         tvDate = (TextView) mView.findViewById(R.id.tv_list_item_date);
 
+        mView.setOnClickListener(this);
+        mView.setOnLongClickListener(this);
+    }
+
+    public void setClickRecyclerViewItemListener(OnClickRecyclerViewItemListener listener) {
+        this.clickRecyclerViewItemListener = listener;
     }
 
     public void setArtist(String artist) {
@@ -38,5 +47,16 @@ public class GigViewHolder extends RecyclerView.ViewHolder {
 
     public void setDate(String date) {
         tvDate.setText(date);
+    }
+
+    @Override
+    public void onClick(View v) {
+        clickRecyclerViewItemListener.onClickRecyclerViewItem(v, getAdapterPosition(), false);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        clickRecyclerViewItemListener.onClickRecyclerViewItem(v, getAdapterPosition(), true);
+        return true;
     }
 }

@@ -31,7 +31,6 @@ public class GigsListActivity extends AppCompatActivity {
     DatabaseFirebaseClient databaseFirebaseClient;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,6 @@ public class GigsListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setRecyclerView();
-
         setFab();
     }
 
@@ -74,11 +72,19 @@ public class GigsListActivity extends AppCompatActivity {
                 GigViewHolder.class,
                 reference) {
             @Override
-            protected void populateViewHolder(GigViewHolder viewHolder, Gig model, int position) {
+            protected void populateViewHolder(GigViewHolder viewHolder, Gig model, final int position) {
                 viewHolder.setArtist(model.getArtist());
                 viewHolder.setVenue(model.getVenue());
                 viewHolder.setDate(model.getDate());
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(Utils.TAG, "onItemClick: position " + position);
+                    }
+                });
             }
+
         };
         recyclerView.setAdapter(mAdapter);
     }
@@ -91,7 +97,6 @@ public class GigsListActivity extends AppCompatActivity {
                 // TODO: 26/06/16 THIS IS A UI CLASS MOVE ALL GIG CREATION LOGIC TO PRESENTER!!
                 Gig tempGig = new Gig();
                 reference.push().setValue(tempGig);
-
                 Toast.makeText(this, "Gig created", Toast.LENGTH_LONG).show();
             }
         }
