@@ -112,6 +112,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             mPasswordField.setError(null);
         }
 
+        if (TextUtils.getTrimmedLength(password) < 6) {
+            mPasswordField.setError("Too short, at least 6 characters");
+            result = false;
+        } else {
+            mPasswordField.setError(null);
+        }
+
         if (TextUtils.isEmpty(artisticName)) {
             mNameField.setError(getString(R.string.field_required_warning));
             result = false;
