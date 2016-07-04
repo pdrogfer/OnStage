@@ -16,8 +16,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CreateGig"
-            android:parentActivityName=".ui.MainActivity">
+        <activity android:name=".ui.CreateGig"
+            android:parentActivityName=".ui.GigsListActivity">
         </activity>
 
         <activity

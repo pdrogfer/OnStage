@@ -17,7 +17,7 @@ public class Utils {
     public static final String USER_TYPE = "USER_TYPE";
 
 
-    // Helper functions to get artisticName anywhere
+    // Helper functions to get artisticName and userType anywhere
     public static void storeArtisticName(String keyName, String value, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
@@ -26,8 +26,8 @@ public class Utils {
     }
 
     public static String getArtisticName(String keyName, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(keyName, null);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(keyName, null);
     }
 
     public static void storeUserType(String keyUserType, String userType, Context context) {
@@ -35,5 +35,10 @@ public class Utils {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(keyUserType, userType);
         editor.commit();
+    }
+
+    public static String getUserType(String keyUserType, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getString(keyUserType, null);
     }
 }

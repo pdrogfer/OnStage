@@ -108,7 +108,7 @@ public class UserAuthFirebaseClient {
         User user = new User(artisticName, email, userType);
         mDatabase.child("users").child(userId).setValue(user);
 
-        // store artisticName in SharedPreferences
+        // store artisticName and userType in SharedPreferences
         Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
         Utils.storeUserType(Utils.USER_TYPE, userType, context);
     }

@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage;
+package com.pdrogfer.onstage.ui;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -17,10 +17,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.pdrogfer.onstage.R;
+import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
-import com.pdrogfer.onstage.ui.GigsListActivity;
 
 import java.util.Calendar;
 
@@ -56,10 +57,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
-
     }
-
-
 
     @Override
     public void onClick(View v) {

@@ -2,11 +2,13 @@ package com.pdrogfer.onstage.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +18,11 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.pdrogfer.onstage.CreateGig;
-import com.pdrogfer.onstage.model.Gig;
-import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
+import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.model.UserType;
 
 public class GigsListActivity extends AppCompatActivity {
 
@@ -37,6 +39,33 @@ public class GigsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setRecyclerView();
+
+        setFab();
+    }
+
+    private void setFab() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Log.i(Utils.TAG, "setFab: USER TYPE " + Utils.getUserType(Utils.USER_TYPE, this));
+        // If the user is a fan, hyde the fab so it can not create gigs
+        if (Utils.getUserType(Utils.USER_TYPE, this) == String.valueOf(UserType.FAN)) {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+        } else {
+            if (fab != null) {
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createNewGig(view);
+                    }
+                });
+            }
+        }
+    }
+
+    private void setRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_gigs);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,16 +81,6 @@ public class GigsListActivity extends AppCompatActivity {
             }
         };
         recyclerView.setAdapter(mAdapter);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    createNewGig(view);
-                }
-            });
-        }
     }
 
     @Override
@@ -105,5 +124,13 @@ public class GigsListActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
