@@ -9,4 +9,7 @@
     <string name="menu_logout">Log out</string>
     <string name="hint_name">Name, Band\'s name, or Venue</string>
     <string name="field_required_warning">Required</string>
+
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_giglist_footer">ca-app-pub-4576286156127371/7898648368</string>
 </resources>

@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,6 +32,7 @@ public class GigsListActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
     DatabaseFirebaseClient databaseFirebaseClient;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
+    private AdView bannerAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,29 +41,19 @@ public class GigsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setBannerAdView();
         setRecyclerView();
         setFab();
     }
 
-    private void setFab() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        Log.i(Utils.TAG, "setFab: USER TYPE " + Utils.getUserType(Utils.USER_TYPE, this));
-        // If the user is a fan, hyde the fab so it can not create gigs
-        if (Utils.getUserType(Utils.USER_TYPE, this) == String.valueOf(UserType.FAN)) {
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-        } else {
-            if (fab != null) {
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        createNewGig(view);
-                    }
-                });
-            }
-        }
+    private void setBannerAdView() {
+        bannerAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest
+                .Builder()
+                // TODO: 07/07/2016 REMOVE 'addTestDevice IN PRODUCTION 
+                .addTestDevice("7C67DD5800874F3698615ADD51366D95")
+                .build();
+        bannerAdView.loadAd(adRequest);
     }
 
     private void setRecyclerView() {
@@ -84,9 +77,29 @@ public class GigsListActivity extends AppCompatActivity {
                     }
                 });
             }
-
         };
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void setFab() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Log.i(Utils.TAG, "setFab: USER TYPE " + Utils.getUserType(Utils.USER_TYPE, this));
+        // If the user is a fan, hyde the fab so it can not create gigs
+        if (Utils.getUserType(Utils.USER_TYPE, this) == String.valueOf(UserType.FAN)) {
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+        } else {
+            if (fab != null) {
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createNewGig(view);
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -107,11 +120,6 @@ public class GigsListActivity extends AppCompatActivity {
         startActivityForResult(intNewGig, Utils.NEW_GIG_REQUEST);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mAdapter.cleanup();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,5 +145,11 @@ public class GigsListActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdapter.cleanup();
     }
 }
