@@ -50,7 +50,7 @@ public class GigsListActivity extends AppCompatActivity {
         bannerAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest
                 .Builder()
-                // TODO: 07/07/2016 REMOVE 'addTestDevice IN PRODUCTION 
+                // TODO: 07/07/2016 REMOVE 'addTestDevice' IN PRODUCTION
                 .addTestDevice("7C67DD5800874F3698615ADD51366D95")
                 .build();
         bannerAdView.loadAd(adRequest);
