@@ -28,7 +28,6 @@ public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    DatabaseFirebaseClient databaseFirebaseClient;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
 
     @Override
@@ -40,6 +39,36 @@ public class GigsListActivity extends AppCompatActivity {
 
         setRecyclerView();
         setFab();
+    }
+
+    private void setRecyclerView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_gigs);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new FirebaseRecyclerAdapter<Gig, GigViewHolder>(Gig.class,
+                R.layout.list_item_card,
+                GigViewHolder.class,
+                reference) {
+            @Override
+            protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
+
+                viewGig.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(Utils.TAG, "onItemClickGeneral: position " + position);
+                        // this doesn't work
+                    }
+                });
+                viewGig.bindToGig(model, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(Utils.TAG, "onItemClickTitle: position " + position);
+                        // this works
+                    }
+                });
+            }
+        };
+        recyclerView.setAdapter(mAdapter);
     }
 
     private void setFab() {
@@ -63,32 +92,6 @@ public class GigsListActivity extends AppCompatActivity {
         }
     }
 
-    private void setRecyclerView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_gigs);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new FirebaseRecyclerAdapter<Gig, GigViewHolder>(Gig.class,
-                R.layout.list_item_card,
-                GigViewHolder.class,
-                reference) {
-            @Override
-            protected void populateViewHolder(GigViewHolder viewHolder, Gig model, final int position) {
-                viewHolder.setArtist(model.getArtist());
-                viewHolder.setVenue(model.getVenue());
-                viewHolder.setDate(model.getDate());
-
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i(Utils.TAG, "onItemClick: position " + position);
-                    }
-                });
-            }
-
-        };
-        recyclerView.setAdapter(mAdapter);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -110,8 +113,9 @@ public class GigsListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAdapter.cleanup();
-    }
+        if (mAdapter != null) {
+            mAdapter.cleanup();
+        }    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
