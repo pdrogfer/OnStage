@@ -51,19 +51,12 @@ public class GigsListActivity extends AppCompatActivity {
                 reference) {
             @Override
             protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
-
-                viewGig.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i(Utils.TAG, "onItemClickGeneral: position " + position);
-                        // this doesn't work
-                    }
-                });
                 viewGig.bindToGig(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.i(Utils.TAG, "onItemClickTitle: position " + position);
-                        // this works
+                        // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
+                        startActivity(new Intent(getApplicationContext(), GigDetailsActivity.class));
                     }
                 });
             }
