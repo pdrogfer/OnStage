@@ -7,5 +7,5 @@ import android.view.View;
  */
 public interface OnClickRecyclerViewItemListener {
 
-    void onClickRecyclerViewItem(View view, int position, boolean isLongClick);
+    void onItemGigClick(View view, int position);
 }

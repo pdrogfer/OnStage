@@ -30,7 +30,6 @@ public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    DatabaseFirebaseClient databaseFirebaseClient;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
     private AdView bannerAdView;
 
@@ -65,15 +64,13 @@ public class GigsListActivity extends AppCompatActivity {
                 GigViewHolder.class,
                 reference) {
             @Override
-            protected void populateViewHolder(GigViewHolder viewHolder, Gig model, final int position) {
-                viewHolder.setArtist(model.getArtist());
-                viewHolder.setVenue(model.getVenue());
-                viewHolder.setDate(model.getDate());
-
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
+                viewGig.bindToGig(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i(Utils.TAG, "onItemClick: position " + position);
+                        Log.i(Utils.TAG, "onItemClickTitle: position " + position);
+                        // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
+                        startActivity(new Intent(getApplicationContext(), GigDetailsActivity.class));
                     }
                 });
             }
@@ -120,7 +117,6 @@ public class GigsListActivity extends AppCompatActivity {
         startActivityForResult(intNewGig, Utils.NEW_GIG_REQUEST);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_gigs_list, menu);
@@ -150,6 +146,8 @@ public class GigsListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAdapter.cleanup();
+        if (mAdapter != null) {
+            mAdapter.cleanup();
+        }
     }
 }

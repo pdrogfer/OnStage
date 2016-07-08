@@ -15,15 +15,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.CreateGig"
-            android:parentActivityName=".ui.GigsListActivity">
-        </activity>
-
+        <activity
+            android:name=".ui.CreateGig"
+            android:parentActivityName=".ui.GigsListActivity"></activity>
         <activity
             android:name=".ui.GigsListActivity"
             android:label="@string/title_activity_gigs_list"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.GigDetailsActivity"
+            android:label="@string/title_activity_gig_details"
+            android:parentActivityName=".ui.GigsListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
+        </activity>
     </application>
 
 </manifest>
