@@ -24,7 +24,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.GigDetailsActivity"
-            android:label="@string/title_activity_gig_details"
             android:parentActivityName=".ui.GigsListActivity"
             android:theme="@style/AppTheme">
             <meta-data

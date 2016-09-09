@@ -65,12 +65,17 @@ public class GigsListActivity extends AppCompatActivity {
                 reference) {
             @Override
             protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
+                final DatabaseReference gigRef = getRef(position);
+
+                final String gigKey = gigRef.getKey();
                 viewGig.bindToGig(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.i(Utils.TAG, "onItemClickTitle: position " + position);
                         // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
-                        startActivity(new Intent(getApplicationContext(), GigDetailsActivity.class));
+                        Intent intentDetails = new Intent(getApplicationContext(), GigDetailsActivity.class);
+                        intentDetails.putExtra(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
+                        startActivity(intentDetails);
                     }
                 });
             }
