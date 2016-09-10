@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.SignInActivity">
+        <activity android:name=".ui.SignInActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,14 +18,17 @@
         </activity>
         <activity
             android:name=".ui.CreateGig"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.GigsListActivity"></activity>
         <activity
             android:name=".ui.GigsListActivity"
             android:label="@string/title_activity_gigs_list"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.GigDetailsActivity"
             android:parentActivityName=".ui.GigsListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
