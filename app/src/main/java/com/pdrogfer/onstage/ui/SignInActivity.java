@@ -52,6 +52,14 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         // Click listeners
         mLogInButton.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
+
+        // TODO: Remove in production, this logs a test user, to skip sign in Activity
+        forTestingOnly();
+    }
+
+    private void forTestingOnly() {
+        userAuth.checkAuth();
+        userAuth.signIn("testuser@hotmail.com", "aaaaaa", "test user", "MUSICIAN");
     }
 
     @Override
@@ -128,7 +136,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         // userType is set to FAN by default
         return result;
     }
-
 
 
     @Override

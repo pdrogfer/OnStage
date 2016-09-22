@@ -16,6 +16,7 @@ public class Gig {
     private String date;
     private String startTime;
     private String price;
+    private String address;
 
     public Gig() {
         // Default constructor required for calls to DataSnapshot.getValue(Gig.class)
@@ -88,5 +89,9 @@ public class Gig {
                 ", startTime='" + startTime + '\'' +
                 ", price='" + price + '\'' +
                 '}';
+    }
+
+    public String getCity() {
+        return "address not implemented yet";
     }
 }

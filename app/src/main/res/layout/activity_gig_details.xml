@@ -21,7 +21,6 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:titleEnabled="true"
-            app:title="@string/title_activity_gig_details"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <!-- acting weird !!! -->

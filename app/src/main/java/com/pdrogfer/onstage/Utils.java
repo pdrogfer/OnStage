@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
- * Created by pedrogonzalezferrandez on 06/06/16.
- */
 public class Utils {
     public static final String FIREBASE_GIGS = "gigs";
     public static final String TAG = "OnStage";
