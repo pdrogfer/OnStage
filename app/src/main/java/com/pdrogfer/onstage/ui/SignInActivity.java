@@ -58,8 +58,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void forTestingOnly() {
+        // using Firebase
         userAuth.checkAuth();
         userAuth.signIn("testuser@hotmail.com", "aaaaaa", "test user", "MUSICIAN");
+        // TODO: 26/09/16 using myOwnServer
     }
 
     @Override
@@ -73,15 +75,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         userType = String.valueOf(UserType.FAN);
     }
 
-    private void logIn() {
+    private void logInWithFirebase() {
         Log.d(Utils.LOG_IN, "LogIn");
-
         userAuth.signIn(email, password, artisticName, userType);
     }
 
-    private void register() {
+    private void registerWithFirebase() {
         Log.d(Utils.LOG_IN, "Register");
-
         userAuth.registerUser(email, password, artisticName, userType);
     }
 
@@ -96,10 +96,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         showProgressDialog();
         switch (v.getId()) {
             case R.id.button_log_in:
-                logIn();
+                logInWithFirebase();
                 break;
             case R.id.button_register:
-                register();
+                registerWithFirebase();
                 break;
         }
     }
