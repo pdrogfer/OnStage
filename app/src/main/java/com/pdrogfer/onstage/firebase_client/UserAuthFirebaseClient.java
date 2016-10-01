@@ -18,15 +18,17 @@ import com.pdrogfer.onstage.model.User;
  * Created by pedrogonzalezferrandez on 29/06/16.
  *
  * This singleton class should hold a unique FirebaseAuth instance. to be called through the app
+ *
+ * It includes a OnAuthenticationCompleted listener to update UI after tasks finished
  */
-public class UserAuthFirebaseClient {
+public class UserAuthFirebaseClient implements UserAuthSuperClient {
 
     private static UserAuthFirebaseClient uniqueAuthInstance;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private final OnAuthenticationCompleted authListener;
+    private final OnAuthenticationCompleted authFirebaseListener;
     private final Context context;
     private String artisticName;
     private String userType;
@@ -35,7 +37,7 @@ public class UserAuthFirebaseClient {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         this.context = context;
-        this.authListener = authListener;
+        this.authFirebaseListener = authListener;
 
     }
 
@@ -46,12 +48,14 @@ public class UserAuthFirebaseClient {
         return uniqueAuthInstance;
     }
 
+    @Override
     public void checkAuth() {
         if (mAuth.getCurrentUser() != null) {
             onAuthSuccess(mAuth.getCurrentUser());
         }
     }
 
+    @Override
     public void signIn(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;
@@ -65,14 +69,13 @@ public class UserAuthFirebaseClient {
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            // return result to SignInActivity
-                            Log.e(Utils.LOG_IN, "onComplete: SignIn error");
-                            authListener.onAuthenticationCompleted(false, "LogIn error");
+                            onAuthFailed("LogIn error");
                         }
                     }
                 });
     }
 
+    @Override
     public void registerUser(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;
@@ -86,11 +89,16 @@ public class UserAuthFirebaseClient {
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            Log.e(Utils.LOG_IN, "onComplete: Register error");
-                            authListener.onAuthenticationCompleted(false, "Registration error");
+                            onAuthFailed("RegisterIn error");
                         }
                     }
                 });
+    }
+
+    private void onAuthFailed(String errorMessage) {
+        // return result to SignInActivity
+        authFirebaseListener.onAuthenticationCompleted(false, errorMessage);
+        Log.e(Utils.LOG_IN, "onComplete: " + errorMessage);
     }
 
     private void onAuthSuccess(FirebaseUser user) {
@@ -100,10 +108,9 @@ public class UserAuthFirebaseClient {
         writeNewUser(user.getUid(), artisticName, user.getEmail(), userType);
 
         // return result to SignInActivity
-        authListener.onAuthenticationCompleted(true, "You are logged in");
+        authFirebaseListener.onAuthenticationCompleted(true, "You are logged in");
     }
 
-    // [START basic_write]
     private void writeNewUser(String userId, String artisticName, String email, String userType) {
         User user = new User(artisticName, email, userType);
         mDatabase.child("users").child(userId).setValue(user);
@@ -112,16 +119,4 @@ public class UserAuthFirebaseClient {
         Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
         Utils.storeUserType(Utils.USER_TYPE, userType, context);
     }
-    // [END basic_write]
-
-
-    // not used in my implementation, storing artisticName instead
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
-        }
-    }
-
 }

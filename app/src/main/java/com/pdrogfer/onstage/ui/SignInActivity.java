@@ -16,9 +16,10 @@ import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
 
-// Using an Interface to receive updates from UserAuthFirebaseClient
+// Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
 public class SignInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private EditText mEmailField, mPasswordField, mNameField;
@@ -27,7 +28,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private String email, password, artisticName, userType;
     private Button mLogInButton, mRegisterButton;
 
-    private UserAuthFirebaseClient userAuth;
+    private UserAuthSuperClient userAuth;
     Context context;
 
     @Override
@@ -35,6 +36,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        // do authentication using Firebase
         userAuth = UserAuthFirebaseClient.getInstance(this, this);
         context = this;
 
@@ -75,12 +77,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         userType = String.valueOf(UserType.FAN);
     }
 
-    private void logInWithFirebase() {
+    private void logIn() {
         Log.d(Utils.LOG_IN, "LogIn");
         userAuth.signIn(email, password, artisticName, userType);
     }
 
-    private void registerWithFirebase() {
+    private void register() {
         Log.d(Utils.LOG_IN, "Register");
         userAuth.registerUser(email, password, artisticName, userType);
     }
@@ -96,10 +98,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         showProgressDialog();
         switch (v.getId()) {
             case R.id.button_log_in:
-                logInWithFirebase();
+                logIn();
                 break;
             case R.id.button_register:
-                registerWithFirebase();
+                register();
                 break;
         }
     }
