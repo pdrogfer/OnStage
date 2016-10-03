@@ -23,7 +23,9 @@ import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
 
@@ -31,6 +33,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
+    private Date gigDate;
     protected static String artisticName, venue, price;
 
     private DatabaseFirebaseClient databaseClient;
@@ -43,6 +46,8 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
 
         databaseClient = DatabaseFirebaseClient.getInstance(this, this);
         context = this;
+
+        gigDate = new Date();
 
         // Views
         btnTime = (Button) findViewById(R.id.btnCreateGigTime);
@@ -103,10 +108,11 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
             int minute = c.get(Calendar.MINUTE);
 
             // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(getActivity(),
+                    this, hour, minute, DateFormat.is24HourFormat(getActivity()));
         }
 
+        @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
             tvTime.setText(hourOfDay + "h " + minute + "min");
@@ -130,12 +136,19 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
+        @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
             tvDate.setText(year + " " + month + " " + day);
             gYear = year;
             gMonth = month;
             gDay = day;
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
+            String dateString = simpleDateFormat.format(calendar.getTime());
+            tvDate.setText(dateString);
         }
     }
 }

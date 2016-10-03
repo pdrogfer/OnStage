@@ -62,8 +62,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private void forTestingOnly() {
         // using Firebase
         userAuth.checkAuth();
-        userAuth.signIn("testuser@hotmail.com", "aaaaaa", "test user", "MUSICIAN");
-        // TODO: 26/09/16 using myOwnServer
+        email = "testuser@hotmail.com";
+        password = "aaaaaa";
+        artisticName = "test user";
+        userType = "MUSICIAN";
+        logIn();
+        // register();
     }
 
     @Override
@@ -71,10 +75,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         super.onStart();
 
         // Check auth on Activity start
-        userAuth.checkAuth();
+        //userAuth.checkAuth();
 
         // set default userType ?
-        userType = String.valueOf(UserType.FAN);
+        // userType = String.valueOf(UserType.FAN);
     }
 
     private void logIn() {
