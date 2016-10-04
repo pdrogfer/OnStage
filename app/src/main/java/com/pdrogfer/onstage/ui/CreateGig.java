@@ -115,7 +115,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            tvTime.setText(hourOfDay + "h " + minute + "min");
+            String timeString;
+            if (minute < 10) {
+                timeString = hourOfDay + ":0" + minute;
+            } else {
+                timeString = hourOfDay + ":" + minute;
+            }
+            tvTime.setText(timeString);
             gHour = hourOfDay;
             gMinute = minute;
         }

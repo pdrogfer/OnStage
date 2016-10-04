@@ -67,7 +67,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         artisticName = "test user";
         userType = "MUSICIAN";
         logIn();
-        // register();
+//         register();
     }
 
     @Override

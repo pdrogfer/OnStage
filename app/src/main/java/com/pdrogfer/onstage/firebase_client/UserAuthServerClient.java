@@ -41,4 +41,12 @@ public class UserAuthServerClient implements UserAuthSuperClient {
     public void registerUser(String email, String password, String artisticName, String userType) {
 
     }
+
+    private void onAuthFailed(String errorMessage) {
+
+    }
+
+    private void onAuthSuccess() {
+
+    }
 }
