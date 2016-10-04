@@ -64,12 +64,29 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Utils.LOG_IN, "LogIn:onComplete: " + task.isSuccessful());
+                        Log.d(Utils.LOG_IN, "LogInActivity:onComplete: " + task.isSuccessful());
 
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         } else {
-                            onAuthFailed("LogIn error");
+                            onAuthFailed("LogInActivity error");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void signIn(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(Utils.LOG_IN, "LogInActivity:onComplete: " + task.isSuccessful());
+
+                        if (task.isSuccessful()) {
+                            onAuthSuccess(task.getResult().getUser());
+                        } else {
+                            onAuthFailed("LogInActivity error");
                         }
                     }
                 });
@@ -96,7 +113,7 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
     }
 
     private void onAuthFailed(String errorMessage) {
-        // return result to SignInActivity
+        // return result to RegisterActivity
         authFirebaseListener.onAuthenticationCompleted(false, errorMessage);
         Log.e(Utils.LOG_IN, "onComplete: " + errorMessage);
     }
@@ -107,7 +124,7 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
         // Write new user
         writeNewUser(user.getUid(), artisticName, user.getEmail(), userType);
 
-        // return result to SignInActivity
+        // return result to RegisterActivity
         authFirebaseListener.onAuthenticationCompleted(true, "You are logged in");
     }
 

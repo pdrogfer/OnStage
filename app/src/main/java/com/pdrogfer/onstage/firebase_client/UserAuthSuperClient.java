@@ -16,6 +16,8 @@ public interface UserAuthSuperClient {
                 final String artisticName,
                 String userType);
 
+    void signIn(String email, String password);
+
     void registerUser(String email,
                       String password,
                       final String artisticName,

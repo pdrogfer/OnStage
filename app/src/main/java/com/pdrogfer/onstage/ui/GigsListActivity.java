@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.model.Gig;
 import com.pdrogfer.onstage.model.UserType;
 
@@ -109,7 +108,6 @@ public class GigsListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Utils.NEW_GIG_REQUEST) {
             if (resultCode == Utils.NEW_GIG_RESULT_OK) {
-                // TODO: 26/06/16 THIS IS A UI CLASS MOVE ALL GIG CREATION LOGIC TO PRESENTER!!
                 Gig tempGig = new Gig();
                 reference.push().setValue(tempGig);
                 Toast.makeText(this, "Gig created", Toast.LENGTH_LONG).show();
@@ -133,7 +131,7 @@ public class GigsListActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.action_logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(this, SignInActivity.class));
+                startActivity(new Intent(this, Presentation.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

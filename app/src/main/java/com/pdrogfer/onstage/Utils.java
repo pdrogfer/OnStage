@@ -9,9 +9,11 @@ public class Utils {
     public static final String TAG = "OnStage";
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
-    public static final String LOG_IN = "SignInActivity";
+    public static final String LOG_IN = "RegisterActivity";
     public static final String ARTISTIC_NAME = "ARTISTIC_NAME";
     public static final String USER_TYPE = "USER_TYPE";
+    public static final String EMAIL = "EMAIL";
+    public static final String PASSWORD = "PASSWORD";
 
 
     // Helper functions to get artisticName and userType anywhere

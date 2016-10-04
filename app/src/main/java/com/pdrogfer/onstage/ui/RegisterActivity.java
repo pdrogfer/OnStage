@@ -3,8 +3,10 @@ package com.pdrogfer.onstage.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +22,7 @@ import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
 
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
-public class SignInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private EditText mEmailField, mPasswordField, mNameField;
     private RadioGroup mUserTypeRadioGroup;
@@ -34,7 +36,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_register);
+
 
         // do authentication using Firebase
         userAuth = UserAuthFirebaseClient.getInstance(this, this);
@@ -59,6 +62,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         forTestingOnly();
     }
 
+
     private void forTestingOnly() {
         // using Firebase
         userAuth.checkAuth();
@@ -82,7 +86,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void logIn() {
-        Log.d(Utils.LOG_IN, "LogIn");
+        Log.d(Utils.LOG_IN, "LogInActivity");
         userAuth.signIn(email, password, artisticName, userType);
     }
 
@@ -148,7 +152,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideProgressDialog();
         if (success) {
-            startActivity(new Intent(SignInActivity.this, GigsListActivity.class));
+            startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();
         } else {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();

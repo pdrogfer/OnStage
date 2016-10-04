@@ -43,6 +43,9 @@ dependencies {
     // Maps
     compile 'com.google.android.gms:play-services-maps:9.4.0'
 
+    // loopj
+    compile 'com.loopj.android:android-async-http:1.4.9'
+
 }
 
 // Firebase
