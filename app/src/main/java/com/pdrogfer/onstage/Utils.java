@@ -14,6 +14,8 @@ public class Utils {
     public static final String USER_TYPE = "USER_TYPE";
     public static final String EMAIL = "EMAIL";
     public static final String PASSWORD = "PASSWORD";
+    public static final String EMAIL_FOR_TESTING = "testuser@hotmail.com";
+    public static final String PASSWORD_FOR_TESTING = "aaaaaa";
 
 
     // Helper functions to get artisticName and userType anywhere

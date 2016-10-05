@@ -1,6 +1,7 @@
 package com.pdrogfer.onstage.firebase_client;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -8,6 +9,8 @@ import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
 
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -19,6 +22,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserAuthServerClient implements UserAuthSuperClient {
 
+    private static final String TAG = "UserAuthServerClient";
     private static UserAuthServerClient uniqueAuthServerInstance;
 
     private final OnAuthenticationCompleted authServerListener;
@@ -59,17 +63,23 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.EMAIL, email);
         requestParams.put(Utils.PASSWORD, password);
 
-        asyncHttpClient.post("http://kavy.servehttp.com/login_json.php", requestParams, new JsonHttpResponseHandler() {
+//        String baseUrl = "http://192.168.1.4/onstage/login.php";
+        String baseUrl = "http://kavy.servehttp.com/login.php";
+
+        asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 jsonResponse = response.toString();
                 onAuthSuccess(true, jsonResponse);
+                Log.i(TAG, "onSuccess: Loopj");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                onAuthFailed(false, errorResponse.toString());
+                Log.i(TAG, "onFailure: Loopj");
             }
         });
     }
@@ -79,8 +89,8 @@ public class UserAuthServerClient implements UserAuthSuperClient {
 
     }
 
-    private void onAuthFailed(String errorMessage) {
-
+    private void onAuthFailed(boolean success, String errorMessage) {
+        authServerListener.onAuthenticationCompleted(success, errorMessage);
     }
 
     private void onAuthSuccess(boolean success, String jsonResponse) {

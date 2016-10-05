@@ -17,6 +17,7 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 
 import static com.pdrogfer.onstage.ui.CreateGig.artisticName;
@@ -25,7 +26,6 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
 
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
-    private String email, password;
 
     private UserAuthSuperClient userAuth;
     Context context;
@@ -43,8 +43,18 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        context = this;
+
+        // do authentication using Server
+        userAuth = UserAuthServerClient.getInstance(this, this);
         context = this;
+
+        forTestingLoginOnly(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
+    }
+
+    private void forTestingLoginOnly(String emailForTesting, String passwordForTesting) {
+        logIn(emailForTesting, passwordForTesting);
     }
 
     @Override
@@ -55,18 +65,20 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 finish();
                 break;
             case R.id.btn_login_login:
-                email = et_email.getText().toString();
-                password = et_password.getText().toString();
-                if (!validateForm(email, password)) {
-                    return;
-                }
+//                String email = et_email.getText().toString();
+//                String password = et_password.getText().toString();
+//                if (!validateForm(email, password)) {
+//                    return;
+//                }
+//                showProgressDialog();
+//                logIn(email, password);
                 showProgressDialog();
-                logIn();
+                logIn(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
                 break;
         }
     }
 
-    private void logIn() {
+    private void logIn(String email, String password) {
         Log.d(Utils.LOG_IN, "LogInActivity");
         userAuth.signIn(email, password);
     }
