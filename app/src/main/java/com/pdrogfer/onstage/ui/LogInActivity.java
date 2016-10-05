@@ -2,12 +2,9 @@ package com.pdrogfer.onstage.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,11 +13,8 @@ import android.widget.Toast;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
-
-import static com.pdrogfer.onstage.ui.CreateGig.artisticName;
 
 public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
@@ -43,18 +37,13 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
-        context = this;
-
-        // do authentication using Server
-//        userAuth = UserAuthServerClient.getInstance(this, this);
+//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
 //        context = this;
 
-        forTestingLoginOnly(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
-    }
+        // do authentication using Server
+        userAuth = UserAuthServerClient.getInstance(this, this);
+        context = this;
 
-    private void forTestingLoginOnly(String emailForTesting, String passwordForTesting) {
-        logIn(emailForTesting, passwordForTesting);
     }
 
     @Override
@@ -72,6 +61,8 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
 //                }
 //                showProgressDialog();
 //                logIn(email, password);
+
+                // TESTING ONLY
                 showProgressDialog();
                 logIn(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
                 break;

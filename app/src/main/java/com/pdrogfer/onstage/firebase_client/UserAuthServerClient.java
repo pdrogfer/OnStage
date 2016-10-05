@@ -8,9 +8,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.URL;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -64,7 +63,7 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.PASSWORD, password);
 
 //        String baseUrl = "http://192.168.1.4/onstage/login.php";
-        String baseUrl = "http://kavy.servehttp.com/login.php";
+        String baseUrl = "http://95.19.0.176:5000/onstage/login.php";
 
         asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
             @Override
@@ -72,13 +71,27 @@ public class UserAuthServerClient implements UserAuthSuperClient {
                 super.onSuccess(statusCode, headers, response);
                 jsonResponse = response.toString();
                 onAuthSuccess(true, jsonResponse);
-                Log.i(TAG, "onSuccess: Loopj");
+                Log.i(TAG, "onSuccess: Loopj, JSONObject received");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                jsonResponse = response.toString();
+                onAuthSuccess(true, jsonResponse);
+                Log.i(TAG, "onSuccess: Loopj, JSONArray received");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 onAuthFailed(false, errorResponse.toString());
+                Log.i(TAG, "onFailure: Loopj");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
                 Log.i(TAG, "onFailure: Loopj");
             }
         });
