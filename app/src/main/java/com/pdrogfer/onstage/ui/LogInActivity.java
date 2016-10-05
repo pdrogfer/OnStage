@@ -43,12 +43,12 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
-//        context = this;
+        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+        context = this;
 
         // do authentication using Server
-        userAuth = UserAuthServerClient.getInstance(this, this);
-        context = this;
+//        userAuth = UserAuthServerClient.getInstance(this, this);
+//        context = this;
 
         forTestingLoginOnly(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
     }
