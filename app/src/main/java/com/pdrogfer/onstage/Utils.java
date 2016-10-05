@@ -12,8 +12,8 @@ public class Utils {
     public static final String LOG_IN = "RegisterActivity";
     public static final String ARTISTIC_NAME = "ARTISTIC_NAME";
     public static final String USER_TYPE = "USER_TYPE";
-    public static final String EMAIL = "EMAIL";
-    public static final String PASSWORD = "PASSWORD";
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
     public static final String EMAIL_FOR_TESTING = "testuser@hotmail.com";
     public static final String PASSWORD_FOR_TESTING = "aaaaaa";
 

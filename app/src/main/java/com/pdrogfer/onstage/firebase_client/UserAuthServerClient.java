@@ -9,6 +9,7 @@ import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -63,22 +64,20 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.PASSWORD, password);
 
 //        String baseUrl = "http://192.168.1.4/onstage/login.php";
-        String baseUrl = "http://95.19.0.176:5000/onstage/login.php";
+        String baseUrl = "http://kavy.servehttp.com/onstage/login.php";
 
         asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                jsonResponse = response.toString();
-                onAuthSuccess(true, jsonResponse);
+                onAuthSuccess(true, response);
                 Log.i(TAG, "onSuccess: Loopj, JSONObject received");
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                jsonResponse = response.toString();
-                onAuthSuccess(true, jsonResponse);
+                onAuthSuccess(true, response);
                 Log.i(TAG, "onSuccess: Loopj, JSONArray received");
             }
 
@@ -106,7 +105,24 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         authServerListener.onAuthenticationCompleted(success, errorMessage);
     }
 
-    private void onAuthSuccess(boolean success, String jsonResponse) {
-        authServerListener.onAuthenticationCompleted(success, jsonResponse);
+    private void onAuthSuccess(boolean success, JSONArray responseArray) {
+        // extract user fields from answer
+        String userName = "";
+        // etc...
+        Log.i(TAG, "onAuthSuccess: " + responseArray);
+        try {
+            JSONObject objectUser = new JSONObject(String.valueOf(responseArray.getJSONObject(0)));
+            userName = objectUser.getString("NAME");
+            Log.i(TAG, "onAuthSuccess: " + userName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        authServerListener.onAuthenticationCompleted(success, userName);
+    }
+
+    private void onAuthSuccess(boolean success, JSONObject responseObject) {
+
     }
 }
