@@ -96,6 +96,8 @@ public class GigDetailsActivity extends AppCompatActivity implements OnMapReadyC
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
                 collapsingToolbarLayout.setTitle(gig.getArtist());
+                // TODO: 05/10/2016 set image here
+                // ivCollapsingBackground.setBackground();
                 tvVenue.setText(gig.getVenue());
                 tvTime.setText(gig.getStartTime());
                 tvCity.setText(gig.getCity());

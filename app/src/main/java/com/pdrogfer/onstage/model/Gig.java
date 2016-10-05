@@ -1,5 +1,7 @@
 package com.pdrogfer.onstage.model;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by pedrogonzalezferrandez on 06/06/16.
  */
@@ -94,4 +96,5 @@ public class Gig {
     public String getCity() {
         return "address not implemented yet";
     }
+
 }
