@@ -2,6 +2,7 @@ package com.pdrogfer.onstage.firebase_client;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -63,29 +64,30 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.EMAIL, email);
         requestParams.put(Utils.PASSWORD, password);
 
-//        String baseUrl = "http://192.168.1.4/onstage/login.php";
+//        String baseUrl = "http://192.168.1.4:5000/onstage/login.php";
         String baseUrl = "http://kavy.servehttp.com/onstage/login.php";
 
         asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                onAuthSuccess(true, response);
                 Log.i(TAG, "onSuccess: Loopj, JSONObject received");
+                onAuthRequestOK(true, response);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                onAuthSuccess(true, response);
                 Log.i(TAG, "onSuccess: Loopj, JSONArray received");
+
+                onAuthRequestOK(true, response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                onAuthFailed(false, errorResponse.toString());
                 Log.i(TAG, "onFailure: Loopj");
+                onAuthFailed(false, errorResponse.toString());
             }
 
             @Override
@@ -105,24 +107,41 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         authServerListener.onAuthenticationCompleted(success, errorMessage);
     }
 
-    private void onAuthSuccess(boolean success, JSONArray responseArray) {
-        // extract user fields from answer
+    private void onAuthRequestOK(boolean success, JSONArray responseArray) {
+        if (responseArray.length() == 0) {
+            Toast.makeText(context, "No user match our database. Please register", Toast.LENGTH_LONG).show();
+            return;
+        } else if (responseArray.length() > 1) {
+            Toast.makeText(context, "Error, duplicated users. Please contact OnStage", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // extract user fields from answer (should be an array with just on JSONObject)
         String userName = "";
+        String userEmail = "";
+        String userPassword = "";
+        String userType = "";
         // etc...
-        Log.i(TAG, "onAuthSuccess: " + responseArray);
+        Log.i(TAG, "onAuthRequestOK: " + responseArray);
         try {
             JSONObject objectUser = new JSONObject(String.valueOf(responseArray.getJSONObject(0)));
-            userName = objectUser.getString("NAME");
-            Log.i(TAG, "onAuthSuccess: " + userName);
+            userName = objectUser.getString(Utils.DB_KEY_USER_NAME);
+            userEmail = objectUser.getString(Utils.DB_KEY_USER_EMAIL);
+            userPassword = objectUser.getString(Utils.DB_KEY_USER_PASSWORD);
+            userType = objectUser.getString(Utils.DB_KEY_USER_TYPE);
+            Log.i(TAG, "onAuthRequestOK: "
+                    + userName + ", "
+                    + userEmail + ", "
+                    + userPassword + ", "
+                    + userType);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
+        // TODO: 06/10/16 store user in a SQLite database, using content providers, with a field 'active' so we can know which user is logged on start
         authServerListener.onAuthenticationCompleted(success, userName);
     }
 
-    private void onAuthSuccess(boolean success, JSONObject responseObject) {
+    private void onAuthRequestOK(boolean success, JSONObject responseObject) {
 
     }
 }
