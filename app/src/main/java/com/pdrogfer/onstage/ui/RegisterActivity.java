@@ -3,10 +3,9 @@ package com.pdrogfer.onstage.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +13,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.R;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
+import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
 
@@ -29,6 +28,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private RadioButton mUserFanRadioButton, mUserMusicianRadioButton, mUserVenueRadioButton;
     private String email, password, artisticName, userType;
     private Button mLogInButton, mRegisterButton;
+    private FloatingActionButton fabProfilePicture;
 
     private UserAuthSuperClient userAuth;
     Context context;
@@ -58,8 +58,27 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mLogInButton.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
 
+        setFabRegisterActivity();
         // TODO: Remove in production, this logs a test user, to skip sign in Activity
         forTestingOnly();
+    }
+
+    private void setFabRegisterActivity() {
+        fabProfilePicture = (FloatingActionButton) findViewById(R.id.fab_photo_register);
+        if (fabProfilePicture != null) {
+            fabProfilePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogTakeOrPickImage();
+                    Toast.makeText(context, "Smile!", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+    }
+
+    private void dialogTakeOrPickImage() {
+
     }
 
 
