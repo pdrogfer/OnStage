@@ -42,16 +42,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
+    private static final String TAG = "RegisterActivity";
+
     private static final int INTENT_REQUEST_CAMERA = 1;
     private static final int INTENT_SELECT_FILE = 2;
+
     private EditText emailField, passwordField, nameField;
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
-    private String emailValue, passwordValue, artisticNameValue, userTypeValue;
     private Button logInButton, registerButton;
     private CircleImageView userThumbnailImageView;
     private FloatingActionButton fabTakePicture;
-    private Bitmap userThumbnail;
+
+    private String emailValue, passwordValue, artisticNameValue, userTypeValue;
 
     private UserAuthSuperClient userAuth;
     Context context;
@@ -144,18 +147,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            onSelectFromGalleryResult(data);
+            if (requestCode == INTENT_SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == INTENT_REQUEST_CAMERA)
+                onCaptureImageResult(data);
         } else {
-            onCaptureImageResult(data);
+            // Ssome error or cancelled action?
+            Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
         }
     }
 
     private void onSelectFromGalleryResult(Intent data) {
         if (data != null) {
             try {
-                userThumbnail = MediaStore.Images.Media.getBitmap(
+                Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
                         getApplicationContext().getContentResolver(), data.getData());
-                loadImageToThumbnail(userThumbnail);
+                loadImageToThumbnail(bitmaFromGallery);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -163,9 +170,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void onCaptureImageResult(Intent data) {
-        userThumbnail = (Bitmap) data.getExtras().get("data");
+        Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        userThumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
@@ -179,7 +186,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } catch (IOException e) {
             e.printStackTrace();
         }
-        loadImageToThumbnail(userThumbnail);
+        loadImageToThumbnail(bitmapFromCamera);
     }
 
     private void loadImageToThumbnail(Bitmap thumbnail) {
