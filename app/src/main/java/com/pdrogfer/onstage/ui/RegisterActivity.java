@@ -102,12 +102,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 @Override
                 public void onClick(View view) {
                     dialogTakeOrPickImage();
-                    Toast.makeText(context, "Smile!", Toast.LENGTH_LONG).show();
-
                 }
             });
         }
-
     }
 
     private void dialogTakeOrPickImage() {
