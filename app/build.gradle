@@ -52,6 +52,7 @@ dependencies {
     // loopj
     compile 'com.loopj.android:android-async-http:1.4.9'
 
+    compile 'com.google.android.gms:play-services-appindexing:9.4.0'
 }
 
 // Firebase
