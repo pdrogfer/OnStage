@@ -19,6 +19,9 @@ import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
@@ -28,6 +31,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private RadioButton mUserFanRadioButton, mUserMusicianRadioButton, mUserVenueRadioButton;
     private String email, password, artisticName, userType;
     private Button mLogInButton, mRegisterButton;
+    private CircleImageView userProfilePicture;
     private FloatingActionButton fabProfilePicture;
 
     private UserAuthSuperClient userAuth;
@@ -53,6 +57,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mUserVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
         mLogInButton = (Button) findViewById(R.id.button_log_in);
         mRegisterButton = (Button) findViewById(R.id.button_register);
+        userProfilePicture = (CircleImageView) findViewById(R.id.profile_image);
 
         // Click listeners
         mLogInButton.setOnClickListener(this);
@@ -60,7 +65,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         setFabRegisterActivity();
         // TODO: Remove in production, this logs a test user, to skip sign in Activity
-        forTestingOnly();
+        // forTestingOnly();
     }
 
     private void setFabRegisterActivity() {
@@ -71,6 +76,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 public void onClick(View view) {
                     dialogTakeOrPickImage();
                     Toast.makeText(context, "Smile!", Toast.LENGTH_LONG).show();
+
                 }
             });
         }
@@ -79,6 +85,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void dialogTakeOrPickImage() {
 
+
+
+        Picasso.with(context)
+                .load(R.drawable.queen)
+                .resize(96, 96)
+                .centerCrop()
+                .noFade()
+                .into(userProfilePicture);
     }
 
 

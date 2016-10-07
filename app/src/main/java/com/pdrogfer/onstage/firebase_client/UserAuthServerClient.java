@@ -63,8 +63,8 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.EMAIL, email);
         requestParams.put(Utils.PASSWORD, password);
 
-//        String baseUrl = "http://192.168.1.4/onstage/login.php";
-        String baseUrl = "http://kavy.servehttp.com/onstage/login.php";
+        String baseUrl = "http://192.168.1.4/onstage/login.php";
+//        String baseUrl = "http://kavy.servehttp.com/onstage/login.php";
 
         asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
             @Override
