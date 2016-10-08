@@ -120,14 +120,14 @@
         android:layout_marginTop="16dp">
 
         <Button
-            android:id="@+id/button_log_in"
+            android:id="@+id/btn_cancel_register"
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content"
-            android:text="@string/log_in" />
+            android:text="@string/cancel" />
 
         <Button
-            android:id="@+id/button_register"
+            android:id="@+id/btn_register_register"
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content"

@@ -27,7 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
 
@@ -50,7 +50,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private EditText emailField, passwordField, nameField;
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
-    private Button logInButton, registerButton;
+    private Button cancelButton, registerButton;
     private CircleImageView userThumbnailImageView;
     private FloatingActionButton fabTakePicture;
 
@@ -69,9 +69,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        context = this;
+
+        // do authentication using Server
+        userAuth = UserAuthServerClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -82,12 +85,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         userFanRadioButton = (RadioButton) findViewById(R.id.radioButtonFan);
         userMusicianRadioButton = (RadioButton) findViewById(R.id.radioButtonMusician);
         userVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
-        logInButton = (Button) findViewById(R.id.button_log_in);
-        registerButton = (Button) findViewById(R.id.button_register);
+        cancelButton = (Button) findViewById(R.id.btn_cancel_register);
+        registerButton = (Button) findViewById(R.id.btn_register_register);
         userThumbnailImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         // Click listeners
-        logInButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
 
         setFabRegisterActivity();
@@ -194,14 +197,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void forTestingOnly() {
-        // using Firebase
         userAuth.checkAuth();
         emailValue = "testuser@hotmail.com";
         passwordValue = "aaaaaa";
         artisticNameValue = "test user";
         userTypeValue = "MUSICIAN";
-        logIn();
-//         register();
+        register();
     }
 
     @Override
@@ -220,11 +221,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
-    private void logIn() {
-        Log.d(Utils.LOG_IN, "LogInActivity");
-        userAuth.signIn(emailValue, passwordValue, artisticNameValue, userTypeValue);
-    }
-
     private void register() {
         Log.d(Utils.LOG_IN, "Register");
         userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
@@ -235,15 +231,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         emailValue = emailField.getText().toString();
         passwordValue = passwordField.getText().toString();
         artisticNameValue = nameField.getText().toString();
-        if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
-            return;
-        }
-        showProgressDialog();
         switch (v.getId()) {
-            case R.id.button_log_in:
-                logIn();
+            case R.id.btn_cancel_register:
+                startActivity(new Intent(RegisterActivity.this, Presentation.class));
+                finish();
                 break;
-            case R.id.button_register:
+            case R.id.btn_register_register:
+                if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
+                    return;
+                }
+                showProgressDialog();
                 register();
                 break;
         }
