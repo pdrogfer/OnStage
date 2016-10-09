@@ -84,9 +84,9 @@ public class GigsListActivity extends AppCompatActivity {
 
     private void setFabGigList() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.USER_TYPE, this));
+        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.DB_KEY_USER_TYPE, this));
         // If the user is a fan, hyde the fab so it can not create gigs
-        if (Utils.getUserType(Utils.USER_TYPE, this) == String.valueOf(UserType.FAN)) {
+        if (Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN)) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);

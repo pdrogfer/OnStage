@@ -10,12 +10,17 @@ public class Utils {
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
     public static final String LOG_IN = "RegisterActivity";
-    public static final String ARTISTIC_NAME = "ARTISTIC_NAME";
-    public static final String USER_TYPE = "USER_TYPE";
-    public static final String EMAIL = "email";
-    public static final String PASSWORD = "password";
-    public static final String EMAIL_FOR_TESTING = "testuser@hotmail.com";
-    public static final String PASSWORD_FOR_TESTING = "aaaaaa";
+    public static final String DB_KEY_ARTISTIC_NAME = "name";
+    public static final String DB_KEY_EMAIL = "email";
+    public static final String DB_KEY_PASSWORD = "password";
+    public static final String DB_KEY_USER_TYPE = "user_type";
+
+    // dummy user for testing
+    public static final String TEST_EMAIL = "testuser@hotmail.com";
+    public static final String TEST_PASSWORD = "aaaaaa";
+    public static final String TEST_NAME = "testuser";
+    public static final String TEST_USER_TYPE = "MUSICIAN";
+
 
 
     // Helper functions to get artisticName and userType anywhere

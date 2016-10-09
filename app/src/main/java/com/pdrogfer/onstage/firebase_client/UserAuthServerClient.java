@@ -33,6 +33,12 @@ public class UserAuthServerClient implements UserAuthSuperClient {
 
     String jsonResponse;
 
+    // choose depending if in local network or not
+    private final String baseUrl = "http://192.168.1.4/onstage/";
+//    private final String baseUrl = "http://kavy.servehttp.com/onstage/";
+    private String urlLogin = baseUrl + "login.php";
+    private String urlRegister = baseUrl + "insert_new_user.php";
+
     private UserAuthServerClient(Context context, OnAuthenticationCompleted authServerListener) {
         this.context = context;
         this.authServerListener = authServerListener;
@@ -60,46 +66,89 @@ public class UserAuthServerClient implements UserAuthSuperClient {
 
     @Override
     public void signIn(String email, String password) {
-        requestParams.put(Utils.EMAIL, email);
-        requestParams.put(Utils.PASSWORD, password);
+        requestParams.put(Utils.DB_KEY_EMAIL, email);
+        requestParams.put(Utils.DB_KEY_PASSWORD, password);
 
-        String baseUrl = "http://192.168.1.4/onstage/login.php";
-//        String baseUrl = "http://kavy.servehttp.com/onstage/login.php";
-
-        asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
+        asyncHttpClient.get(urlLogin, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 onAuthSuccess(true, response);
-                Log.i(TAG, "onSuccess: Loopj, JSONObject received");
+                Log.i(TAG, "signIn onSuccess: Loopj, JSONObject received");
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 onAuthSuccess(true, response);
-                Log.i(TAG, "onSuccess: Loopj, JSONArray received");
+                Log.i(TAG, "signIn onSuccess: Loopj, JSONArray received");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 onAuthFailed(false, errorResponse.toString());
-                Log.i(TAG, "onFailure: Loopj");
+                Log.i(TAG, "signIn onFailure: Loopj");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Log.i(TAG, "onFailure: Loopj");
+                Log.i(TAG, "signIn onFailure: Loopj");
             }
         });
     }
 
     @Override
     public void registerUser(String email, String password, String artisticName, String userType) {
+        requestParams.put(Utils.DB_KEY_EMAIL, email);
+        requestParams.put(Utils.DB_KEY_PASSWORD, password);
+        requestParams.put(Utils.DB_KEY_ARTISTIC_NAME, artisticName);
+        requestParams.put(Utils.DB_KEY_USER_TYPE, userType);
+
+        asyncHttpClient.get(urlRegister, requestParams, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                onRegistrationSuccess(true, response);
+                Log.i(TAG, "registerUser onSuccess: Loopj, JSONObject received");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                onRegistrationSuccess(true, response);
+                Log.i(TAG, "registerUser onSuccess: Loopj, JSONArray received");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                onRegistrationFailed(false, errorResponse.toString());
+                Log.i(TAG, "registerUser onFailure: Loopj");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.i(TAG, "registerUser onFailure: Loopj - " + responseString);
+            }
+        });
+    }
+
+    private void onRegistrationSuccess(boolean success, JSONObject responseObject) {
+        Log.i(TAG, "onRegistrationSuccess: responseObject");
+    }
+
+    private void onRegistrationSuccess(boolean success, JSONArray responseArray) {
+        Log.i(TAG, "onRegistrationSuccess: responseArray");
+    }
+
+    private void onRegistrationFailed(boolean success, String errorMessage) {
+        authServerListener.onAuthenticationCompleted(success, errorMessage);
 
     }
+
 
     private void onAuthFailed(boolean success, String errorMessage) {
         authServerListener.onAuthenticationCompleted(success, errorMessage);

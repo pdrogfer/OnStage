@@ -196,47 +196,39 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         userThumbnailImageView.setImageBitmap(thumbnail);
     }
 
-    private void forTestingOnly() {
-        userAuth.checkAuth();
-        emailValue = "testuser@hotmail.com";
-        passwordValue = "aaaaaa";
-        artisticNameValue = "test user";
-        userTypeValue = "MUSICIAN";
-        register();
-    }
-
     @Override
     public void onStart() {
         super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
 // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
 
-        // Check auth on Activity start
-        //userAuth.checkAuth();
-
-        // set default userTypeValue ?
-        // userTypeValue = String.valueOf(UserType.FAN);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
-    private void register() {
-        Log.d(Utils.LOG_IN, "Register");
-        userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
-    }
-
     @Override
     public void onClick(View v) {
-        emailValue = emailField.getText().toString();
-        passwordValue = passwordField.getText().toString();
-        artisticNameValue = nameField.getText().toString();
         switch (v.getId()) {
             case R.id.btn_cancel_register:
                 startActivity(new Intent(RegisterActivity.this, Presentation.class));
                 finish();
                 break;
             case R.id.btn_register_register:
+
+                // TODO: testing ONLY, remove in production
+                emailField.setText(Utils.TEST_EMAIL);
+                passwordField.setText(Utils.TEST_PASSWORD);
+                nameField.setText(Utils.TEST_NAME);
+                if (userTypeValue == null) {
+                    // set default userTypeValue
+                    userTypeValue = String.valueOf(UserType.FAN);
+                }
+                // ------- end testing block
+
+                emailValue = emailField.getText().toString();
+                passwordValue = passwordField.getText().toString();
+                artisticNameValue = nameField.getText().toString();
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
@@ -244,6 +236,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 register();
                 break;
         }
+    }
+
+    private void register() {
+        Log.d(Utils.LOG_IN, "Register");
+        userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -280,6 +277,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
 
+    // this method works ok for both auth and reg cases
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideProgressDialog();

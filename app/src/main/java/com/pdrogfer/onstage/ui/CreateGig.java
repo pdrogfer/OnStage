@@ -76,7 +76,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.btnCreateGigCreate:
-                artisticName = Utils.getArtisticName(Utils.ARTISTIC_NAME, context);
+                artisticName = Utils.getArtisticName(Utils.DB_KEY_ARTISTIC_NAME, context);
                 venue = etVenue.getText().toString();
                 price = etPrice.getText().toString();
                 long timestamp = System.currentTimeMillis();

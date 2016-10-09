@@ -133,7 +133,7 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
         mDatabase.child("users").child(userId).setValue(user);
 
         // store artisticName and userType in SharedPreferences
-        Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
-        Utils.storeUserType(Utils.USER_TYPE, userType, context);
+        Utils.storeArtisticName(Utils.DB_KEY_ARTISTIC_NAME, artisticName, context);
+        Utils.storeUserType(Utils.DB_KEY_USER_TYPE, userType, context);
     }
 }
