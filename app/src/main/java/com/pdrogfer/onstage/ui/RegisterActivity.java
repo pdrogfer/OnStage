@@ -220,10 +220,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 emailField.setText(Utils.TEST_EMAIL);
                 passwordField.setText(Utils.TEST_PASSWORD);
                 nameField.setText(Utils.TEST_NAME);
-                if (userTypeValue == null) {
-                    // set default userTypeValue
-                    userTypeValue = String.valueOf(UserType.FAN);
-                }
+                userTypeValue = String.valueOf(UserType.MUSICIAN);
                 // ------- end testing block
 
                 emailValue = emailField.getText().toString();
