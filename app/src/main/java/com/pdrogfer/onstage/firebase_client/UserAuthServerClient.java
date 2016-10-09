@@ -167,6 +167,12 @@ public class UserAuthServerClient implements UserAuthSuperClient {
             }
 
             @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                onRegistrationFailed(false, errorResponse.toString());
+            }
+
+            @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 JSONArray userArray = new JSONArray();
@@ -178,11 +184,11 @@ public class UserAuthServerClient implements UserAuthSuperClient {
                     }
                     if (userArray.length() > 0) {
                         onRegistrationSuccess(true, userArray);
-                        return;
+                    } else {
+                        Log.i(TAG, "registerUser onFailure: Loopj statusCode " + statusCode + errorResponse.toString());
+                        onRegistrationFailed(false, "Server error");
                     }
                 }
-                Log.i(TAG, "registerUser onFailure: Loopj statusCode " + statusCode + errorResponse.toString());
-                onRegistrationFailed(false, "Server error");
             }
 
             @Override
