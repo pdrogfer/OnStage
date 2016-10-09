@@ -27,8 +27,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
-import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserRegServerClient;
 import com.pdrogfer.onstage.model.UserType;
 
 import java.io.ByteArrayOutputStream;
@@ -56,7 +56,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private String emailValue, passwordValue, artisticNameValue, userTypeValue;
 
-    private UserAuthSuperClient userAuth;
+    private UserOperationsSuperClient userRegistration;
     Context context;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -70,11 +70,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register);
 
         // do authentication using Firebase
-//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        userRegistration = UserAuthFirebaseClient.getInstance(this, this);
 //        context = this;
 
         // do authentication using Server
-        userAuth = UserAuthServerClient.getInstance(this, this);
+        userRegistration = UserRegServerClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -229,15 +229,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
-                showProgressDialog();
                 register();
                 break;
         }
     }
 
     private void register() {
+        showProgressDialog();
         Log.d(Utils.LOG_IN, "Register");
-        userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
+        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -272,7 +272,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         // userTypeValue is set to FAN by default
         return result;
     }
-
 
     // this method works ok for both auth and reg cases
     @Override

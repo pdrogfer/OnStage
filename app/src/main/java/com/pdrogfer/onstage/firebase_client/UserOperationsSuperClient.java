@@ -5,7 +5,7 @@ package com.pdrogfer.onstage.firebase_client;
  *
  */
 
-public interface UserAuthSuperClient {
+public interface UserOperationsSuperClient {
 
     void checkAuth();
 

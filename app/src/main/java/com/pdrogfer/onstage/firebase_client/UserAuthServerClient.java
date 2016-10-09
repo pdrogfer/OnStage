@@ -21,7 +21,7 @@ import cz.msebera.android.httpclient.Header;
  * This class perform authentication operations to comply with Rubric
  */
 
-public class UserAuthServerClient implements UserAuthSuperClient {
+public class UserAuthServerClient implements UserOperationsSuperClient {
 
     private static final String TAG = "UserAuthServerClient";
     private static UserAuthServerClient uniqueAuthServerInstance;
@@ -65,7 +65,7 @@ public class UserAuthServerClient implements UserAuthSuperClient {
         requestParams.put(Utils.DB_KEY_USER_EMAIL, email);
         requestParams.put(Utils.DB_KEY_USER_PASSWORD, password);
 
-        asyncHttpClient.get(baseUrl, requestParams, new JsonHttpResponseHandler() {
+        asyncHttpClient.get(urlLogin, requestParams, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -105,9 +105,11 @@ public class UserAuthServerClient implements UserAuthSuperClient {
     private void onAuthRequestOK(boolean success, JSONArray responseArray) {
         if (responseArray.length() == 0) {
             Toast.makeText(context, "No user match our database. Please register", Toast.LENGTH_LONG).show();
+            authServerListener.onAuthenticationCompleted(success, "No user match our database. Please register");
             return;
         } else if (responseArray.length() > 1) {
             Toast.makeText(context, "Error, duplicated users. Please contact OnStage", Toast.LENGTH_LONG).show();
+            authServerListener.onAuthenticationCompleted(success, "Error, duplicated users. Please contact OnStage");
             return;
         }
 
@@ -176,6 +178,8 @@ public class UserAuthServerClient implements UserAuthSuperClient {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 JSONArray userArray = new JSONArray();
+                // for some reason, server returns 500 in after successful registration
+                // Log.i(TAG, "onFailure: statusCode " + statusCode + " - " + errorResponse.toString());
                 if (statusCode == 500) {
                     try {
                         userArray = errorResponse.getJSONArray("message");
@@ -188,6 +192,8 @@ public class UserAuthServerClient implements UserAuthSuperClient {
                         Log.i(TAG, "registerUser onFailure: Loopj statusCode " + statusCode + errorResponse.toString());
                         onRegistrationFailed(false, "Server error");
                     }
+                } else if (statusCode == 400) {
+                    onRegistrationFailed(false, "Error. User already exists");
                 }
             }
 
@@ -205,7 +211,7 @@ public class UserAuthServerClient implements UserAuthSuperClient {
     }
 
     private void onRegistrationSuccess(boolean success, JSONArray responseArray) {
-        Log.i(TAG, "onRegistrationSuccess: responseArray");
+        Log.i(TAG, "onRegistrationSuccess: responseArray: " + responseArray.toString());
         authServerListener.onAuthenticationCompleted(success, "User successfully registered");
     }
 

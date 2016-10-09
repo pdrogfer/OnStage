@@ -14,14 +14,14 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
-import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
 public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
 
-    private UserAuthSuperClient userAuth;
+    private UserOperationsSuperClient userAuth;
     Context context;
 
     @Override

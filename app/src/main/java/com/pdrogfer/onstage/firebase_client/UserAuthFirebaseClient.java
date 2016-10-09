@@ -21,7 +21,7 @@ import com.pdrogfer.onstage.model.User;
  *
  * It includes a OnAuthenticationCompleted listener to update UI after tasks finished
  */
-public class UserAuthFirebaseClient implements UserAuthSuperClient {
+public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private static UserAuthFirebaseClient uniqueAuthInstance;
 
