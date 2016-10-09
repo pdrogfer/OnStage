@@ -54,17 +54,19 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 finish();
                 break;
             case R.id.btn_login_login:
-//                String email = et_email.getText().toString();
-//                String password = et_password.getText().toString();
-//                if (!validateForm(email, password)) {
-//                    return;
-//                }
-//                showProgressDialog();
-//                logIn(email, password);
 
-                // TESTING ONLY
+                // TODO: testing ONLY, remove in production
+                et_email.setText(Utils.TEST_EMAIL);
+                et_password.setText(Utils.TEST_PASSWORD);
+                // --------- end testing block
+
+                String email = et_email.getText().toString();
+                String password = et_password.getText().toString();
+                if (!validateForm(email, password)) {
+                    return;
+                }
                 showProgressDialog();
-                logIn(Utils.EMAIL_FOR_TESTING, Utils.PASSWORD_FOR_TESTING);
+                logIn(email, password);
                 break;
         }
     }
@@ -78,6 +80,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideProgressDialog();
         if (success) {
+            Toast.makeText(this, Utils.TEST_EMAIL + "Logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
         } else {

@@ -27,7 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
 import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
 import com.pdrogfer.onstage.model.UserType;
 
@@ -42,16 +42,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
+    private static final String TAG = "RegisterActivity";
+
     private static final int INTENT_REQUEST_CAMERA = 1;
     private static final int INTENT_SELECT_FILE = 2;
+
     private EditText emailField, passwordField, nameField;
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
-    private String emailValue, passwordValue, artisticNameValue, userTypeValue;
-    private Button logInButton, registerButton;
+    private Button cancelButton, registerButton;
     private CircleImageView userThumbnailImageView;
     private FloatingActionButton fabTakePicture;
-    private Bitmap userThumbnail;
+
+    private String emailValue, passwordValue, artisticNameValue, userTypeValue;
 
     private UserAuthSuperClient userAuth;
     Context context;
@@ -66,9 +69,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        context = this;
+
+        // do authentication using Server
+        userAuth = UserAuthServerClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -79,12 +85,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         userFanRadioButton = (RadioButton) findViewById(R.id.radioButtonFan);
         userMusicianRadioButton = (RadioButton) findViewById(R.id.radioButtonMusician);
         userVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
-        logInButton = (Button) findViewById(R.id.button_log_in);
-        registerButton = (Button) findViewById(R.id.button_register);
+        cancelButton = (Button) findViewById(R.id.btn_cancel_register);
+        registerButton = (Button) findViewById(R.id.btn_register_register);
         userThumbnailImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         // Click listeners
-        logInButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
 
         setFabRegisterActivity();
@@ -102,12 +108,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 @Override
                 public void onClick(View view) {
                     dialogTakeOrPickImage();
-                    Toast.makeText(context, "Smile!", Toast.LENGTH_LONG).show();
-
                 }
             });
         }
-
     }
 
     private void dialogTakeOrPickImage() {
@@ -147,18 +150,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            onSelectFromGalleryResult(data);
+            if (requestCode == INTENT_SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == INTENT_REQUEST_CAMERA)
+                onCaptureImageResult(data);
         } else {
-            onCaptureImageResult(data);
+            // Ssome error or cancelled action?
+            Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
         }
     }
 
     private void onSelectFromGalleryResult(Intent data) {
         if (data != null) {
             try {
-                userThumbnail = MediaStore.Images.Media.getBitmap(
+                Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
                         getApplicationContext().getContentResolver(), data.getData());
-                loadImageToThumbnail(userThumbnail);
+                loadImageToThumbnail(bitmaFromGallery);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -166,9 +173,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void onCaptureImageResult(Intent data) {
-        userThumbnail = (Bitmap) data.getExtras().get("data");
+        Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        userThumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
@@ -182,22 +189,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } catch (IOException e) {
             e.printStackTrace();
         }
-        loadImageToThumbnail(userThumbnail);
+        loadImageToThumbnail(bitmapFromCamera);
     }
 
     private void loadImageToThumbnail(Bitmap thumbnail) {
         userThumbnailImageView.setImageBitmap(thumbnail);
-    }
-
-    private void forTestingOnly() {
-        // using Firebase
-        userAuth.checkAuth();
-        emailValue = "testuser@hotmail.com";
-        passwordValue = "aaaaaa";
-        artisticNameValue = "test user";
-        userTypeValue = "MUSICIAN";
-        logIn();
-//         register();
     }
 
     @Override
@@ -206,43 +202,42 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
 
-        // Check auth on Activity start
-        //userAuth.checkAuth();
-
-        // set default userTypeValue ?
-        // userTypeValue = String.valueOf(UserType.FAN);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
-    private void logIn() {
-        Log.d(Utils.LOG_IN, "LogInActivity");
-        userAuth.signIn(emailValue, passwordValue, artisticNameValue, userTypeValue);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_cancel_register:
+                startActivity(new Intent(RegisterActivity.this, Presentation.class));
+                finish();
+                break;
+            case R.id.btn_register_register:
+
+                // TODO: testing ONLY, remove in production
+                emailField.setText(Utils.TEST_EMAIL);
+                passwordField.setText(Utils.TEST_PASSWORD);
+                nameField.setText(Utils.TEST_NAME);
+                userTypeValue = String.valueOf(UserType.MUSICIAN);
+                // ------- end testing block
+
+                emailValue = emailField.getText().toString();
+                passwordValue = passwordField.getText().toString();
+                artisticNameValue = nameField.getText().toString();
+                if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
+                    return;
+                }
+                showProgressDialog();
+                register();
+                break;
+        }
     }
 
     private void register() {
         Log.d(Utils.LOG_IN, "Register");
         userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
-    }
-
-    @Override
-    public void onClick(View v) {
-        emailValue = emailField.getText().toString();
-        passwordValue = passwordField.getText().toString();
-        artisticNameValue = nameField.getText().toString();
-        if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
-            return;
-        }
-        showProgressDialog();
-        switch (v.getId()) {
-            case R.id.button_log_in:
-                logIn();
-                break;
-            case R.id.button_register:
-                register();
-                break;
-        }
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -279,6 +274,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
 
+    // this method works ok for both auth and reg cases
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideProgressDialog();

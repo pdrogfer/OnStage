@@ -56,26 +56,6 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
     }
 
     @Override
-    public void signIn(String email, String password, final String artisticName, String userType) {
-
-        this.artisticName = artisticName;
-        this.userType = userType;
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Utils.LOG_IN, "LogInActivity:onComplete: " + task.isSuccessful());
-
-                        if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser());
-                        } else {
-                            onAuthFailed("LogInActivity error");
-                        }
-                    }
-                });
-    }
-
-    @Override
     public void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -133,7 +113,7 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
         mDatabase.child("users").child(userId).setValue(user);
 
         // store artisticName and userType in SharedPreferences
-        Utils.storeArtisticName(Utils.ARTISTIC_NAME, artisticName, context);
-        Utils.storeUserType(Utils.USER_TYPE, userType, context);
+        Utils.storeArtisticName(Utils.DB_KEY_USER_NAME, artisticName, context);
+        Utils.storeUserType(Utils.DB_KEY_USER_TYPE, userType, context);
     }
 }
