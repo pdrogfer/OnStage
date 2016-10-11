@@ -13,9 +13,9 @@ public class Contract {
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_USER_TYPE = "user_type";
 
-    public static final String DATABASE_NAME = "userstable.db";
+    public static final String DATABASE_NAME = "usersDb";
     public static final int DATABASE_VERSION = 1;
-    public static final String USERS_TABLE_NAME = "users";
+    public static final String USERS_TABLE_NAME = "usersTable";
 
     public static final String SCHEME = "content://";
     public static final String AUTHORITY = "com.pdrogfer.onstage.database";
