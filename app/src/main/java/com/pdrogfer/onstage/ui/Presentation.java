@@ -61,19 +61,17 @@ public class Presentation extends AppCompatActivity implements View.OnClickListe
 
     private boolean checkAuthActiveUser() {
 
-
         Uri users = UsersContentProvider.CONTENT_URI;
-        // TODO: 12/10/16 use column user_active to find if the user was logged in already
-        // instead of tempName
+        String selectUserActive = "1";
         String tempName = null;
-        Cursor cursor = getContentResolver().query(users, null, null, null, null);
+        Cursor cursor = getContentResolver().query(users, null, Contract.COLUMN_USER_ACTIVE + "=?", new String[]{selectUserActive}, null);
         if (cursor.moveToFirst()) {
             do {
                 tempName = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_NAME));
-                Toast.makeText(this, tempName, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Welcome " + tempName, Toast.LENGTH_LONG).show();
             } while (cursor.moveToNext());
         }
-        
+
         return (tempName != null);
     }
 }

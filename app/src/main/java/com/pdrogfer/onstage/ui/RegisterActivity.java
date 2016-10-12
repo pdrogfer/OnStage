@@ -59,6 +59,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private FloatingActionButton fabTakePicture;
 
     private String emailValue, passwordValue, artisticNameValue, userTypeValue;
+    private int isUserActiveValue;
     private ProgressDialog regProgressDialog;
 
     private UserOperationsSuperClient userRegistration;
@@ -230,6 +231,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 emailValue = emailField.getText().toString();
                 passwordValue = passwordField.getText().toString();
                 artisticNameValue = nameField.getText().toString();
+                isUserActiveValue = 0;
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
@@ -242,19 +244,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         showRegProgressDialog();
         Log.d(Utils.LOG_IN, "Register");
         userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
-    }
-
-    private void showRegProgressDialog() {
-        regProgressDialog = new ProgressDialog(this);
-        regProgressDialog.setCancelable(false);
-        regProgressDialog.setMessage("Please wait...");
-        regProgressDialog.show();
-    }
-
-    private void hideRegProgressDialog() {
-        if (regProgressDialog != null && regProgressDialog.isShowing()) {
-            regProgressDialog.dismiss();
-        }
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -295,7 +284,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideRegProgressDialog();
         if (success) {
-            insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue);
+            // by default, new registered user is active, so 1
+            isUserActiveValue = 1;
+            insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
             startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();
         } else {
@@ -303,12 +294,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue) {
+    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
         ContentValues values = new ContentValues();
         values.put(Contract.COLUMN_EMAIL, emailValue);
         values.put(Contract.COLUMN_PASSWORD, passwordValue);
         values.put(Contract.COLUMN_NAME, artisticNameValue);
         values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
+        values.put(Contract.COLUMN_USER_ACTIVE, isUserActive);
         Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
         Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
     }
@@ -334,6 +326,19 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
+        }
+    }
+
+    private void showRegProgressDialog() {
+        regProgressDialog = new ProgressDialog(this);
+        regProgressDialog.setCancelable(false);
+        regProgressDialog.setMessage("Please wait...");
+        regProgressDialog.show();
+    }
+
+    private void hideRegProgressDialog() {
+        if (regProgressDialog != null && regProgressDialog.isShowing()) {
+            regProgressDialog.dismiss();
         }
     }
 

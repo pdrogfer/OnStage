@@ -1,9 +1,5 @@
 package com.pdrogfer.onstage.database;
 
-/**
- * Created by pedrogonzalezferrandez on 10/10/16.
- */
-
 public class Contract {
 
     // Database table
@@ -12,6 +8,7 @@ public class Contract {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_USER_TYPE = "user_type";
+    public static final String COLUMN_USER_ACTIVE = "user_active";
 
     public static final String DATABASE_NAME = "usersDb";
     public static final int DATABASE_VERSION = 1;

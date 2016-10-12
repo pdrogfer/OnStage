@@ -6,6 +6,7 @@ import android.util.Log;
 public class UsersTable {
 
     // Database creation SQL statement
+    // column user_active stores 0 for false and 1 for true
     private static final String DATABASE_CREATE = "create table "
             + Contract.USERS_TABLE_NAME
             + "("
@@ -13,7 +14,8 @@ public class UsersTable {
             + Contract.COLUMN_NAME + " text not null, "
             + Contract.COLUMN_EMAIL + " text not null,"
             + Contract.COLUMN_PASSWORD + " text not null,"
-            + Contract.COLUMN_USER_TYPE + " text not null"
+            + Contract.COLUMN_USER_TYPE + " text not null,"
+            + Contract.COLUMN_USER_ACTIVE + " integer not null"
             + ");";
 
     public static void onCreate(SQLiteDatabase database) {
