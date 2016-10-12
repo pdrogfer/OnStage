@@ -14,10 +14,6 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-/**
- * Created by pedrogonzalezferrandez on 09/10/16.
- */
-
 public class UserRegServerClient implements UserOperationsSuperClient {
 
     private static final String TAG = "UserRegServerClient";

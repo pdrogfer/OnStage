@@ -1,6 +1,7 @@
 package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private FloatingActionButton fabTakePicture;
 
     private String emailValue, passwordValue, artisticNameValue, userTypeValue;
+    private ProgressDialog regProgressDialog;
 
     private UserOperationsSuperClient userRegistration;
     Context context;
@@ -234,9 +236,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register() {
-        showProgressDialog();
+        showRegProgressDialog();
         Log.d(Utils.LOG_IN, "Register");
         userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
+    }
+
+    private void showRegProgressDialog() {
+        regProgressDialog = new ProgressDialog(this);
+        regProgressDialog.setCancelable(false);
+        regProgressDialog.setMessage("Please wait...");
+        regProgressDialog.show();
+    }
+
+    private void hideRegProgressDialog() {
+        if (regProgressDialog != null && regProgressDialog.isShowing()) {
+            regProgressDialog.dismiss();
+        }
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -275,7 +290,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     // this method works ok for both auth and reg cases
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
-        hideProgressDialog();
+        hideRegProgressDialog();
         if (success) {
             startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();

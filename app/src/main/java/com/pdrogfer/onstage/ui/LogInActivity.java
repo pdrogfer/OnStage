@@ -1,5 +1,6 @@
 package com.pdrogfer.onstage.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
 
+    ProgressDialog authProgressDialog;
     private UserOperationsSuperClient userAuth;
     Context context;
 
@@ -65,9 +67,22 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 if (!validateForm(email, password)) {
                     return;
                 }
-                showProgressDialog();
+                showAuthProgressDialog();
                 logIn(email, password);
                 break;
+        }
+    }
+
+    private void showAuthProgressDialog() {
+        authProgressDialog = new ProgressDialog(this);
+        authProgressDialog.setCancelable(false);
+        authProgressDialog.setMessage("Please wait...");
+        authProgressDialog.show();
+    }
+
+    private void hideAuthProgressDialog() {
+        if (authProgressDialog != null && authProgressDialog.isShowing()) {
+            authProgressDialog.dismiss();
         }
     }
 
@@ -78,7 +93,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
-        hideProgressDialog();
+        hideAuthProgressDialog();
         if (success) {
             Toast.makeText(this, Utils.TEST_EMAIL + "Logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));

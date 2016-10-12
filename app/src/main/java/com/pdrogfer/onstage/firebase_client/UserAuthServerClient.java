@@ -16,8 +16,6 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by pdro on 01/10/2016.
- *
  * This class perform authentication operations to comply with Rubric
  */
 
@@ -76,7 +74,7 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.i(TAG, "onSuccess: Loopj, JSONArray received");
+                Log.i(TAG, "onSuccess: Loopj, JSONArray received: " + response.toString());
 
                 onAuthRequestOK(true, response);
                 Log.i(TAG, "signIn onSuccess: Loopj, JSONArray received");
@@ -98,7 +96,15 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
         });
     }
 
+    @Override
+    public void registerUser(String email, String password, String artisticName, String userType) {
+        // not implemented here, belongs to UserRegServerClient
+    }
+
     private void onAuthFailed(boolean success, String errorMessage) {
+        if (errorMessage == "") {
+            errorMessage = "error in registration process";
+        }
         authServerListener.onAuthenticationCompleted(success, errorMessage);
     }
 
@@ -142,83 +148,5 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
         // TODO: 09/10/16 I am getting the user's details here
         Log.i(TAG, "onAuthSuccess: responseObject: " + responseObject.toString());
         authServerListener.onAuthenticationCompleted(success, "YES!");
-    }
-
-    @Override
-    public void registerUser(String email, String password, String artisticName, String userType) {
-        requestParams.put(Utils.DB_KEY_USER_EMAIL, email);
-        requestParams.put(Utils.DB_KEY_USER_PASSWORD, password);
-        requestParams.put(Utils.DB_KEY_USER_NAME, artisticName);
-        requestParams.put(Utils.DB_KEY_USER_TYPE, userType);
-
-        asyncHttpClient.get(urlRegister, requestParams, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                onRegistrationSuccess(true, response);
-                Log.i(TAG, "registerUser onSuccess: Loopj, JSONObject received");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                if (statusCode == 200) {
-                    onRegistrationSuccess(true, response);
-                    Log.i(TAG, "registerUser onSuccess: Loopj, JSONArray received");
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                onRegistrationFailed(false, errorResponse.toString());
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                JSONArray userArray = new JSONArray();
-                // for some reason, server returns 500 in after successful registration
-                // Log.i(TAG, "onFailure: statusCode " + statusCode + " - " + errorResponse.toString());
-                if (statusCode == 500) {
-                    try {
-                        userArray = errorResponse.getJSONArray("message");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (userArray.length() > 0) {
-                        onRegistrationSuccess(true, userArray);
-                    } else {
-                        Log.i(TAG, "registerUser onFailure: Loopj statusCode " + statusCode + errorResponse.toString());
-                        onRegistrationFailed(false, "Server error");
-                    }
-                } else if (statusCode == 400) {
-                    onRegistrationFailed(false, "Error. User already exists");
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                onRegistrationFailed(false, responseString);
-                Log.i(TAG, "registerUser onFailure: Loopj - " + statusCode + responseString);
-            }
-        });
-    }
-
-    private void onRegistrationSuccess(boolean success, JSONObject responseObject) {
-        Log.i(TAG, "onRegistrationSuccess: responseObject");
-    }
-
-    private void onRegistrationSuccess(boolean success, JSONArray responseArray) {
-        Log.i(TAG, "onRegistrationSuccess: responseArray: " + responseArray.toString());
-        authServerListener.onAuthenticationCompleted(success, "User successfully registered");
-    }
-
-    private void onRegistrationFailed(boolean success, String errorMessage) {
-        if (errorMessage == "") {
-            errorMessage = "error in registration process";
-        }
-        authServerListener.onAuthenticationCompleted(success, errorMessage);
     }
 }
