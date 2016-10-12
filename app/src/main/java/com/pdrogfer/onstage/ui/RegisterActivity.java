@@ -2,6 +2,7 @@ package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.UsersContentProvider;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.firebase_client.UserRegServerClient;
@@ -292,11 +295,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onAuthenticationCompleted(Boolean success, String message) {
         hideRegProgressDialog();
         if (success) {
+            insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue);
             startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();
         } else {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue) {
+        ContentValues values = new ContentValues();
+        values.put(Contract.COLUMN_EMAIL, emailValue);
+        values.put(Contract.COLUMN_PASSWORD, passwordValue);
+        values.put(Contract.COLUMN_NAME, artisticNameValue);
+        values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
+        Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
+        Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void onRadioBtnClick(View view) {

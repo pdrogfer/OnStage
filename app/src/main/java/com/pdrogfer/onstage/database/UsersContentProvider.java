@@ -20,7 +20,7 @@ public class UsersContentProvider extends ContentProvider {
 
     private static final String TAG = "UsersContentProvider";
     private SQLiteDatabase databaseUsers;
-    static final Uri CONTENT_URI = Uri.parse(Contract.SCHEME + Contract.AUTHORITY + Contract.PATH);
+    public static final Uri CONTENT_URI = Uri.parse(Contract.SCHEME + Contract.AUTHORITY + Contract.PATH);
 
     private static HashMap<String, String> USERS_PROJECTION_MAP;
 
