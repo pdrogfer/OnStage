@@ -7,6 +7,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.ui.GigsListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +55,11 @@ public class UserRegServerClient implements UserOperationsSuperClient {
 
     @Override
     public void signIn(String email, String password) {
+        // NOT IMPLEMENTED HERE, ONLY IN UserAuthServerClient
+    }
+
+    @Override
+    public void signOut(GigsListActivity gigsListActivity) {
     }
 
     private void onAuthFailed(boolean success, String errorMessage) {

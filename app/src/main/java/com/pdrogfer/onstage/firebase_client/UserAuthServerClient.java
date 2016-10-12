@@ -1,6 +1,9 @@
 package com.pdrogfer.onstage.firebase_client;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,6 +11,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.UsersContentProvider;
+import com.pdrogfer.onstage.ui.GigsListActivity;
+import com.pdrogfer.onstage.ui.Presentation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,6 +101,22 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
                 onAuthFailed(false, "User doesn' exist. Please register");
             }
         });
+    }
+
+    @Override
+    public void signOut(GigsListActivity gigsListActivity) {
+        Uri users = UsersContentProvider.CONTENT_URI;
+        String selectUserActive = "1";
+        ContentValues values = new ContentValues();
+        values.put(Contract.COLUMN_USER_ACTIVE, 0);
+        int result = gigsListActivity.getContentResolver().update(users, values, Contract.COLUMN_USER_ACTIVE + "=?", new String[]{selectUserActive});
+        if (result > 0) {
+            Toast.makeText(gigsListActivity, "You are logged out", Toast.LENGTH_LONG).show();
+            authServerListener.onSignOut();
+        } else {
+            Toast.makeText(gigsListActivity, "Error logging out", Toast.LENGTH_LONG).show();
+        }
+        gigsListActivity.startActivity(new Intent(gigsListActivity, Presentation.class));
     }
 
     @Override

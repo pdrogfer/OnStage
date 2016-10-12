@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.User;
+import com.pdrogfer.onstage.ui.GigsListActivity;
 
 /**
  * Created by pedrogonzalezferrandez on 29/06/16.
@@ -70,6 +71,12 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void signOut(GigsListActivity gigsListActivity) {
+        mAuth.signOut();
+        authFirebaseListener.onSignOut();
     }
 
     @Override

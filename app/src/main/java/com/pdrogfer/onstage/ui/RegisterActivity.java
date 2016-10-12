@@ -231,7 +231,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 emailValue = emailField.getText().toString();
                 passwordValue = passwordField.getText().toString();
                 artisticNameValue = nameField.getText().toString();
-                isUserActiveValue = 0;
+                isUserActiveValue = 1;
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
@@ -292,6 +292,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } else {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onSignOut() {
+        // do nothing here
     }
 
     private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
