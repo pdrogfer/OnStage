@@ -94,8 +94,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         registerButton.setOnClickListener(this);
 
         setFabRegisterActivity();
-        // TODO: Remove in production, this logs a test user, to skip sign in Activity
-        // forTestingOnly();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

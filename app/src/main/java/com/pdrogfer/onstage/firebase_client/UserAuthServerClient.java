@@ -15,8 +15,6 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by pdro on 01/10/2016.
- *
  * This class perform authentication operations to comply with Rubric
  */
 
