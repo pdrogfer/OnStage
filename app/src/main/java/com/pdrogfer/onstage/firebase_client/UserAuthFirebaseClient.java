@@ -101,7 +101,7 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private void onAuthFailed(String errorMessage) {
         // return result to RegisterActivity
-        authFirebaseListener.onAuthenticationCompleted(false, errorMessage);
+        authFirebaseListener.onAuthenticationCompleted(false, null, null, null, null);
         Log.e(Utils.LOG_IN, "onComplete: " + errorMessage);
     }
 
@@ -112,7 +112,7 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
         writeNewUser(user.getUid(), artisticName, user.getEmail(), userType);
 
         // return result to RegisterActivity
-        authFirebaseListener.onAuthenticationCompleted(true, "You are logged in");
+        authFirebaseListener.onAuthenticationCompleted(true, null, null, null, null);
     }
 
     private void writeNewUser(String userId, String artisticName, String email, String userType) {

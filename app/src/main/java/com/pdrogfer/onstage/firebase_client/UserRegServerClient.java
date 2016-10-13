@@ -8,6 +8,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.ui.GigsListActivity;
+import com.pdrogfer.onstage.ui.LogInActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,8 +63,8 @@ public class UserRegServerClient implements UserOperationsSuperClient {
     public void signOut(GigsListActivity gigsListActivity) {
     }
 
-    private void onAuthFailed(boolean success, String errorMessage) {
-        regServerListener.onAuthenticationCompleted(success, errorMessage);
+    private void onAuthFailed(Boolean success, String name, String email, String password, String user_type) {
+        regServerListener.onAuthenticationCompleted(success, null, null, null, null);
     }
 
     @Override
@@ -132,18 +133,29 @@ public class UserRegServerClient implements UserOperationsSuperClient {
 
     private void onRegistrationSuccess(boolean success, JSONObject responseObject) {
         Log.i(TAG, "onRegistrationSuccess: responseObject");
-        regServerListener.onAuthenticationCompleted(success, "User successfully registered");
+        regServerListener.onAuthenticationCompleted(success, null, null, null, null);
     }
 
     private void onRegistrationSuccess(boolean success, JSONArray responseArray) {
         Log.i(TAG, "onRegistrationSuccess: responseArray: " + responseArray.toString());
-        regServerListener.onAuthenticationCompleted(success, "User successfully registered");
+        String name, email, password, user_type;
+        try {
+            name = responseArray.getString(0);
+            email = responseArray.getString(1);
+            password = responseArray.getString(2);
+            user_type = responseArray.getString(3);
+            regServerListener.onAuthenticationCompleted(success, name, email, password, user_type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void onRegistrationFailed(boolean success, String errorMessage) {
         if (errorMessage == "") {
             errorMessage = "error in registration process";
         }
-        regServerListener.onAuthenticationCompleted(success, errorMessage);
+        Log.i(TAG, "onRegistrationFailed: " + errorMessage);
+        regServerListener.onAuthenticationCompleted(success, null, null, null, null);
     }
 }

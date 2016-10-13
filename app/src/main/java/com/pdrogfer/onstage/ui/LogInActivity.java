@@ -96,22 +96,22 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String message) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideAuthProgressDialog();
         if (success) {
-            Toast.makeText(this, Utils.TEST_EMAIL + "Logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
 
-            // TODO: 12/10/16 get array of user details and put them here 
-            // insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
+            // TODO: 13/10/2016 not insert, update user in sqlite to isUserActive = 1 and all others to 0
+            updateActiveUserLocalDb(email, password, name, user_type, 1);
 
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
         } else {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
+    private void updateActiveUserLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
         ContentValues values = new ContentValues();
         values.put(Contract.COLUMN_EMAIL, emailValue);
         values.put(Contract.COLUMN_PASSWORD, passwordValue);

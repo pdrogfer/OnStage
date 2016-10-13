@@ -275,13 +275,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } else {
             nameField.setError(null);
         }
-        // userTypeValue is set to FAN by default
         return result;
     }
 
     // this method works ok for both auth and reg cases
     @Override
-    public void onAuthenticationCompleted(Boolean success, String message) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideRegProgressDialog();
         if (success) {
             // by default, new registered user is active, so 1
@@ -290,7 +289,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();
         } else {
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
         }
     }
 
