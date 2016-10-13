@@ -128,48 +128,56 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
         if (errorMessage == "") {
             errorMessage = "error in registration process";
         }
-        authServerListener.onAuthenticationCompleted(success, errorMessage);
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+        authServerListener.onAuthenticationCompleted(success, null, null, null, null);
     }
 
+    // just in case I receive an array
     private void onAuthRequestOK(boolean success, JSONArray responseArray) {
         if (responseArray.length() == 0) {
             Toast.makeText(context, "No user match our database. Please register", Toast.LENGTH_LONG).show();
-            authServerListener.onAuthenticationCompleted(success, "No user match our database. Please register");
+            authServerListener.onAuthenticationCompleted(success, null, null, null, null);
             return;
         } else if (responseArray.length() > 1) {
             Toast.makeText(context, "Error, duplicated users. Please contact OnStage", Toast.LENGTH_LONG).show();
-            authServerListener.onAuthenticationCompleted(success, "Error, duplicated users. Please contact OnStage");
+            authServerListener.onAuthenticationCompleted(success, null, null, null, null);
             return;
         }
 
         // extract user fields from answer (should be an array with just on JSONObject)
-        String userName = "";
-        String userEmail = "";
-        String userPassword = "";
-        String userType = "";
-        // etc...
         Log.i(TAG, "onAuthRequestOK: " + responseArray);
         try {
             JSONObject objectUser = new JSONObject(String.valueOf(responseArray.getJSONObject(0)));
-            userName = objectUser.getString(Utils.DB_KEY_USER_NAME);
-            userEmail = objectUser.getString(Utils.DB_KEY_USER_EMAIL);
-            userPassword = objectUser.getString(Utils.DB_KEY_USER_PASSWORD);
-            userType = objectUser.getString(Utils.DB_KEY_USER_TYPE);
+            String userName = objectUser.getString(Utils.DB_KEY_USER_NAME);
+            String userEmail = objectUser.getString(Utils.DB_KEY_USER_EMAIL);
+            String userPassword = objectUser.getString(Utils.DB_KEY_USER_PASSWORD);
+            String userType = objectUser.getString(Utils.DB_KEY_USER_TYPE);
             Log.i(TAG, "onAuthRequestOK: "
                     + userName + ", "
                     + userEmail + ", "
                     + userPassword + ", "
                     + userType);
+            authServerListener.onAuthenticationCompleted(success, userName, userEmail, userPassword, userType);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO: 06/10/16 store user in a SQLite database, using content providers, with a field 'active' so we can know which user is logged on start
-        authServerListener.onAuthenticationCompleted(success, userName);
     }
 
+    // but usually I just get a JSONObject
     private void onAuthRequestOK(boolean success, JSONObject responseObject) {
-        // TODO: 09/10/16 I am getting the user's details here
-        Log.i(TAG, "onAuthSuccess: responseObject: " + responseObject.toString());
-        authServerListener.onAuthenticationCompleted(success, "YES!");
+        //typical answer: {"message":[{"_id":"31","user_type":"MUSICIAN","password":"aaaaaa","email":"testuser@hotmail.com","name":"testuser"}],"status":true}
+        String name, email, password, user_type;
+        try {
+            JSONArray arrayDetails = responseObject.getJSONArray("message");
+            JSONObject user = arrayDetails.getJSONObject(0);
+            name = user.getString(Contract.COLUMN_NAME);
+            email = user.getString(Contract.COLUMN_EMAIL);
+            password = user.getString(Contract.COLUMN_PASSWORD);
+            user_type = user.getString(Contract.COLUMN_USER_TYPE);
+            authServerListener.onAuthenticationCompleted(success, name, email, password, user_type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "onAuthRequestOK: could not read json values " + responseObject.toString());
     }
 }

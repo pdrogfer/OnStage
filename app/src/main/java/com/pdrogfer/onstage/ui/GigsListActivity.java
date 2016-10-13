@@ -161,7 +161,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String message) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         // do nothing here
     }
 
