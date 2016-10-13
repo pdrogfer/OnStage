@@ -12,10 +12,12 @@ import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.pdrogfer.onstage.R;
+import com.pdrogfer.onstage.database.CheckAuthActiveUserTask;
 import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.OnAsyncTaskCompleted;
 import com.pdrogfer.onstage.database.UsersContentProvider;
 
-public class Presentation extends AppCompatActivity implements View.OnClickListener {
+public class Presentation extends AppCompatActivity implements View.OnClickListener, OnAsyncTaskCompleted {
 
     Button btnLogin, btnRegister;
 
@@ -32,6 +34,7 @@ public class Presentation extends AppCompatActivity implements View.OnClickListe
         btnRegister.setOnClickListener(this);
 
         Stetho.initializeWithDefaults(this);
+        // open chrome after lauching app and go to 'chrome://inspect/#devices'
     }
 
     @Override
@@ -54,13 +57,14 @@ public class Presentation extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
-        if (checkAuthActiveUser()) {
+        if (checkAuthLocal()) {
             startActivity(new Intent(Presentation.this, GigsListActivity.class));
+            finish();
         }
+//        new CheckAuthActiveUserTask(this, this).execute();
     }
 
-    private boolean checkAuthActiveUser() {
-
+    private boolean checkAuthLocal() {
         Uri users = UsersContentProvider.CONTENT_URI;
         String selectUserActive = "1";
         String tempName = null;
@@ -68,10 +72,18 @@ public class Presentation extends AppCompatActivity implements View.OnClickListe
         if (cursor.moveToFirst()) {
             do {
                 tempName = cursor.getString(cursor.getColumnIndex(Contract.COLUMN_NAME));
-                Toast.makeText(this, "Welcome " + tempName, Toast.LENGTH_LONG).show();
             } while (cursor.moveToNext());
         }
-
         return (tempName != null);
+    }
+
+    @Override
+    public void onTaskCompleted(String result) {
+
+        Boolean loggedIn = Boolean.valueOf(result);
+        if (loggedIn) {
+            startActivity(new Intent(Presentation.this, GigsListActivity.class));
+            finish();
+        }
     }
 }

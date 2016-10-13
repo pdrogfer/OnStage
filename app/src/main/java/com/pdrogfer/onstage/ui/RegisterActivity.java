@@ -2,7 +2,6 @@ package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,8 +27,8 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.database.Contract;
-import com.pdrogfer.onstage.database.UsersContentProvider;
+import com.pdrogfer.onstage.database.InsertUserToLocalDbTask;
+import com.pdrogfer.onstage.database.OnAsyncTaskCompleted;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.firebase_client.UserRegServerClient;
@@ -44,7 +43,7 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
-public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted, OnAsyncTaskCompleted {
 
     private static final String TAG = "RegisterActivity";
 
@@ -58,8 +57,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private CircleImageView userThumbnailImageView;
     private FloatingActionButton fabTakePicture;
 
-    private String emailValue, passwordValue, artisticNameValue, userTypeValue;
-    private int isUserActiveValue;
+    private String emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue;
     private ProgressDialog regProgressDialog;
 
     private UserOperationsSuperClient userRegistration;
@@ -231,7 +229,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 emailValue = emailField.getText().toString();
                 passwordValue = passwordField.getText().toString();
                 artisticNameValue = nameField.getText().toString();
-                isUserActiveValue = 1;
+                isUserActiveValue = "1";
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
@@ -284,10 +282,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         hideRegProgressDialog();
         if (success) {
             // by default, new registered user is active, so 1
-            isUserActiveValue = 1;
+            isUserActiveValue = "1";
             insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
-            startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
-            finish();
         } else {
             Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
         }
@@ -298,15 +294,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         // do nothing here
     }
 
-    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
-        ContentValues values = new ContentValues();
-        values.put(Contract.COLUMN_EMAIL, emailValue);
-        values.put(Contract.COLUMN_PASSWORD, passwordValue);
-        values.put(Contract.COLUMN_NAME, artisticNameValue);
-        values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
-        values.put(Contract.COLUMN_USER_ACTIVE, isUserActive);
-        Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
-        Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
+    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, String isUserActive) {
+
+        String[] userValues = {artisticNameValue, emailValue, passwordValue, userTypeValue, String.valueOf(isUserActive)};
+        new InsertUserToLocalDbTask(this, this).execute(userValues);
     }
 
     public void onRadioBtnClick(View view) {
@@ -370,5 +361,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    @Override
+    public void onTaskCompleted(String result) {
+        Log.i(TAG, "onTaskCompleted: user " + result + " added to SQLite db" );
+        startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
+        finish();
     }
 }

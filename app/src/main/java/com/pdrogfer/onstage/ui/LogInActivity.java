@@ -16,13 +16,16 @@ import android.widget.Toast;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.OnAsyncTaskCompleted;
+import com.pdrogfer.onstage.database.UpdateActiveUserLocalTask;
 import com.pdrogfer.onstage.database.UsersContentProvider;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
-public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
+public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted, OnAsyncTaskCompleted {
 
+    private static final String TAG = "LogInActivity";
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
 
@@ -102,24 +105,18 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
 
             // TODO: 13/10/2016 not insert, update user in sqlite to isUserActive = 1 and all others to 0
-            updateActiveUserLocalDb(email, password, name, user_type, 1);
+            updateActiveUserLocalDb(email, password, name, user_type, "1");
 
-            startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
-            finish();
+
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void updateActiveUserLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
-        ContentValues values = new ContentValues();
-        values.put(Contract.COLUMN_EMAIL, emailValue);
-        values.put(Contract.COLUMN_PASSWORD, passwordValue);
-        values.put(Contract.COLUMN_NAME, artisticNameValue);
-        values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
-        values.put(Contract.COLUMN_USER_ACTIVE, isUserActive);
-        Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
-        Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
+    private void updateActiveUserLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, String isUserActive) {
+
+        String[] userValues = {artisticNameValue, emailValue, passwordValue, userTypeValue, isUserActive};
+        new UpdateActiveUserLocalTask(this, this).execute(userValues);
     }
 
     @Override
@@ -150,5 +147,14 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
             et_password.setError(null);
         }
         return result;
+    }
+
+    @Override
+    public void onTaskCompleted(String result) {
+
+        Log.i(TAG, "onTaskCompleted: updated active user in SQLite");
+
+        startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
+        finish();
     }
 }
