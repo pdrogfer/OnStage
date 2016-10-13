@@ -6,11 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class UsersDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "userstable.db";
-    private static final int DATABASE_VERSION = 1;
-
     public UsersDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, Contract.DATABASE_NAME, null, Contract.DATABASE_VERSION);
     }
 
     @Override

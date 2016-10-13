@@ -10,9 +10,9 @@ public class Utils {
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
     public static final String LOG_IN = "RegisterActivity";
-    public static final String DB_KEY_ARTISTIC_NAME = "name";
-    public static final String DB_KEY_EMAIL = "email";
-    public static final String DB_KEY_PASSWORD = "password";
+    public static final String DB_KEY_USER_NAME = "name";
+    public static final String DB_KEY_USER_EMAIL = "email";
+    public static final String DB_KEY_USER_PASSWORD = "password";
     public static final String DB_KEY_USER_TYPE = "user_type";
 
     // dummy user for testing
@@ -20,8 +20,6 @@ public class Utils {
     public static final String TEST_PASSWORD = "aaaaaa";
     public static final String TEST_NAME = "testuser";
     public static final String TEST_USER_TYPE = "MUSICIAN";
-
-
 
     // Helper functions to get artisticName and userType anywhere
     public static void storeArtisticName(String keyName, String value, Context context) {

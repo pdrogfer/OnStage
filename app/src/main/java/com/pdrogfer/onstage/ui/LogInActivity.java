@@ -1,7 +1,10 @@
 package com.pdrogfer.onstage.ui;
 
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,16 +15,19 @@ import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.UsersContentProvider;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
-import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
 public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
 
-    private UserAuthSuperClient userAuth;
+    ProgressDialog authProgressDialog;
+    private UserOperationsSuperClient userAuth;
     Context context;
 
     @Override
@@ -65,9 +71,22 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 if (!validateForm(email, password)) {
                     return;
                 }
-                showProgressDialog();
+                showAuthProgressDialog();
                 logIn(email, password);
                 break;
+        }
+    }
+
+    private void showAuthProgressDialog() {
+        authProgressDialog = new ProgressDialog(this);
+        authProgressDialog.setCancelable(false);
+        authProgressDialog.setMessage("Please wait...");
+        authProgressDialog.show();
+    }
+
+    private void hideAuthProgressDialog() {
+        if (authProgressDialog != null) {
+            authProgressDialog.dismiss();
         }
     }
 
@@ -78,14 +97,34 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
-        hideProgressDialog();
+        hideAuthProgressDialog();
         if (success) {
             Toast.makeText(this, Utils.TEST_EMAIL + "Logged in", Toast.LENGTH_SHORT).show();
+
+            // TODO: 12/10/16 get array of user details and put them here 
+            // insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
+
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
         } else {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
+        ContentValues values = new ContentValues();
+        values.put(Contract.COLUMN_EMAIL, emailValue);
+        values.put(Contract.COLUMN_PASSWORD, passwordValue);
+        values.put(Contract.COLUMN_NAME, artisticNameValue);
+        values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
+        values.put(Contract.COLUMN_USER_ACTIVE, isUserActive);
+        Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
+        Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSignOut() {
+        // do nothing for the moment
     }
 
     private boolean validateForm(String email, String password) {

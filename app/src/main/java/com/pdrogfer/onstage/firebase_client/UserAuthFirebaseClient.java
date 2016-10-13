@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.User;
+import com.pdrogfer.onstage.ui.GigsListActivity;
 
 /**
  * Created by pedrogonzalezferrandez on 29/06/16.
@@ -21,7 +22,7 @@ import com.pdrogfer.onstage.model.User;
  *
  * It includes a OnAuthenticationCompleted listener to update UI after tasks finished
  */
-public class UserAuthFirebaseClient implements UserAuthSuperClient {
+public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private static UserAuthFirebaseClient uniqueAuthInstance;
 
@@ -73,6 +74,12 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
     }
 
     @Override
+    public void signOut(GigsListActivity gigsListActivity) {
+        mAuth.signOut();
+        authFirebaseListener.onSignOut();
+    }
+
+    @Override
     public void registerUser(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;
@@ -113,7 +120,7 @@ public class UserAuthFirebaseClient implements UserAuthSuperClient {
         mDatabase.child("users").child(userId).setValue(user);
 
         // store artisticName and userType in SharedPreferences
-        Utils.storeArtisticName(Utils.DB_KEY_ARTISTIC_NAME, artisticName, context);
+        Utils.storeArtisticName(Utils.DB_KEY_USER_NAME, artisticName, context);
         Utils.storeUserType(Utils.DB_KEY_USER_TYPE, userType, context);
     }
 }

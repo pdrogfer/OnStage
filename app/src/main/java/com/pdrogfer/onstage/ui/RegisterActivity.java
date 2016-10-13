@@ -1,6 +1,8 @@
 package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,9 +28,11 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.database.Contract;
+import com.pdrogfer.onstage.database.UsersContentProvider;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
-import com.pdrogfer.onstage.firebase_client.UserAuthSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
+import com.pdrogfer.onstage.firebase_client.UserRegServerClient;
 import com.pdrogfer.onstage.model.UserType;
 
 import java.io.ByteArrayOutputStream;
@@ -55,8 +59,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private FloatingActionButton fabTakePicture;
 
     private String emailValue, passwordValue, artisticNameValue, userTypeValue;
+    private int isUserActiveValue;
+    private ProgressDialog regProgressDialog;
 
-    private UserAuthSuperClient userAuth;
+    private UserOperationsSuperClient userRegistration;
     Context context;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -70,11 +76,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register);
 
         // do authentication using Firebase
-//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+//        userRegistration = UserAuthFirebaseClient.getInstance(this, this);
 //        context = this;
 
         // do authentication using Server
-        userAuth = UserAuthServerClient.getInstance(this, this);
+        userRegistration = UserRegServerClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -94,6 +100,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         registerButton.setOnClickListener(this);
 
         setFabRegisterActivity();
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -224,18 +231,19 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 emailValue = emailField.getText().toString();
                 passwordValue = passwordField.getText().toString();
                 artisticNameValue = nameField.getText().toString();
+                isUserActiveValue = 1;
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
-                showProgressDialog();
                 register();
                 break;
         }
     }
 
     private void register() {
+        showRegProgressDialog();
         Log.d(Utils.LOG_IN, "Register");
-        userAuth.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
+        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userType) {
@@ -271,17 +279,35 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         return result;
     }
 
-
     // this method works ok for both auth and reg cases
     @Override
     public void onAuthenticationCompleted(Boolean success, String message) {
-        hideProgressDialog();
+        hideRegProgressDialog();
         if (success) {
+            // by default, new registered user is active, so 1
+            isUserActiveValue = 1;
+            insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
             startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
             finish();
         } else {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onSignOut() {
+        // do nothing here
+    }
+
+    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, int isUserActive) {
+        ContentValues values = new ContentValues();
+        values.put(Contract.COLUMN_EMAIL, emailValue);
+        values.put(Contract.COLUMN_PASSWORD, passwordValue);
+        values.put(Contract.COLUMN_NAME, artisticNameValue);
+        values.put(Contract.COLUMN_USER_TYPE, userTypeValue);
+        values.put(Contract.COLUMN_USER_ACTIVE, isUserActive);
+        Uri uri = getContentResolver().insert(UsersContentProvider.CONTENT_URI, values);
+        Toast.makeText(this, uri.toString(), Toast.LENGTH_LONG).show();
     }
 
     public void onRadioBtnClick(View view) {
@@ -305,6 +331,19 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
+        }
+    }
+
+    private void showRegProgressDialog() {
+        regProgressDialog = new ProgressDialog(this);
+        regProgressDialog.setCancelable(false);
+        regProgressDialog.setMessage("Please wait...");
+        regProgressDialog.show();
+    }
+
+    private void hideRegProgressDialog() {
+        if (regProgressDialog != null && regProgressDialog.isShowing()) {
+            regProgressDialog.dismiss();
         }
     }
 

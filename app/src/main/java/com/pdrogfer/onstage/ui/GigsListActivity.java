@@ -17,19 +17,22 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
+import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
+import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
 import com.pdrogfer.onstage.model.UserType;
 
-public class GigsListActivity extends AppCompatActivity {
+public class GigsListActivity extends AppCompatActivity implements OnAuthenticationCompleted{
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
     final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
+    private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
     @Override
@@ -42,6 +45,10 @@ public class GigsListActivity extends AppCompatActivity {
         setBannerAdView();
         setRecyclerView();
         setFabGigList();
+
+        // TODO: 12/10/16 change this to UserAuthServerClient before submit
+//        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
+        userOperationsSuperClient = UserAuthServerClient.getInstance(this, this);
     }
 
     private void setBannerAdView() {
@@ -130,8 +137,7 @@ public class GigsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(this, Presentation.class));
+                userOperationsSuperClient.signOut(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -152,5 +158,16 @@ public class GigsListActivity extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.cleanup();
         }
+    }
+
+    @Override
+    public void onAuthenticationCompleted(Boolean success, String message) {
+        // do nothing here
+    }
+
+    @Override
+    public void onSignOut() {
+        Toast.makeText(this, "callback received", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, Presentation.class));
     }
 }
