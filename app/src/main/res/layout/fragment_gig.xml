@@ -1,10 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pdrogfer.onstage.ui.GigFragment">
 
-    <include layout="@layout/content_gig_details" />
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.pdrogfer.onstage.ui.GigDetailsActivity"
+        tools:showIn="@layout/activity_gig_details">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_details_venueandtime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_details_venue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textSize="32dp"
+                    android:ellipsize="end"
+                    android:text="Venue Name"/>
+                <TextView
+                    android:id="@+id/tv_details_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textSize="24dp"
+                    android:text="Time"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_details_cityanddate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_details_city"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textSize="32dp"
+                    android:ellipsize="end"
+                    android:text="City Name"/>
+                <TextView
+                    android:id="@+id/tv_details_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textSize="24dp"
+                    android:text="Date"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_details_description"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia"/>
+
+            <fragment
+                android:id="@+id/fragmentMap"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                tools:context=".MainActivity"
+                android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

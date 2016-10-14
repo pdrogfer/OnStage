@@ -31,6 +31,8 @@ import static com.pdrogfer.onstage.ui.CreateGig.tvTime;
  */
 public class GigFragment extends Fragment {
 
+    private final String TAG = "GigFragment";
+
     private DatabaseReference gigItem;
     private ValueEventListener valueEventListenerBackup;
     private Activity activity;
@@ -46,10 +48,7 @@ public class GigFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         activity = this.getActivity();
-        tvVenue = (TextView) activity.findViewById(R.id.tv_details_venue);
-        tvTime = (TextView) activity.findViewById(R.id.tv_details_time);
-        tvCity = (TextView) activity.findViewById(R.id.tv_details_city);
-        tvDate = (TextView) activity.findViewById(R.id.tv_details_date);
+
 
         if (getArguments().containsKey(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY)) {
             // all this according FirebaseSamples - database
@@ -58,11 +57,6 @@ public class GigFragment extends Fragment {
                     .child(Utils.FIREBASE_GIGS).child(getArguments().getString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY));
             // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
         } else {
-        }
-
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
-            appBarLayout.setTitle("Details");
         }
     }
 
@@ -76,6 +70,11 @@ public class GigFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        tvVenue = (TextView) getView().findViewById(R.id.tv_details_venue);
+        tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
+        tvCity = (TextView) getView().findViewById(R.id.tv_details_city);
+        tvDate = (TextView) getView().findViewById(R.id.tv_details_date);
 
         ValueEventListener gigListener = new ValueEventListener() {
             @Override
