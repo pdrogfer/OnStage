@@ -35,6 +35,8 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
+    private boolean usingMasterDetailFlow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +48,19 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         setRecyclerView();
         setFabGigList();
 
-        // TODO: 12/10/16 change this to UserAuthServerClient before submit
+        // this selects Firebase or Server (with ContentProvider) for user authentication
 //        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
         userOperationsSuperClient = UserAuthServerClient.getInstance(this, this);
+
+        if (findViewById(R.id.gig_detail_container) != null) {
+            usingMasterDetailFlow = true;
+        }
     }
 
     private void setBannerAdView() {
         bannerAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest
                 .Builder()
-                // TODO: 07/07/2016 REMOVE 'addTestDevice' IN PRODUCTION
-                .addTestDevice("7C67DD5800874F3698615ADD51366D95")
                 .build();
         bannerAdView.loadAd(adRequest);
     }
@@ -78,10 +82,21 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
                     @Override
                     public void onClick(View v) {
                         Log.i(Utils.TAG, "onItemClickTitle: position " + position);
-                        // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
-                        Intent intentDetails = new Intent(getApplicationContext(), GigDetailsActivity.class);
-                        intentDetails.putExtra(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
-                        startActivity(intentDetails);
+
+                        if (usingMasterDetailFlow) {
+                            Bundle arguments = new Bundle();
+                            arguments.putString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
+                            GigFragment gigFragment = new GigFragment();
+                            gigFragment.setArguments(arguments);
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.gig_detail_container, gigFragment)
+                                    .commit();
+                        } else {
+                            // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
+                            Intent intentDetails = new Intent(getApplicationContext(), GigDetailsActivity.class);
+                            intentDetails.putExtra(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
+                            startActivity(intentDetails);
+                        }
                     }
                 });
             }
