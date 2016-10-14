@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
+import com.squareup.picasso.Picasso;
 
 import static com.pdrogfer.onstage.ui.CreateGig.tvDate;
 import static com.pdrogfer.onstage.ui.CreateGig.tvTime;
@@ -38,6 +39,7 @@ public class GigFragment extends Fragment {
     private Activity activity;
 
     private TextView tvVenue, tvTime, tvCity, tvDate;
+    private ImageView ivBanner;
 
     public GigFragment() {
         // Required empty public constructor
@@ -75,6 +77,7 @@ public class GigFragment extends Fragment {
         tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
         tvCity = (TextView) getView().findViewById(R.id.tv_details_city);
         tvDate = (TextView) getView().findViewById(R.id.tv_details_date);
+        ivBanner = (ImageView) getView().findViewById(R.id.ivBigImageTablet);
 
         ValueEventListener gigListener = new ValueEventListener() {
             @Override
@@ -89,6 +92,7 @@ public class GigFragment extends Fragment {
                 tvCity.setText(gig.getCity());
                 tvDate.setText(gig.getDate());
                 // TODO: 22/09/2016 add image field
+//                Picasso.with(getActivity()) etc
                 // TODO: 22/09/2016 add description field
 
             }
