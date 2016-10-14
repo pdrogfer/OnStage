@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +34,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     Button btnTime, btnDate, btnCreateGig;
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
+    ImageView ivGig;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
     protected static String artisticName, venue, price;
@@ -57,11 +60,16 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
         etPrice = (EditText) findViewById(R.id.etCreateGigPrice);
+        ivGig = (ImageView) findViewById(R.id.ivGigCreate);
 
         // Click listeners
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
+
+        Picasso.with(this)
+                .load(R.drawable.gig_placeholder)
+                .into(ivGig);
     }
 
     @Override
