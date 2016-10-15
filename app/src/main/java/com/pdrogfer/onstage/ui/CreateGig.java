@@ -50,6 +50,8 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
     ImageView ivGig;
+    File imageFile;
+    Uri imageUri;
     private FloatingActionButton fabTakeImageGig;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
@@ -138,16 +140,16 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Utils.INTENT_SELECT_FILE)
-                onSelectFromGalleryResult(data);
+                imageUri = onSelectFromGalleryResult(data);
             else if (requestCode == Utils.INTENT_REQUEST_CAMERA)
-                onCaptureImageResult(data);
+                imageUri = onCaptureImageResult(data);
         } else {
             // Ssome error or cancelled action?
             Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
         }
     }
 
-    private void onSelectFromGalleryResult(Intent data) {
+    private Uri onSelectFromGalleryResult(Intent data) {
         if (data != null) {
             try {
                 Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
@@ -157,26 +159,30 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 e.printStackTrace();
             }
         }
+        return data.getData();
     }
 
-    private void onCaptureImageResult(Intent data) {
+    private Uri onCaptureImageResult(Intent data) {
         Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
+        imageFile = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
         try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
+            imageFile.createNewFile();
+            fo = new FileOutputStream(imageFile);
             fo.write(bytes.toByteArray());
             fo.close();
+            loadImageFromCamera(imageFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        loadImageFromCamera(destination);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmapFromCamera, "Title", null);
+        return Uri.parse(path);
+
     }
 
     private void loadImageFromCamera(File imageFile) {
@@ -200,10 +206,14 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.btnCreateGigCreate:
+                // TODO: 15/10/2016 validate input
+                // TODO: 15/10/2016 upload image to Firebase from uri and store destination in database gigs
                 artisticName = Utils.getArtisticName(Utils.DB_KEY_USER_NAME, context);
                 venue = etVenue.getText().toString();
                 price = etPrice.getText().toString();
                 long timestamp = System.currentTimeMillis();
+
+                uploadImageToFirebase();
                 databaseClient.addGig(timestamp,
                         artisticName,
                         venue,
@@ -211,6 +221,12 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                         gHour + "h " + gMinute + "min",
                         price);
         }
+    }
+
+    private void uploadImageToFirebase() {
+        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
+        Uri file = Uri.fromFile(new File("path/to/folderName/file.jpg"));
+        UploadTask uploadTask = storageRef.putFile(file);
     }
 
     @Override
