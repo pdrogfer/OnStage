@@ -89,8 +89,6 @@ public class GigFragment extends Fragment {
                 tvTime.setText(gig.getStartTime());
                 tvCity.setText(gig.getCity());
                 tvDate.setText(gig.getDate());
-                // TODO: 22/09/2016 add image field
-                Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").into(ivBanner);
                 // TODO: 22/09/2016 add description field
 
             }

@@ -49,10 +49,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     Button btnTime, btnDate, btnCreateGig;
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
-    ImageView ivGig;
-    File imageFile;
-    Uri imageUri;
-    private FloatingActionButton fabTakeImageGig;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
     protected static String artisticName, venue, price;
@@ -78,122 +74,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
         etPrice = (EditText) findViewById(R.id.etCreateGigPrice);
-        ivGig = (ImageView) findViewById(R.id.ivGigCreate);
 
         // Click listeners
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
-
-        Picasso.with(this)
-                .load(R.drawable.gig_placeholder)
-                .into(ivGig);
-
-        setFabGigPicture();
     }
 
-    private void setFabGigPicture() {
-        fabTakeImageGig = (FloatingActionButton) findViewById(R.id.fab_photo_create_gig);
-        fabTakeImageGig.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogTakeOrPickImage();
-            }
-        });
-    }
-
-    private void dialogTakeOrPickImage() {
-
-        final CharSequence[] options = {"Take Photo", "Choose from Library",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreateGig.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")) {
-                    cameraIntent();
-                } else if (options[item].equals("Choose from Library")) {
-                    galleryIntent();
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, Utils.INTENT_REQUEST_CAMERA);
-    }
-
-    private void galleryIntent() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select File"), Utils.INTENT_SELECT_FILE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Utils.INTENT_SELECT_FILE)
-                imageUri = onSelectFromGalleryResult(data);
-            else if (requestCode == Utils.INTENT_REQUEST_CAMERA)
-                imageUri = onCaptureImageResult(data);
-        } else {
-            // Ssome error or cancelled action?
-            Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
-        }
-    }
-
-    private Uri onSelectFromGalleryResult(Intent data) {
-        if (data != null) {
-            try {
-                Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
-                        getApplicationContext().getContentResolver(), data.getData());
-                loadImageFromGallery(bitmaFromGallery);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return data.getData();
-    }
-
-    private Uri onCaptureImageResult(Intent data) {
-        Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        imageFile = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            imageFile.createNewFile();
-            fo = new FileOutputStream(imageFile);
-            fo.write(bytes.toByteArray());
-            fo.close();
-            loadImageFromCamera(imageFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmapFromCamera, "Title", null);
-        return Uri.parse(path);
-
-    }
-
-    private void loadImageFromCamera(File imageFile) {
-        Picasso.with(this)
-                .load(imageFile)
-                .into(ivGig);
-    }
-
-    private void loadImageFromGallery(Bitmap bitmap) {
-        ivGig.setImageBitmap(bitmap);
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -207,13 +94,11 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.btnCreateGigCreate:
                 // TODO: 15/10/2016 validate input
-                // TODO: 15/10/2016 upload image to Firebase from uri and store destination in database gigs
                 artisticName = Utils.getArtisticName(Utils.DB_KEY_USER_NAME, context);
                 venue = etVenue.getText().toString();
                 price = etPrice.getText().toString();
                 long timestamp = System.currentTimeMillis();
 
-                uploadImageToFirebase();
                 databaseClient.addGig(timestamp,
                         artisticName,
                         venue,
@@ -223,11 +108,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    private void uploadImageToFirebase() {
-        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
-        Uri file = Uri.fromFile(new File("path/to/folderName/file.jpg"));
-        UploadTask uploadTask = storageRef.putFile(file);
-    }
 
     @Override
     public void onDbRequestCompleted(Gig gig) {

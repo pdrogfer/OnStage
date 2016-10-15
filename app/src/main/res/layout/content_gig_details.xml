@@ -71,13 +71,6 @@
             android:layout_height="180dp"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia"/>
 
-        <fragment
-            android:id="@+id/fragmentMap"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            tools:context=".MainActivity"
-            android:name="com.google.android.gms.maps.SupportMapFragment"/>
     </LinearLayout>
-
 
 </android.support.v4.widget.NestedScrollView>

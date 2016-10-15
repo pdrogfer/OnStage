@@ -22,17 +22,6 @@
             app:titleEnabled="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!-- acting weird !!! -->
-            <ImageView
-                android:id="@+id/ivBigImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/queen"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:layout_collapseMode="parallax"/>
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

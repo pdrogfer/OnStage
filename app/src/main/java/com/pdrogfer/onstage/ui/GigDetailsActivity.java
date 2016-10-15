@@ -27,17 +27,13 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
 
-public class GigDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class GigDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_GIG_DETAILS_KEY = "gig_details_key";
     private String gigIntentKey;
 
     private DatabaseReference gigReference;
     private ValueEventListener valueEventListenerBackup;
-
-    SupportMapFragment mapFragment;
-    GoogleMap googleMap;
-    boolean isMapReady;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView ivCollapsingBackground;
@@ -50,8 +46,6 @@ public class GigDetailsActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_gig_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        initMapView();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -78,7 +72,6 @@ public class GigDetailsActivity extends AppCompatActivity implements OnMapReadyC
         // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        ivCollapsingBackground = (ImageView) findViewById(R.id.ivBigImage);
         tvVenue = (TextView) findViewById(R.id.tv_details_venue);
         tvTime = (TextView) findViewById(R.id.tv_details_time);
         tvCity = (TextView) findViewById(R.id.tv_details_city);
@@ -127,29 +120,5 @@ public class GigDetailsActivity extends AppCompatActivity implements OnMapReadyC
         if (valueEventListenerBackup != null) {
             gigReference.removeEventListener(valueEventListenerBackup);
         }
-    }
-
-    private void initMapView() {
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMap);
-        mapFragment.getMapAsync(this);
-        isMapReady = false;
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        isMapReady = true;
-        // TODO: 19/09/2016 get location from gig
-        double latitude = 38.3;
-        double longitude = -0.4;
-        String locationName = "this is the place";
-        moveMapToGigLocation(latitude, longitude, locationName);
-    }
-
-    private void moveMapToGigLocation(double latitude, double longitude, String locationName) {
-        // move map to location
-        LatLng location = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(location).title(locationName));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
 }

@@ -130,21 +130,6 @@
             android:hint="Set Event Price"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivGigCreate"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerCrop" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_photo_create_gig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_a_photo"
-        android:layout_gravity="end"/>
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
