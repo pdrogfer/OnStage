@@ -137,7 +137,7 @@
         android:scaleType="centerCrop" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_photo_register"
+        android:id="@+id/fab_photo_create_gig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
@@ -146,7 +146,6 @@
 
 
     <LinearLayout
-        android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp">

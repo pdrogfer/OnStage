@@ -21,6 +21,10 @@ public class Utils {
     public static final String TEST_NAME = "testuser";
     public static final String TEST_USER_TYPE = "MUSICIAN";
 
+    // camera intents
+    public static final int INTENT_REQUEST_CAMERA = 1;
+    public static final int INTENT_SELECT_FILE = 2;
+
     // Helper functions to get artisticName and userType anywhere
     public static void storeArtisticName(String keyName, String value, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

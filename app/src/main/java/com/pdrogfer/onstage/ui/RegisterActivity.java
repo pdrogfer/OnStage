@@ -47,9 +47,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private static final String TAG = "RegisterActivity";
 
-    private static final int INTENT_REQUEST_CAMERA = 1;
-    private static final int INTENT_SELECT_FILE = 2;
-
     private EditText emailField, passwordField, nameField;
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
@@ -139,23 +136,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, INTENT_REQUEST_CAMERA);
+        startActivityForResult(intent, Utils.INTENT_REQUEST_CAMERA);
     }
 
     private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select File"), INTENT_SELECT_FILE);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), Utils.INTENT_SELECT_FILE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == INTENT_SELECT_FILE)
+            if (requestCode == Utils.INTENT_SELECT_FILE)
                 onSelectFromGalleryResult(data);
-            else if (requestCode == INTENT_REQUEST_CAMERA)
+            else if (requestCode == Utils.INTENT_REQUEST_CAMERA)
                 onCaptureImageResult(data);
         } else {
             // Ssome error or cancelled action?

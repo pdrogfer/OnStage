@@ -1,14 +1,23 @@
 package com.pdrogfer.onstage.ui;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,16 +34,23 @@ import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
 
+    private static final String TAG = "CreateGig";
     Button btnTime, btnDate, btnCreateGig;
     protected static TextView tvDate, tvTime;
     protected static EditText etVenue, etPrice;
     ImageView ivGig;
+    private FloatingActionButton fabTakeImageGig;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
     protected static String artisticName, venue, price;
@@ -70,8 +86,108 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         Picasso.with(this)
                 .load(R.drawable.gig_placeholder)
                 .into(ivGig);
+
+        setFabGigPicture();
     }
 
+    private void setFabGigPicture() {
+        fabTakeImageGig = (FloatingActionButton) findViewById(R.id.fab_photo_create_gig);
+        fabTakeImageGig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogTakeOrPickImage();
+            }
+        });
+    }
+
+    private void dialogTakeOrPickImage() {
+
+        final CharSequence[] options = {"Take Photo", "Choose from Library",
+                "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateGig.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take Photo")) {
+                    cameraIntent();
+                } else if (options[item].equals("Choose from Library")) {
+                    galleryIntent();
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, Utils.INTENT_REQUEST_CAMERA);
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), Utils.INTENT_SELECT_FILE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == Utils.INTENT_SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == Utils.INTENT_REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        } else {
+            // Ssome error or cancelled action?
+            Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
+        }
+    }
+
+    private void onSelectFromGalleryResult(Intent data) {
+        if (data != null) {
+            try {
+                Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
+                        getApplicationContext().getContentResolver(), data.getData());
+                loadImageFromGallery(bitmaFromGallery);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        loadImageFromCamera(destination);
+    }
+
+    private void loadImageFromCamera(File imageFile) {
+        Picasso.with(this)
+                .load(imageFile)
+                .into(ivGig);
+    }
+
+    private void loadImageFromGallery(Bitmap bitmap) {
+        ivGig.setImageBitmap(bitmap);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
