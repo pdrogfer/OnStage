@@ -12,12 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,8 +30,7 @@ public class GigDetailsActivity extends AppCompatActivity {
     private ValueEventListener valueEventListenerBackup;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private ImageView ivCollapsingBackground;
-    private TextView tvVenue, tvTime, tvCity, tvDate;
+    private TextView tvVenue, tvTime, tvCity, tvDate, tvDescription;
 
 
     @Override
@@ -76,6 +69,7 @@ public class GigDetailsActivity extends AppCompatActivity {
         tvTime = (TextView) findViewById(R.id.tv_details_time);
         tvCity = (TextView) findViewById(R.id.tv_details_city);
         tvDate = (TextView) findViewById(R.id.tv_details_date);
+        tvDescription = (TextView) findViewById(R.id.tv_details_description);
 
     }
 
@@ -89,15 +83,11 @@ public class GigDetailsActivity extends AppCompatActivity {
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
                 collapsingToolbarLayout.setTitle(gig.getArtist());
-                // TODO: 05/10/2016 set image here
-                // ivCollapsingBackground.setBackground();
                 tvVenue.setText(gig.getVenue());
                 tvTime.setText(gig.getStartTime());
                 tvCity.setText(gig.getCity());
                 tvDate.setText(gig.getDate());
-                // TODO: 22/09/2016 add image field
-                // TODO: 22/09/2016 add description field 
-
+                tvDescription.setText(gig.getDescription());
             }
 
             @Override

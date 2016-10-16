@@ -11,15 +11,13 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.model.Gig;
 
 /**
- * Created by pedrogonzalezferrandez on 26/06/16.
+ * This is shown in items in Gig List Activity
  */
 public class GigViewHolder extends RecyclerView.ViewHolder {
 
     RelativeLayout relativeLayout; // used only to capture click events
     ImageView ivIconArtist;
-    TextView tvArtist;
-    TextView tvVenue;
-    TextView tvDate;
+    TextView tvArtist, tvVenue, tvDate;
 
     public GigViewHolder(View view) {
         super(view);

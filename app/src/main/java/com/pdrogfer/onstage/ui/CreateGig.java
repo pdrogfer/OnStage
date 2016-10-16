@@ -1,44 +1,28 @@
 package com.pdrogfer.onstage.ui;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
-import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
-import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,11 +31,11 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
 
     private static final String TAG = "CreateGig";
     Button btnTime, btnDate, btnCreateGig;
-    protected static TextView tvDate, tvTime;
-    protected static EditText etVenue, etPrice;
+    protected static TextView tvArtisticName, tvDate, tvTime;
+    protected static EditText etName, etVenue, etFee, etDescription;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
-    protected static String artisticName, venue, price;
+    protected static String artisticName, venue, price, description, timeString, dateString;
 
     private DatabaseFirebaseClient databaseClient;
     Context context;
@@ -70,10 +54,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnTime = (Button) findViewById(R.id.btnCreateGigTime);
         btnDate = (Button) findViewById(R.id.btnCreateGigDate);
         btnCreateGig = (Button) findViewById(R.id.btnCreateGigCreate);
+        tvArtisticName = (TextView) findViewById(R.id.tvCreateGigArtisticName);
         tvDate = (TextView) findViewById(R.id.tvCreateGigDate);
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
+        etName = (EditText) findViewById(R.id.etCreateGigName);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
-        etPrice = (EditText) findViewById(R.id.etCreateGigPrice);
+        etFee = (EditText) findViewById(R.id.etCreateGigPrice);
+        etDescription = (EditText) findViewById(R.id.etCreateGigDescription);
 
         // Click listeners
         btnTime.setOnClickListener(this);
@@ -94,18 +81,54 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.btnCreateGigCreate:
                 // TODO: 15/10/2016 validate input
-                artisticName = Utils.getArtisticName(Utils.DB_KEY_USER_NAME, context);
+                artisticName = etName.getText().toString();
                 venue = etVenue.getText().toString();
-                price = etPrice.getText().toString();
+                price = etFee.getText().toString();
+                description = etDescription.getText().toString();
+                if (!validateInputGig(artisticName, venue, price, description)) {
+                    Toast.makeText(this, "Please fill all the details", Toast.LENGTH_LONG).show();
+                    break;
+                }
                 long timestamp = System.currentTimeMillis();
 
+                // TODO: 16/10/2016 format date and time apropriately
                 databaseClient.addGig(timestamp,
                         artisticName,
                         venue,
-                        gYear + "year " + gMonth + " " + gDay,
-                        gHour + "h " + gMinute + "min",
-                        price);
+                        dateString,
+                        timeString,
+                        price,
+                        description);
         }
+    }
+
+    private boolean validateInputGig(String artisticName, String venue, String fee, String description) {
+        boolean validation = true;
+        if (TextUtils.isEmpty(artisticName)) {
+            etName.setError(getString(R.string.field_required_warning));
+            validation = false;
+        } else {
+            etName.setError(null);
+        }
+        if (TextUtils.isEmpty(venue)) {
+            etVenue.setError(getString(R.string.field_required_warning));
+            validation = false;
+        } else {
+            etVenue.setError(null);
+        }
+        if (TextUtils.isEmpty(fee)) {
+            etFee.setError(getString(R.string.field_required_warning));
+            validation = false;
+        } else {
+            etFee.setError(null);
+        }
+        if (TextUtils.isEmpty(description)) {
+            etDescription.setError(getString(R.string.field_required_warning));
+            validation = false;
+        } else {
+            etDescription.setError(null);
+        }
+        return validation;
     }
 
 
@@ -135,7 +158,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            String timeString;
             if (minute < 10) {
                 timeString = hourOfDay + ":0" + minute;
             } else {
@@ -165,7 +187,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            tvDate.setText(year + " " + month + " " + day);
             gYear = year;
             gMonth = month;
             gDay = day;
@@ -173,7 +194,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, day);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
-            String dateString = simpleDateFormat.format(calendar.getTime());
+            dateString = simpleDateFormat.format(calendar.getTime());
             tvDate.setText(dateString);
         }
     }

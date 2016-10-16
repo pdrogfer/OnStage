@@ -13,19 +13,21 @@ public class Gig {
     private String date;
     private String startTime;
     private String price;
+    private String description;
     private String address;
 
     public Gig() {
         // Default constructor required for calls to DataSnapshot.getValue(Gig.class)
     }
 
-    public Gig(long timestamp, String artistName, String venue, String date, String startTime, String price) {
+    public Gig(long timestamp, String artistName, String venue, String date, String startTime, String price, String description) {
         this.gigID = timestamp;
         this.artist = artistName;
         this.venue = venue;
         this.date = date;
         this.startTime = startTime;
         this.price = price;
+        this.description = description;
     }
 
     public String getArtist() {
@@ -76,20 +78,30 @@ public class Gig {
         this.venue = venue;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
-        return "Gig {" +
-                "artist='" + artist + '\'' +
-                ", gigID=" + gigID +
+        return "Gig{" +
+                "gigID=" + gigID +
+                ", artist='" + artist + '\'' +
                 ", venue='" + venue + '\'' +
                 ", date='" + date + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", price='" + price + '\'' +
+                ", description='" + description + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 
     public String getCity() {
-        return "address not implemented yet";
+        return "---";
     }
 
 }

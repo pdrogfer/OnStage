@@ -42,14 +42,16 @@ public class DatabaseFirebaseClient {
                         String venue,
                         String date,
                         String startTime,
-                        String price ) {
+                        String price,
+                        String description) {
 
         tempGig = new Gig(timestamp,
                 artisticName,
                 venue,
                 date,
                 startTime,
-                price);
+                price,
+                description);
         mGigsRef.child(String.valueOf(timestamp)).setValue(tempGig);
         // notify back the UI of operation completed
         databaseListener.onDbRequestCompleted(tempGig);

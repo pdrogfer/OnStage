@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="24dp"
+                android:textSize="18dp"
                 android:text="Time"/>
         </LinearLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="24dp"
+                android:textSize="18dp"
                 android:text="Date"/>
         </LinearLayout>
 
@@ -69,8 +69,7 @@
             android:id="@+id/tv_details_description"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia"/>
-
+            android:text="event description"/>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
