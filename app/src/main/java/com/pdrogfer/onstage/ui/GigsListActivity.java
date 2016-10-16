@@ -154,6 +154,8 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
             case R.id.action_logout:
                 userOperationsSuperClient.signOut(this);
                 return true;
+            case R.id.action_profile:
+                startActivity(new Intent(this, ActivityProfile.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

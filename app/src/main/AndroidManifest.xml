@@ -17,8 +17,8 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -27,7 +27,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ui.Presentation"
             android:label="@string/title_activity_presentation"
@@ -40,23 +39,18 @@
         </activity>
         <activity
             android:name=".ui.RegisterActivity"
-            android:parentActivityName=".ui.Presentation">
-        </activity>
-
-        <activity android:name=".ui.LogInActivity"
-            android:parentActivityName=".ui.Presentation">
-        </activity>
-
+            android:parentActivityName=".ui.Presentation"></activity>
+        <activity
+            android:name=".ui.LogInActivity"
+            android:parentActivityName=".ui.Presentation"></activity>
         <activity
             android:name=".ui.CreateGig"
             android:parentActivityName=".ui.GigsListActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.GigsListActivity"
             android:label="@string/title_activity_gigs_list"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.GigDetailsActivity"
             android:parentActivityName=".ui.GigsListActivity"
@@ -65,20 +59,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
         </activity>
+        <activity android:name=".ui.ActivityProfile"
+            android:parentActivityName=".ui.GigsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
+        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBR9OFUSYfGpHwwFH3_IZ1Yvt1ryPNpUVM" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:value="AIzaSyBR9OFUSYfGpHwwFH3_IZ1Yvt1ryPNpUVM" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <provider
-            android:authorities="com.pdrogfer.onstage.database"
-            android:name=".database.UsersContentProvider"/>
-
-        
+            android:name=".database.UsersContentProvider"
+            android:authorities="com.pdrogfer.onstage.database" />
     </application>
 
 </manifest>
