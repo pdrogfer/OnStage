@@ -39,10 +39,10 @@
         </activity>
         <activity
             android:name=".ui.RegisterActivity"
-            android:parentActivityName=".ui.Presentation"></activity>
+            android:parentActivityName=".ui.Presentation" />
         <activity
             android:name=".ui.LogInActivity"
-            android:parentActivityName=".ui.Presentation"></activity>
+            android:parentActivityName=".ui.Presentation" />
         <activity
             android:name=".ui.CreateGig"
             android:parentActivityName=".ui.GigsListActivity"
@@ -59,7 +59,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
         </activity>
-        <activity android:name=".ui.ActivityProfile"
+        <activity
+            android:name=".ui.ActivityProfile"
             android:parentActivityName=".ui.GigsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -80,6 +81,20 @@
         <provider
             android:name=".database.UsersContentProvider"
             android:authorities="com.pdrogfer.onstage.database" />
+
+        <receiver android:name=".ui.GigsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gigs_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".ui.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
