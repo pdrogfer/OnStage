@@ -51,8 +51,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
     private Button cancelButton, registerButton;
-    private CircleImageView userThumbnailImageView;
-    private FloatingActionButton fabTakePicture;
 
     private String emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue;
     private ProgressDialog regProgressDialog;
@@ -88,114 +86,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         userVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
         cancelButton = (Button) findViewById(R.id.btn_cancel_register);
         registerButton = (Button) findViewById(R.id.btn_register_register);
-        userThumbnailImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         // Click listeners
         cancelButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
 
-        setFabRegisterActivity();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
-    private void setFabRegisterActivity() {
-        fabTakePicture = (FloatingActionButton) findViewById(R.id.fab_photo_register);
-        if (fabTakePicture != null) {
-            fabTakePicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogTakeOrPickImage();
-                }
-            });
-        }
-    }
-
-    private void dialogTakeOrPickImage() {
-
-        final CharSequence[] options = {"Take Photo", "Choose from Library",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")) {
-                    cameraIntent();
-                } else if (options[item].equals("Choose from Library")) {
-                    galleryIntent();
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, Utils.INTENT_REQUEST_CAMERA);
-    }
-
-    private void galleryIntent() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
-        startActivityForResult(Intent.createChooser(intent, "Select File"), Utils.INTENT_SELECT_FILE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Utils.INTENT_SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == Utils.INTENT_REQUEST_CAMERA)
-                onCaptureImageResult(data);
-        } else {
-            // Ssome error or cancelled action?
-            Log.i(TAG, "onActivityResult: ResultCode " + resultCode);
-        }
-    }
-
-    private void onSelectFromGalleryResult(Intent data) {
-        if (data != null) {
-            try {
-                Bitmap bitmaFromGallery = MediaStore.Images.Media.getBitmap(
-                        getApplicationContext().getContentResolver(), data.getData());
-                loadImageToThumbnail(bitmaFromGallery);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void onCaptureImageResult(Intent data) {
-        Bitmap bitmapFromCamera = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmapFromCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        loadImageToThumbnail(bitmapFromCamera);
-    }
-
-    private void loadImageToThumbnail(Bitmap thumbnail) {
-        userThumbnailImageView.setImageBitmap(thumbnail);
-    }
-
+    
     @Override
     public void onStart() {
         super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.

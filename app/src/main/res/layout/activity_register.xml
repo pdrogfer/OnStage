@@ -93,26 +93,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_gravity="center"
-        app:civ_border_width="1dp"
-        android:src="@drawable/ic_microphone_variant"
-        app:civ_border_color="#FF000000"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_photo_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_a_photo" />
-
-
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"

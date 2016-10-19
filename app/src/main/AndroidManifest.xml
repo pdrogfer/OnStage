@@ -60,7 +60,7 @@
                 android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
         </activity>
         <activity
-            android:name=".ui.ActivityProfile"
+            android:name=".ui.ActivityUser"
             android:parentActivityName=".ui.GigsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

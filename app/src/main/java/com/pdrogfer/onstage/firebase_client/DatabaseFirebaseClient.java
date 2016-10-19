@@ -56,4 +56,12 @@ public class DatabaseFirebaseClient {
         // notify back the UI of operation completed
         databaseListener.onDbRequestCompleted(tempGig);
     }
+
+    public DatabaseReference getGigsRef() {
+        return mGigsRef;
+    }
+
+    public void setGigsRef(DatabaseReference mGigsRef) {
+        this.mGigsRef = mGigsRef;
+    }
 }
