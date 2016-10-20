@@ -95,7 +95,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-    
+
     @Override
     public void onStart() {
         super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.

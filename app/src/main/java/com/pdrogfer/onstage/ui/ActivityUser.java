@@ -32,6 +32,7 @@ public class ActivityUser extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(0, null, this);
 
+        // TODO: 20/10/2016 Use a custom layout to display User fields
         lvUserProfiles = (ListView) findViewById(R.id.lv_user_list);
         simpleCursorAdapter = new SimpleCursorAdapter(
                 this,
