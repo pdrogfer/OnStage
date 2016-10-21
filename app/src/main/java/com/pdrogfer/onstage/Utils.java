@@ -1,10 +1,10 @@
 package com.pdrogfer.onstage;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import com.pdrogfer.onstage.model.Gig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class Utils {
     public static final int INTENT_REQUEST_CAMERA = 1;
     public static final int INTENT_SELECT_FILE = 2;
 
-    public static List<String> widgetData = new ArrayList<>();
+    public static List<Gig> widgetData = new ArrayList<>();
 
     // Helper functions to get artisticName and userType anywhere
     public static void storeArtisticName(String keyName, String value, Context context) {
@@ -57,11 +57,11 @@ public class Utils {
         return prefs.getString(keyUserType, null);
     }
 
-    public static void updateWidgetData(String artist) {
+    public static void updateWidgetData(Gig gig) {
         // limit this to the 10 most recent events
         if (widgetData.size() > 10) {
             widgetData.remove(0);
         }
-        widgetData.add(artist);
+        widgetData.add(gig);
     }
 }

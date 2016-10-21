@@ -193,7 +193,8 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
 
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, day);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
+            // not including year, seems redundant
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM");
             dateString = simpleDateFormat.format(calendar.getTime());
             tvDate.setText(dateString);
         }

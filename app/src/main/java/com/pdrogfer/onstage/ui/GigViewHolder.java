@@ -41,7 +41,7 @@ public class GigViewHolder extends RecyclerView.ViewHolder {
         relativeLayout.setOnClickListener(clickListener);
 
         // Widgets doesn't work with Firebase, so this
-        Utils.updateWidgetData(gig.getArtist());
+        Utils.updateWidgetData(gig);
     }
 
 }
