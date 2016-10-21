@@ -28,7 +28,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:contentDescription="TODO"
+            android:contentDescription="Gig style image"
             android:src="@drawable/ic_account_circle_black_24dp" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_list_item_icon_artist"
-            android:text="Artist Name"
+            android:text="@string/artist_name"
             android:textSize="18sp" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_alignParentBottom="true"
             android:ellipsize="marquee"
             android:maxLines="1"
-            android:text="Venue"
+            android:text="@string/venue"
             android:textSize="16sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_alignParentRight="true"
             android:ellipsize="marquee"
             android:maxLines="1"
-            android:text="Date"
+            android:text="@string/date"
             android:textSize="16sp" />
     </RelativeLayout>
 

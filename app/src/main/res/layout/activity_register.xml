@@ -60,7 +60,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I am a fan"
+            android:text="@string/i_am_a_fan"
             android:id="@+id/radioButtonFan"
             android:layout_gravity="left"
             android:onClick="onRadioBtnClick"/>
@@ -68,7 +68,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I am a musician / band"
+            android:text="@string/i_am_a_musician_band"
             android:id="@+id/radioButtonMusician"
             android:layout_gravity="left"
             android:onClick="onRadioBtnClick"/>
@@ -76,7 +76,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I have a Venue"
+            android:text="@string/i_have_a_venue"
             android:id="@+id/radioButtonVenue"
             android:layout_gravity="left"
             android:onClick="onRadioBtnClick"/>
@@ -88,10 +88,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_name"
         android:inputType="textPersonName"
-        android:ems="14"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:ems="14" />
 
     <LinearLayout
         android:id="@+id/layout_buttons"

@@ -109,4 +109,25 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="create_a_new_gig">Create a New Gig</string>
+    <string name="name">Name</string>
+    <string name="band_s_name">Band\'s Name</string>
+    <string name="date">Date</string>
+    <string name="click_button_to_set_date">Click Button to set Date</string>
+    <string name="time">Time</string>
+    <string name="click_button_to_set_time">Click Button to set Time</string>
+    <string name="venue">Venue</string>
+    <string name="where_is_the_event">Where is the event?</string>
+    <string name="fee">Fee</string>
+    <string name="set_event_price">Set Event Price</string>
+    <string name="event_description">Event description</string>
+    <string name="create">Create</string>
+    <string name="venue_name">Venue Name</string>
+    <string name="city_name">City Name</string>
+    <string name="i_am_a_fan">I am a fan</string>
+    <string name="i_am_a_musician_band">I am a musician / band</string>
+    <string name="i_have_a_venue">I have a Venue</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="email">Email</string>
+    <string name="user_type">User Type</string>
 </resources>

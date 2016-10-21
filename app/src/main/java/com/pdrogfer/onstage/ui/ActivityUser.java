@@ -21,9 +21,8 @@ public class ActivityUser extends AppCompatActivity implements LoaderManager.Loa
     ListView lvUserProfiles;
     SimpleCursorAdapter simpleCursorAdapter;
 
-    public String[] mFromColumns = {Contract.COLUMN_NAME};
-    public int[] mToFields = {android.R.id.text1};
-
+    public String[] mFromColumns = {Contract.COLUMN_NAME, Contract.COLUMN_EMAIL, Contract.COLUMN_USER_TYPE};
+    public int[] mToFields = {R.id.tv_user_name, R.id.tv_user_email, R.id.tv_user_usertype};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +31,10 @@ public class ActivityUser extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(0, null, this);
 
-        // TODO: 20/10/2016 Use a custom layout to display User fields
         lvUserProfiles = (ListView) findViewById(R.id.lv_user_list);
         simpleCursorAdapter = new SimpleCursorAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.user_list_item,
                 null,
                 mFromColumns,
                 mToFields,

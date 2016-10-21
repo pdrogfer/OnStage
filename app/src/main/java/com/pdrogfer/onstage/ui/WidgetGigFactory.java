@@ -58,14 +58,6 @@ public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, 
                 + " - " + dataCollection.get(position).getDate());
         view.setTextColor(android.R.id.text1, Color.BLACK);
 
-        final Intent fillInIntent = new Intent();
-        fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
-        final Bundle bundle = new Bundle();
-        bundle.putString(WidgetProvider.EXTRA_STRING,
-                mCollections.get(position));
-        fillInIntent.putExtras(bundle);
-        mView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
-
         return view;
     }
 
