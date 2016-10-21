@@ -82,7 +82,7 @@
             android:name=".database.UsersContentProvider"
             android:authorities="com.pdrogfer.onstage.database" />
 
-        <receiver android:name=".ui.GigsWidget">
+        <receiver android:name=".ui.GigsWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
