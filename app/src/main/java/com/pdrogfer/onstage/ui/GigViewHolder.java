@@ -1,6 +1,7 @@
 package com.pdrogfer.onstage.ui;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -8,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pdrogfer.onstage.R;
+import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
 
 /**
@@ -15,6 +17,7 @@ import com.pdrogfer.onstage.model.Gig;
  */
 public class GigViewHolder extends RecyclerView.ViewHolder {
 
+    private static final String TAG = "GigViewHolder";
     RelativeLayout relativeLayout; // used only to capture click events
     ImageView ivIconArtist;
     TextView tvArtist, tvVenue, tvDate;
@@ -36,6 +39,9 @@ public class GigViewHolder extends RecyclerView.ViewHolder {
         // setting up the click listener to the relative layout we capture clicks
         // it the whole card surface
         relativeLayout.setOnClickListener(clickListener);
+
+        // Widgets doesn't work with Firebase, so this
+        Utils.updateWidgetData(gig.getArtist());
     }
 
 }

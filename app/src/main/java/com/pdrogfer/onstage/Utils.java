@@ -1,8 +1,13 @@
 package com.pdrogfer.onstage;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
     public static final String FIREBASE_GIGS = "gigs";
@@ -24,6 +29,8 @@ public class Utils {
     // camera intents
     public static final int INTENT_REQUEST_CAMERA = 1;
     public static final int INTENT_SELECT_FILE = 2;
+
+    public static List<String> widgetData = new ArrayList<>();
 
     // Helper functions to get artisticName and userType anywhere
     public static void storeArtisticName(String keyName, String value, Context context) {
@@ -48,5 +55,13 @@ public class Utils {
     public static String getUserType(String keyUserType, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(keyUserType, null);
+    }
+
+    public static void updateWidgetData(String artist) {
+        // limit this to the 10 most recent events
+        if (widgetData.size() > 10) {
+            widgetData.remove(0);
+        }
+        widgetData.add(artist);
     }
 }
