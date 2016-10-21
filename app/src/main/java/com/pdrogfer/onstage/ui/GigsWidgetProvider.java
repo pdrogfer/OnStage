@@ -14,7 +14,7 @@ import com.pdrogfer.onstage.R;
 /**
  * Implementation of App Widget functionality.
  */
-public class GigsWidget extends AppWidgetProvider {
+public class GigsWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {

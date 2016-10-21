@@ -3,6 +3,7 @@ package com.pdrogfer.onstage.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.TextView;
@@ -16,14 +17,14 @@ import com.pdrogfer.onstage.model.Gig;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WidgetGigProvider implements RemoteViewsService.RemoteViewsFactory, OnDbRequestCompleted {
+public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, OnDbRequestCompleted {
 
-    private static final String TAG = "WidgetGigProvider";
+    private static final String TAG = "WidgetGigFactory";
 
     List<Gig> dataCollection = new ArrayList<>();
     Context context;
 
-    public WidgetGigProvider(Context context, Intent intent) {
+    public WidgetGigFactory(Context context, Intent intent) {
         this.context = context;
     }
 
@@ -56,6 +57,14 @@ public class WidgetGigProvider implements RemoteViewsService.RemoteViewsFactory,
         view.setTextViewText(android.R.id.text1, dataCollection.get(position).getArtist()
                 + " - " + dataCollection.get(position).getDate());
         view.setTextColor(android.R.id.text1, Color.BLACK);
+
+        final Intent fillInIntent = new Intent();
+        fillInIntent.setAction(WidgetProvider.ACTION_TOAST);
+        final Bundle bundle = new Bundle();
+        bundle.putString(WidgetProvider.EXTRA_STRING,
+                mCollections.get(position));
+        fillInIntent.putExtras(bundle);
+        mView.setOnClickFillInIntent(android.R.id.text1, fillInIntent);
 
         return view;
     }
@@ -91,6 +100,6 @@ public class WidgetGigProvider implements RemoteViewsService.RemoteViewsFactory,
 
     @Override
     public void onDbRequestCompleted(Gig gig) {
-        
+
     }
 }
