@@ -218,6 +218,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
+            default:
+                userTypeValue = String.valueOf(UserType.FAN);
         }
     }
 
