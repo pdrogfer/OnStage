@@ -116,11 +116,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.btn_register_register:
 
-                // TODO: testing ONLY, remove in production
-                emailField.setText(Utils.TEST_EMAIL);
-                passwordField.setText(Utils.TEST_PASSWORD);
-                nameField.setText(Utils.TEST_NAME);
-                userTypeValue = String.valueOf(UserType.MUSICIAN);
+                // for testing ONLY, remove in production
+//                emailField.setText(Utils.TEST_EMAIL);
+//                passwordField.setText(Utils.TEST_PASSWORD);
+//                nameField.setText(Utils.TEST_NAME);
+//                userTypeValue = String.valueOf(UserType.MUSICIAN);
                 // ------- end testing block
 
                 emailValue = emailField.getText().toString();

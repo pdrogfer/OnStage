@@ -23,10 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_giglist_footer"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            ads:adUnitId="@string/banner_giglist_footer"/>
 
         <!-- Recycler View used in Gigs List Activity -->
         <android.support.v7.widget.RecyclerView
@@ -43,6 +40,5 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2" />
-
 
 </LinearLayout>

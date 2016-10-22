@@ -80,7 +80,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 break;
             case R.id.btnCreateGigCreate:
-                // TODO: 15/10/2016 validate input
                 artisticName = etName.getText().toString();
                 venue = etVenue.getText().toString();
                 price = etFee.getText().toString();
@@ -91,7 +90,6 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 }
                 long timestamp = System.currentTimeMillis();
 
-                // TODO: 16/10/2016 format date and time apropriately
                 databaseClient.addGig(timestamp,
                         artisticName,
                         venue,

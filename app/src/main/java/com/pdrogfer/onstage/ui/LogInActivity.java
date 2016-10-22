@@ -64,9 +64,9 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.btn_login_login:
 
-                // TODO: testing ONLY, remove in production
-                et_email.setText(Utils.TEST_EMAIL);
-                et_password.setText(Utils.TEST_PASSWORD);
+                // for testing ONLY, remove in production
+//                et_email.setText(Utils.TEST_EMAIL);
+//                et_password.setText(Utils.TEST_PASSWORD);
                 // --------- end testing block
 
                 String email = et_email.getText().toString();
@@ -103,11 +103,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         hideAuthProgressDialog();
         if (success) {
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
-
-            // TODO: 13/10/2016 not insert, update user in sqlite to isUserActive = 1 and all others to 0
             updateActiveUserLocalDb(email, password, name, user_type, "1");
-
-
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
