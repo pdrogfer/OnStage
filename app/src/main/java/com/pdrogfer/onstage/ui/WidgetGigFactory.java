@@ -1,14 +1,20 @@
 package com.pdrogfer.onstage.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
@@ -36,6 +42,14 @@ public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, 
     @Override
     public void onDataSetChanged() {
         initData();
+    }
+
+    private void initData() {
+
+        dataCollection.clear();
+        for (int i = 0; i < Utils.widgetData.size(); i++) {
+            dataCollection.add(Utils.widgetData.get(i));
+        }
     }
 
     @Override
@@ -81,14 +95,6 @@ public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, 
         return true;
     }
 
-
-    private void initData() {
-
-        dataCollection.clear();
-        for (int i = 0; i < Utils.widgetData.size(); i++) {
-                dataCollection.add(Utils.widgetData.get(i));
-        }
-    }
 
     @Override
     public void onDbRequestCompleted(Gig gig) {

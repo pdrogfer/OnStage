@@ -92,7 +92,6 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
                                     .replace(R.id.gig_detail_container, gigFragment)
                                     .commit();
                         } else {
-                            // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
                             Intent intentDetails = new Intent(getApplicationContext(), GigDetailsActivity.class);
                             intentDetails.putExtra(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
                             startActivity(intentDetails);

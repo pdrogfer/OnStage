@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#bbDEDFDE"
+        android:background="@android:color/white"
         android:orientation="vertical">
         <LinearLayout
             android:id="@+id/widget_layout_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#aaDEDFDE"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
                 android:layout_gravity="center_vertical"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorTextPrimary"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
                 android:paddingStart="@dimen/widget_header_padding"

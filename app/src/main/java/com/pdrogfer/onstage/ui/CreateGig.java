@@ -30,7 +30,7 @@ import java.util.Date;
 public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
 
     private static final String TAG = "CreateGig";
-    Button btnTime, btnDate, btnCreateGig;
+    Button btnTime, btnDate, btnCreateGig, btnCancel;
     protected static TextView tvArtisticName, tvDate, tvTime;
     protected static EditText etName, etVenue, etFee, etDescription;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
@@ -54,6 +54,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnTime = (Button) findViewById(R.id.btnCreateGigTime);
         btnDate = (Button) findViewById(R.id.btnCreateGigDate);
         btnCreateGig = (Button) findViewById(R.id.btnCreateGigCreate);
+        btnCancel = (Button) findViewById(R.id.btnCancelGigCreate);
         tvArtisticName = (TextView) findViewById(R.id.tvCreateGigArtisticName);
         tvDate = (TextView) findViewById(R.id.tvCreateGigDate);
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
@@ -66,6 +67,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnTime.setOnClickListener(this);
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
     }
 
     @Override
@@ -97,6 +99,9 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                         timeString,
                         price,
                         description);
+                break;
+            case R.id.btnCancelGigCreate:
+                startActivity(new Intent(this, GigsListActivity.class));
         }
     }
 
