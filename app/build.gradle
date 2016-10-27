@@ -2,9 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        // Configuration to sign app with a release key for testing.
         myrelease {
+            // when in Windows
             storeFile file('keystore\\key.jks')
+            // when in osx or linux
+            //storeFile file('../keystore/key.jks')
             keyAlias 'pdrogfer'
             keyPassword "onstage"
             storePassword "onstage"
@@ -61,9 +63,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
 
     // Stetho
-    compile 'com.facebook.stetho:stetho:1.4.1'
-
-    compile 'com.google.android.gms:play-services-appindexing:9.4.0'
+    testCompile 'com.facebook.stetho:stetho:1.4.1'
 }
 
 // Firebase

@@ -16,8 +16,6 @@ import com.pdrogfer.onstage.model.User;
 import com.pdrogfer.onstage.ui.GigsListActivity;
 
 /**
- * Created by pedrogonzalezferrandez on 29/06/16.
- *
  * This singleton class should hold a unique FirebaseAuth instance. to be called through the app
  *
  * It includes a OnAuthenticationCompleted listener to update UI after tasks finished
@@ -117,7 +115,7 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private void writeNewUser(String userId, String artisticName, String email, String userType) {
         User user = new User(artisticName, email, userType);
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child(Utils.FIREBASE_USERS).child(userId).setValue(user);
 
         // store artisticName and userType in SharedPreferences
         Utils.storeArtisticName(Utils.DB_KEY_USER_NAME, artisticName, context);

@@ -31,7 +31,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
+    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
     private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
@@ -104,7 +104,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     private void setFabGigList() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
         Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.DB_KEY_USER_TYPE, this));
         // If the user is a fan, hyde the fab so it can not create gigs
         if (Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN)) {
@@ -131,7 +131,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
             if (resultCode == Utils.NEW_GIG_RESULT_OK) {
                 Gig tempGig = new Gig();
                 reference.push().setValue(tempGig);
-                Toast.makeText(this, "Gig created", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.confirmation_gig_created, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -183,7 +183,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public void onSignOut() {
-        Toast.makeText(this, "callback received", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, Presentation.class));
     }
 }

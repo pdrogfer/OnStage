@@ -21,10 +21,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.database.InsertUserToLocalDbTask;
@@ -57,11 +53,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private UserOperationsSuperClient userRegistration;
     Context context;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,20 +82,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         cancelButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     public void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+        super.onStart();
     }
 
     @Override
@@ -158,7 +140,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
 
         if (TextUtils.getTrimmedLength(password) < 6) {
-            passwordField.setError("Too short, at least 6 characters");
+            passwordField.setError(getString(R.string.warning_pwd_too_short));
             result = false;
         } else {
             passwordField.setError(null);
@@ -182,7 +164,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             isUserActiveValue = "1";
             insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
         } else {
-            Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.warning_registration_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -226,7 +208,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void showRegProgressDialog() {
         regProgressDialog = new ProgressDialog(this);
         regProgressDialog.setCancelable(false);
-        regProgressDialog.setMessage("Please wait...");
+        regProgressDialog.setMessage(getString(R.string.dialog_wait));
         regProgressDialog.show();
     }
 
@@ -236,30 +218,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Register Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     @Override

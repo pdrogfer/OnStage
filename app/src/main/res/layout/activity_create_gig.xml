@@ -65,8 +65,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/date"
-                style="@style/button_color" />
+                style="@style/button_color"
+                android:contentDescription="@string/btn_select_date"
+                android:text="@string/date" />
 
             <TextView
                 android:id="@+id/tvCreateGigDate"
@@ -92,8 +93,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/time"
-                style="@style/button_color"/>
+                style="@style/button_color"
+                android:contentDescription="@string/btn_select_time"
+                android:text="@string/time" />
 
             <TextView
                 android:id="@+id/tvCreateGigTime"
@@ -184,8 +186,10 @@
                 android:layout_weight=".5"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="@string/cancel"
-                style="@style/button_color"/>
+                android:layout_marginRight="8dp"
+                style="@style/button_color"
+                android:contentDescription="@string/btn_cancel"
+                android:text="@string/btn_cancel" />
 
             <Button
                 android:id="@+id/btnCreateGigCreate"
@@ -193,9 +197,10 @@
                 android:layout_weight=".5"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="@string/create"
-                style="@style/button_color"/>
-
+                android:layout_marginLeft="8dp"
+                style="@style/button_color"
+                android:contentDescription="@string/btn_create_gig"
+                android:text="@string/create" />
         </LinearLayout>
 
     </LinearLayout>
