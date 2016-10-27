@@ -36,14 +36,16 @@
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content"
-            android:text="@string/log_in" />
+            android:contentDescription="@string/btn_log_in"
+            android:text="@string/btn_log_in" />
 
         <Button
             android:id="@+id/button_register"
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content"
-            android:text="@string/register" />
+            android:contentDescription="@string/btn_register"
+            android:text="@string/btn_register" />
 
     </LinearLayout>
 </LinearLayout>

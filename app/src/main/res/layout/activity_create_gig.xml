@@ -65,6 +65,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/btn_select_date"
                 android:text="@string/date" />
 
             <TextView
@@ -91,6 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/btn_select_time"
                 android:text="@string/time" />
 
             <TextView
@@ -181,6 +183,7 @@
                 android:layout_width="0dp"
                 android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/btn_cancel"
                 android:text="@string/cancel" />
 
             <Button
@@ -188,6 +191,7 @@
                 android:layout_width="0dp"
                 android:layout_weight=".5"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/btn_create_gig"
                 android:text="@string/create" />
 
         </LinearLayout>

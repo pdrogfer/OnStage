@@ -34,13 +34,14 @@
             <include layout="@layout/content_main" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
+                android:id="@+id/fab_new_gig"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
                 android:layout_marginLeft="@dimen/fab_margin_tablet"
                 android:layout_marginBottom="@dimen/fab_margin"
-                android:src="@drawable/ic_add_white_48px" />
+                android:src="@drawable/ic_add_white_48px"
+                android:contentDescription="@string/fab_create_gig"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

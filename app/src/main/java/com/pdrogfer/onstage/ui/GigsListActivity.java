@@ -105,7 +105,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     private void setFabGigList() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
         Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.DB_KEY_USER_TYPE, this));
         // If the user is a fan, hyde the fab so it can not create gigs
         if (Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN)) {
