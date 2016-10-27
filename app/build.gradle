@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.pdrogfer.onstage"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
