@@ -44,6 +44,7 @@ public class GigDetailsActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // TODO: 27/10/2016 replace this when implementing SHARE action
                     Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -54,14 +55,12 @@ public class GigDetailsActivity extends AppCompatActivity {
         // Get gig key from intent
         gigIntentKey = getIntent().getStringExtra(EXTRA_GIG_DETAILS_KEY);
         if (gigIntentKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+            throw new IllegalArgumentException(getString(R.string.warning_no_key));
         }
 
         // all this according FirebaseSamples - database
-        // TODO: 09/09/2016 Initialize Database, pass gigIntentKey to get the Gig we are interested in
         gigReference = FirebaseDatabase.getInstance().getReference()
                 .child(Utils.FIREBASE_GIGS).child(gigIntentKey);
-        // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         tvVenue = (TextView) findViewById(R.id.tv_details_venue);
@@ -92,7 +91,7 @@ public class GigDetailsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(Utils.TAG, "GigDetailsActivity onCancelled: ", databaseError.toException());
-                Toast.makeText(GigDetailsActivity.this, "Failed to load event details.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GigDetailsActivity.this, R.string.warning_load_error, Toast.LENGTH_SHORT).show();
             }
         };
         gigReference.addValueEventListener(gigListener);

@@ -50,4 +50,19 @@
     <string name="select_musician_user_type">Select Musician User Type</string>
     <string name="select_venue_user_type">Select Venue User Type</string>
     <string name="no_description_available">No description available</string>
+    <string name="dialog_loading">Loading...</string>
+    <string name="warning_fill_all_fields">Please fill all the details</string>
+    <string name="new_gig_confirmation">" you have a new Gig at "</string>
+    <string name="warning_no_key">Must pass EXTRA_POST_KEY</string>
+    <string name="warning_load_error">Failed to load event details.</string>
+    <string name="confirmation_gig_created">Gig created</string>
+    <string name="confirmation_log_out">You are logged out</string>
+    <string name="dialog_wait">Please wait...</string>
+    <string name="logged_in">" Logged in"</string>
+    <string name="warning_pwd_too_short">Too short, at least 6 characters</string>
+    <string name="warning_registration_error">Error registering user</string>
+    <string name="confirmation_logged_out">You are logged out</string>
+    <string name="warning_error_loggin_out">Error logging out</string>
+    <string name="warning_no_user">No user match our database. Please register</string>
+    <string name="warning_duplicated_user">Error, duplicated user. Please contact OnStage</string>
 </resources>

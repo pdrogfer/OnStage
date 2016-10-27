@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.database.Contract;
 import com.pdrogfer.onstage.database.UsersContentProvider;
@@ -111,10 +112,10 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
         values.put(Contract.COLUMN_USER_ACTIVE, 0);
         int result = gigsListActivity.getContentResolver().update(users, values, Contract.COLUMN_USER_ACTIVE + "=?", new String[]{selectUserActive});
         if (result > 0) {
-            Toast.makeText(gigsListActivity, "You are logged out", Toast.LENGTH_LONG).show();
+            Toast.makeText(gigsListActivity, R.string.confirmation_logged_out, Toast.LENGTH_LONG).show();
             authServerListener.onSignOut();
         } else {
-            Toast.makeText(gigsListActivity, "Error logging out", Toast.LENGTH_LONG).show();
+            Toast.makeText(gigsListActivity, R.string.warning_error_loggin_out, Toast.LENGTH_LONG).show();
         }
         gigsListActivity.startActivity(new Intent(gigsListActivity, Presentation.class));
     }
@@ -135,11 +136,11 @@ public class UserAuthServerClient implements UserOperationsSuperClient {
     // just in case I receive an array
     private void onAuthRequestOK(boolean success, JSONArray responseArray) {
         if (responseArray.length() == 0) {
-            Toast.makeText(context, "No user match our database. Please register", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.warning_no_user, Toast.LENGTH_LONG).show();
             authServerListener.onAuthenticationCompleted(success, null, null, null, null);
             return;
         } else if (responseArray.length() > 1) {
-            Toast.makeText(context, "Error, duplicated users. Please contact OnStage", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.warning_duplicated_user, Toast.LENGTH_LONG).show();
             authServerListener.onAuthenticationCompleted(success, null, null, null, null);
             return;
         }

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.pdrogfer.onstage.Utils;
+
 public class UpdateActiveUserLocalTask extends AsyncTask<String, Void, String> {
 
     Context context;
@@ -48,7 +50,7 @@ public class UpdateActiveUserLocalTask extends AsyncTask<String, Void, String> {
                         Contract.COLUMN_EMAIL + "=" + strings[1], null);
             }
 
-            return (result > 0) ? "updated" : "error updating";
+            return (result > 0) ? Utils.UPDATED : Utils.UPDATE_ERROR;
         } else {
             // create local user
             ContentValues values = new ContentValues();

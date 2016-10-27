@@ -31,7 +31,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("gigs");
+    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
     private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
@@ -92,7 +92,6 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
                                     .replace(R.id.gig_detail_container, gigFragment)
                                     .commit();
                         } else {
-                            // TODO: 08/07/2016  see sample 'database' to pass the Gig info to Details Activity
                             Intent intentDetails = new Intent(getApplicationContext(), GigDetailsActivity.class);
                             intentDetails.putExtra(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY, gigKey);
                             startActivity(intentDetails);
@@ -132,7 +131,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
             if (resultCode == Utils.NEW_GIG_RESULT_OK) {
                 Gig tempGig = new Gig();
                 reference.push().setValue(tempGig);
-                Toast.makeText(this, "Gig created", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.confirmation_gig_created, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -184,7 +183,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public void onSignOut() {
-        Toast.makeText(this, "callback received", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, Presentation.class));
     }
 }

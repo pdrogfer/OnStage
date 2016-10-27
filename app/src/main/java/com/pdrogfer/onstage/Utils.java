@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Utils {
     public static final String FIREBASE_GIGS = "gigs";
+    public static final String FIREBASE_USERS = "users";
     public static final String TAG = "OnStage";
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
@@ -29,6 +30,8 @@ public class Utils {
     // camera intents
     public static final int INTENT_REQUEST_CAMERA = 1;
     public static final int INTENT_SELECT_FILE = 2;
+    public static final String UPDATED = "updated";
+    public static final String UPDATE_ERROR = "error updating";
 
     public static List<Gig> widgetData = new ArrayList<>();
 

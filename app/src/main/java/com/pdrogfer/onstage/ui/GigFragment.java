@@ -54,7 +54,8 @@ public class GigFragment extends Fragment {
 
         if (getArguments().containsKey(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY)) {
             // all this according FirebaseSamples - database
-            // TODO: 09/09/2016 Initialize Database, pass gigIntentKey to get the Gig we are interested in
+
+            // see GigDetailsActivity for implementation
             gigItem = FirebaseDatabase.getInstance().getReference()
                     .child(Utils.FIREBASE_GIGS).child(getArguments().getString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY));
             // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
@@ -84,19 +85,17 @@ public class GigFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
-                // TODO: 05/10/2016 set image here
                 tvVenue.setText(gig.getVenue());
                 tvTime.setText(gig.getStartTime());
                 tvCity.setText(gig.getCity());
                 tvDate.setText(gig.getDate());
                 // TODO: 22/09/2016 add description field
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(Utils.TAG, "GigDetailsActivity onCancelled: ", databaseError.toException());
-                Toast.makeText(activity, "Failed to load event details.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.warning_load_error, Toast.LENGTH_SHORT).show();
             }
         };
         gigItem.addValueEventListener(gigListener);

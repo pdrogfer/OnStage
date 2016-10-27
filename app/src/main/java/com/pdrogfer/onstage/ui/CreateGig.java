@@ -30,6 +30,8 @@ import java.util.Date;
 public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
 
     private static final String TAG = "CreateGig";
+    private static final String DATE_PICKER = "datePicker";
+    private static final String TIME_PICKER = "timePicker";
     Button btnTime, btnDate, btnCreateGig;
     protected static TextView tvArtisticName, tvDate, tvTime;
     protected static EditText etName, etVenue, etFee, etDescription;
@@ -73,25 +75,23 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.btnCreateGigDate:
                 DialogFragment datePickerFragment = new DatePickerFragment();
-                datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+                datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER);
                 break;
             case R.id.btnCreateGigTime:
                 DialogFragment timePickerFragment = new TimePickerFragment();
-                timePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER);
                 break;
             case R.id.btnCreateGigCreate:
-                // TODO: 15/10/2016 validate input
                 artisticName = etName.getText().toString();
                 venue = etVenue.getText().toString();
                 price = etFee.getText().toString();
                 description = etDescription.getText().toString();
                 if (!validateInputGig(artisticName, venue, price, description)) {
-                    Toast.makeText(this, "Please fill all the details", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.warning_fill_all_fields, Toast.LENGTH_LONG).show();
                     break;
                 }
                 long timestamp = System.currentTimeMillis();
 
-                // TODO: 16/10/2016 format date and time apropriately
                 databaseClient.addGig(timestamp,
                         artisticName,
                         venue,
@@ -134,7 +134,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
 
     @Override
     public void onDbRequestCompleted(Gig gig) {
-        Toast.makeText(this, gig.getArtist() + " you have a new Gig at " + gig.getVenue(),
+        Toast.makeText(this, gig.getArtist() + getString(R.string.new_gig_confirmation) + gig.getVenue(),
                 Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, GigsListActivity.class));
         finish();

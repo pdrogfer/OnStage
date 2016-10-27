@@ -158,7 +158,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
 
         if (TextUtils.getTrimmedLength(password) < 6) {
-            passwordField.setError("Too short, at least 6 characters");
+            passwordField.setError(getString(R.string.warning_pwd_too_short));
             result = false;
         } else {
             passwordField.setError(null);
@@ -182,7 +182,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             isUserActiveValue = "1";
             insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
         } else {
-            Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.warning_registration_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -224,7 +224,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void showRegProgressDialog() {
         regProgressDialog = new ProgressDialog(this);
         regProgressDialog.setCancelable(false);
-        regProgressDialog.setMessage("Please wait...");
+        regProgressDialog.setMessage(getString(R.string.dialog_wait));
         regProgressDialog.show();
     }
 

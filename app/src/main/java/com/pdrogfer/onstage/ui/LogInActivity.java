@@ -83,7 +83,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     private void showAuthProgressDialog() {
         authProgressDialog = new ProgressDialog(this);
         authProgressDialog.setCancelable(false);
-        authProgressDialog.setMessage("Please wait...");
+        authProgressDialog.setMessage(getString(R.string.dialog_wait));
         authProgressDialog.show();
     }
 
@@ -102,12 +102,8 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideAuthProgressDialog();
         if (success) {
-            Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
-
-            // TODO: 13/10/2016 not insert, update user in sqlite to isUserActive = 1 and all others to 0
+            Toast.makeText(this, name + getString(R.string.logged_in), Toast.LENGTH_SHORT).show();
             updateActiveUserLocalDb(email, password, name, user_type, "1");
-
-
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
@@ -141,7 +137,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         }
 
         if (TextUtils.getTrimmedLength(password) < 6) {
-            et_password.setError("Too short, at least 6 characters");
+            et_password.setError(getString(R.string.warning_pwd_too_short));
             result = false;
         } else {
             et_password.setError(null);
