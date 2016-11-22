@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.database.CheckAuthActiveUserTask;
 import com.pdrogfer.onstage.database.Contract;
@@ -33,7 +32,7 @@ public class Presentation extends AppCompatActivity implements View.OnClickListe
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
 
-        Stetho.initializeWithDefaults(this);
+        // Stetho.initializeWithDefaults(this);
         // open chrome after lauching app and go to 'chrome://inspect/#devices'
     }
 
