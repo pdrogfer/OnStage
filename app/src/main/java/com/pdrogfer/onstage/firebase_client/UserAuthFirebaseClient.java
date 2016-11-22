@@ -16,8 +16,6 @@ import com.pdrogfer.onstage.model.User;
 import com.pdrogfer.onstage.ui.GigsListActivity;
 
 /**
- * Created by pedrogonzalezferrandez on 29/06/16.
- *
  * This singleton class should hold a unique FirebaseAuth instance. to be called through the app
  *
  * It includes a OnAuthenticationCompleted listener to update UI after tasks finished

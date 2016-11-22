@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
+import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
 import com.pdrogfer.onstage.model.UserType;
@@ -48,9 +48,8 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         setRecyclerView();
         setFabGigList();
 
-        // this selects Firebase or Server (with ContentProvider) for user authentication
-//        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
-        userOperationsSuperClient = UserAuthServerClient.getInstance(this, this);
+        // this selects Firebase for user authentication
+        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
 
         if (findViewById(R.id.gig_detail_container) != null) {
             usingMasterDetailFlow = true;
@@ -154,7 +153,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
                 userOperationsSuperClient.signOut(this);
                 return true;
             case R.id.action_profile:
-                startActivity(new Intent(this, ActivityUser.class));
+                Toast.makeText(this, "Activity profile not implemented yet", Toast.LENGTH_SHORT).show();
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -15,15 +15,12 @@ import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.database.Contract;
-import com.pdrogfer.onstage.database.OnAsyncTaskCompleted;
-import com.pdrogfer.onstage.database.UpdateActiveUserLocalTask;
-import com.pdrogfer.onstage.database.UsersContentProvider;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthServerClient;
+
+import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
-public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted, OnAsyncTaskCompleted {
+public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private static final String TAG = "LogInActivity";
     private EditText et_email, et_password;
@@ -46,13 +43,8 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-//        userAuth = UserAuthFirebaseClient.getInstance(this, this);
-//        context = this;
-
-        // do authentication using Server
-        userAuth = UserAuthServerClient.getInstance(this, this);
+        userAuth = UserAuthFirebaseClient.getInstance(this, this);
         context = this;
-
     }
 
     @Override
@@ -65,8 +57,8 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
             case R.id.btn_login_login:
 
                 // for testing ONLY, remove in production
-//                et_email.setText(Utils.TEST_EMAIL);
-//                et_password.setText(Utils.TEST_PASSWORD);
+                et_email.setText(Utils.TEST_EMAIL);
+                et_password.setText(Utils.TEST_PASSWORD);
                 // --------- end testing block
 
                 String email = et_email.getText().toString();
@@ -103,16 +95,11 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         hideAuthProgressDialog();
         if (success) {
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
-            updateActiveUserLocalDb(email, password, name, user_type, "1");
+            startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
+            finish();
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void updateActiveUserLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, String isUserActive) {
-
-        String[] userValues = {artisticNameValue, emailValue, passwordValue, userTypeValue, isUserActive};
-        new UpdateActiveUserLocalTask(this, this).execute(userValues);
     }
 
     @Override
@@ -143,14 +130,5 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
             et_password.setError(null);
         }
         return result;
-    }
-
-    @Override
-    public void onTaskCompleted(String result) {
-
-        Log.i(TAG, "onTaskCompleted: updated active user in SQLite");
-
-        startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
-        finish();
     }
 }

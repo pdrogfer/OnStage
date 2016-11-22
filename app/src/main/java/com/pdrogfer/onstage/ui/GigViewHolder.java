@@ -40,6 +40,7 @@ public class GigViewHolder extends RecyclerView.ViewHolder {
         // it the whole card surface
         relativeLayout.setOnClickListener(clickListener);
 
+        // TODO: 22/11/2016 make list widget work with firebase
         // Widgets doesn't work with Firebase, so this
         Utils.updateWidgetData(gig);
     }

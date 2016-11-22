@@ -59,13 +59,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
         </activity>
-        <activity
-            android:name=".ui.ActivityUser"
-            android:parentActivityName=".ui.GigsListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.pdrogfer.onstage.ui.GigsListActivity" />
-        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -77,10 +70,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <provider
-            android:name=".database.UsersContentProvider"
-            android:authorities="com.pdrogfer.onstage.database" />
 
         <receiver android:name=".ui.GigsWidgetProvider">
             <intent-filter>
