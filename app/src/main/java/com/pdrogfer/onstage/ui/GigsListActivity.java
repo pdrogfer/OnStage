@@ -151,7 +151,8 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         switch(item.getItemId()) {
             case R.id.action_logout:
                 userOperationsSuperClient.signOut(this);
-                return true;
+                startActivity(new Intent(this, Presentation.class));
+                finish();
             case R.id.action_profile:
                 Toast.makeText(this, "Activity profile not implemented yet", Toast.LENGTH_SHORT).show();
             default:
