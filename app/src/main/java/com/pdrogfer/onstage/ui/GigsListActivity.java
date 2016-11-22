@@ -116,7 +116,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        createNewGig(view);
+                        createNewGig();
                     }
                 });
             }
@@ -135,7 +135,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         }
     }
 
-    private void createNewGig(View view) {
+    private void createNewGig() {
         Intent intNewGig = new Intent(this, CreateGig.class);
         startActivityForResult(intNewGig, Utils.NEW_GIG_REQUEST);
     }
@@ -182,7 +182,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public void onSignOut() {
-        Toast.makeText(this, "callback received", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Sign Out completed", Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, Presentation.class));
     }
 }

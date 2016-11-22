@@ -1,10 +1,8 @@
 package com.pdrogfer.onstage.ui;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
@@ -55,12 +52,6 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 finish();
                 break;
             case R.id.btn_login_login:
-
-                // for testing ONLY, remove in production
-                et_email.setText(Utils.TEST_EMAIL);
-                et_password.setText(Utils.TEST_PASSWORD);
-                // --------- end testing block
-
                 String email = et_email.getText().toString();
                 String password = et_password.getText().toString();
                 if (!validateForm(email, password)) {

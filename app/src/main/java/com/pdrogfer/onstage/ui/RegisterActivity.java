@@ -165,6 +165,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         hideRegProgressDialog();
         if (!success) {
             Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, GigsListActivity.class));
         }
     }
 
