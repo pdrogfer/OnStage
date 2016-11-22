@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+// branch udacity retains the state of the app as Capstone Project, no further development is done here
+
 android {
     signingConfigs {
         myrelease {
