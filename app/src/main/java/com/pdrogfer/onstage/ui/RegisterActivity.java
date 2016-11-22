@@ -23,23 +23,13 @@ import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.database.InsertUserToLocalDbTask;
-import com.pdrogfer.onstage.database.OnAsyncTaskCompleted;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
+import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
-import com.pdrogfer.onstage.firebase_client.UserRegServerClient;
 import com.pdrogfer.onstage.model.UserType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
-public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted, OnAsyncTaskCompleted {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
 
     private static final String TAG = "RegisterActivity";
 
@@ -60,11 +50,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register);
 
         // do authentication using Firebase
-//        userRegistration = UserAuthFirebaseClient.getInstance(this, this);
-//        context = this;
-
-        // do authentication using Server
-        userRegistration = UserRegServerClient.getInstance(this, this);
+        userRegistration = UserAuthFirebaseClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -99,10 +85,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_register_register:
 
                 // for testing ONLY, remove in production
-//                emailField.setText(Utils.TEST_EMAIL);
-//                passwordField.setText(Utils.TEST_PASSWORD);
-//                nameField.setText(Utils.TEST_NAME);
-//                userTypeValue = String.valueOf(UserType.MUSICIAN);
+                emailField.setText(Utils.TEST_EMAIL);
+                passwordField.setText(Utils.TEST_PASSWORD);
+                nameField.setText(Utils.TEST_NAME);
+                userTypeValue = String.valueOf(UserType.MUSICIAN);
                 // ------- end testing block
 
                 emailValue = emailField.getText().toString();
@@ -159,24 +145,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideRegProgressDialog();
-        if (success) {
-            // by default, new registered user is active, so 1
-            isUserActiveValue = "1";
-            insertUserToLocalDb(emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue);
+        if (!success) {
+            Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, R.string.warning_registration_error, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, GigsListActivity.class));
         }
     }
 
     @Override
     public void onSignOut() {
         // do nothing here
-    }
-
-    private void insertUserToLocalDb(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue, String isUserActive) {
-
-        String[] userValues = {artisticNameValue, emailValue, passwordValue, userTypeValue, String.valueOf(isUserActive)};
-        new InsertUserToLocalDbTask(this, this).execute(userValues);
     }
 
     public void onRadioBtnClick(View view) {
@@ -205,6 +184,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    // TODO: 22/11/2016 try to use BaseActivity methods instead
     private void showRegProgressDialog() {
         regProgressDialog = new ProgressDialog(this);
         regProgressDialog.setCancelable(false);
@@ -223,12 +203,5 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onStop() {
         super.onStop();
 
-    }
-
-    @Override
-    public void onTaskCompleted(String result) {
-        Log.i(TAG, "onTaskCompleted: user " + result + " added to SQLite db" );
-        startActivity(new Intent(RegisterActivity.this, GigsListActivity.class));
-        finish();
     }
 }

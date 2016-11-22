@@ -62,8 +62,7 @@ dependencies {
     // Loopj
     compile 'com.loopj.android:android-async-http:1.4.9'
 
-    // Stetho
-    testCompile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.4.0'
 }
 
 // Firebase

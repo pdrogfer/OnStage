@@ -104,8 +104,10 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
     }
 
     private void onAuthSuccess(FirebaseUser user) {
+        // TODO: 22/11/2016 maybe the null user field comes from here?
         // String username = usernameFromEmail(user.getEmail());  // using artisticName instead
 
+<<<<<<< HEAD
         // Write new user
         writeNewUser(user.getUid(), artisticName, user.getEmail(), userType);
 
@@ -120,5 +122,14 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
         // store artisticName and userType in SharedPreferences
         Utils.storeArtisticName(Utils.DB_KEY_USER_NAME, artisticName, context);
         Utils.storeUserType(Utils.DB_KEY_USER_TYPE, userType, context);
+=======
+        // return result to RegisterActivity. Firebase Auth only stores name and email
+        authFirebaseListener.onAuthenticationCompleted(
+                true,
+                user.getDisplayName(),
+                user.getEmail(),
+                null,
+                null);
+>>>>>>> cleanup
     }
 }
