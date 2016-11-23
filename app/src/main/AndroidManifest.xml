@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.Presentation"
+            android:name=".ui.PresentationActivity"
             android:label="@string/title_activity_presentation"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -39,10 +39,10 @@
         </activity>
         <activity
             android:name=".ui.RegisterActivity"
-            android:parentActivityName=".ui.Presentation" />
+            android:parentActivityName=".ui.PresentationActivity" />
         <activity
             android:name=".ui.LogInActivity"
-            android:parentActivityName=".ui.Presentation" />
+            android:parentActivityName=".ui.PresentationActivity" />
         <activity
             android:name=".ui.CreateGig"
             android:parentActivityName=".ui.GigsListActivity"

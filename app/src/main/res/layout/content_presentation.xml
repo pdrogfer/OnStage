@@ -13,11 +13,11 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.pdrogfer.onstage.ui.Presentation"
+    tools:context="com.pdrogfer.onstage.ui.PresentationActivity"
     tools:showIn="@layout/activity_presentation">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/title_presentation_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -32,7 +32,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_log_in"
+            android:id="@+id/btn_goto_login"
             style="@style/button_color"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

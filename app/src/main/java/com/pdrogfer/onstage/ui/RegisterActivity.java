@@ -1,17 +1,9 @@
 package com.pdrogfer.onstage.ui;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -79,7 +71,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cancel_register:
-                startActivity(new Intent(RegisterActivity.this, Presentation.class));
+                startActivity(new Intent(RegisterActivity.this, PresentationActivity.class));
                 finish();
                 break;
             case R.id.btn_register_register:

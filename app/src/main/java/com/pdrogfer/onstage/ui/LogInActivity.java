@@ -48,7 +48,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_cancel_login:
-                startActivity(new Intent(LogInActivity.this, Presentation.class));
+                startActivity(new Intent(LogInActivity.this, PresentationActivity.class));
                 finish();
                 break;
             case R.id.btn_login_login:

@@ -151,7 +151,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         switch(item.getItemId()) {
             case R.id.action_logout:
                 userOperationsSuperClient.signOut(this);
-                startActivity(new Intent(this, Presentation.class));
+                startActivity(new Intent(this, PresentationActivity.class));
                 finish();
             case R.id.action_profile:
                 Toast.makeText(this, "Activity profile not implemented yet", Toast.LENGTH_SHORT).show();
@@ -184,6 +184,6 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     @Override
     public void onSignOut() {
         Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this, Presentation.class));
+        startActivity(new Intent(this, PresentationActivity.class));
     }
 }

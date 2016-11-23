@@ -14,7 +14,7 @@
     tools:context=".ui.RegisterActivity">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/title_presentation_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -26,7 +26,7 @@
         android:id="@+id/layout_email_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/title_presentation_activity"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
