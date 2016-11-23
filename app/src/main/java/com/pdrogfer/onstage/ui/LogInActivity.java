@@ -85,14 +85,9 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideAuthProgressDialog();
         if (success) {
-<<<<<<< HEAD
-            Toast.makeText(this, name + getString(R.string.logged_in), Toast.LENGTH_SHORT).show();
-            updateActiveUserLocalDb(email, password, name, user_type, "1");
-=======
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
->>>>>>> cleanup
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
