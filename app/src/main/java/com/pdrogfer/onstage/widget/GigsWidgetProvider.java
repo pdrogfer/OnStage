@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage.ui;
+package com.pdrogfer.onstage.widget;
 
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;

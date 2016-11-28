@@ -1,4 +1,4 @@
-package com.pdrogfer.onstage.ui;
+package com.pdrogfer.onstage.widget;
 
 import android.app.Activity;
 import android.content.Context;
