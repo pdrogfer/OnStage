@@ -105,7 +105,7 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private void onAuthSuccess(FirebaseUser user) {
         // TODO: 22/11/2016 maybe the null user field comes from here?
-        String username = user.getEmail();  // using artisticName instead
+        String username = user.getEmail();
         // return result to RegisterActivity. Firebase Auth only stores name and email
         authFirebaseListener.onAuthenticationCompleted(
                 true,

@@ -142,6 +142,11 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem menuItemAddGig = menu.findItem(R.id.action_new_gig);
+        if (isUserFan()) {
+            menuItemAddGig.setVisible(false);
+        }
+        invalidateOptionsMenu();
         getMenuInflater().inflate(R.menu.menu_gigs_list, menu);
         return true;
     }
@@ -149,6 +154,8 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.action_new_gig:
+                createNewGig();
             case R.id.action_logout:
                 userOperationsSuperClient.signOut(this);
                 startActivity(new Intent(this, PresentationActivity.class));
@@ -185,5 +192,9 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     public void onSignOut() {
         Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, PresentationActivity.class));
+    }
+
+    private boolean isUserFan() {
+        return Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN);
     }
 }

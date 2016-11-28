@@ -75,18 +75,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.btn_register_register:
-
-                // for testing ONLY, remove in production
-                emailField.setText(Utils.TEST_EMAIL);
-                passwordField.setText(Utils.TEST_PASSWORD);
-                nameField.setText(Utils.TEST_NAME);
-                userTypeValue = String.valueOf(UserType.MUSICIAN);
-                // ------- end testing block
-
                 emailValue = emailField.getText().toString();
                 passwordValue = passwordField.getText().toString();
                 artisticNameValue = nameField.getText().toString();
-                isUserActiveValue = "1";
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
