@@ -141,6 +141,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         // do nothing here
     }
 
+    @Override
+    public void onUserDeleted() {
+
+    }
+
     public void onRadioBtnClick(View view) {
         boolean checked = ((RadioButton) view).isChecked();
         switch (view.getId()) {

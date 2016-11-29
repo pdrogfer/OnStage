@@ -39,7 +39,7 @@
     <string name="artist_name">Artist Name</string>
     <string name="email">Email</string>
     <string name="user_type">User Type</string>
-    <string name="profile">Profile</string>
+    <string name="delete_user">Delete User</string>
     <string name="btn_select_time">Select Time</string>
     <string name="btn_select_date">Select Date</string>
     <string name="btn_create_gig">Create Gig</string>

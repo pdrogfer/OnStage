@@ -27,9 +27,6 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     private UserOperationsSuperClient userAuth;
     Context context;
 
-    final String TEST_USER_NAME = "testuser@hotmail.com";
-    final String TEST_USER_PWD = "aaaaaa";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +52,13 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 finish();
                 break;
             case R.id.btn_login_login:
-                // TODO: 28/11/2016
-//                String email = et_email.getText().toString();
-//                String password = et_password.getText().toString();
-//                if (!validateForm(email, password)) {
-//                    return;
-//                }
+                String email = et_email.getText().toString();
+                String password = et_password.getText().toString();
+                if (!validateForm(email, password)) {
+                    return;
+                }
                 showAuthProgressDialog();
-                logIn(TEST_USER_NAME, TEST_USER_PWD);
+                logIn(email, password);
                 break;
         }
     }
@@ -100,6 +96,11 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onSignOut() {
         // do nothing for the moment
+    }
+
+    @Override
+    public void onUserDeleted() {
+
     }
 
     private boolean validateForm(String email, String password) {

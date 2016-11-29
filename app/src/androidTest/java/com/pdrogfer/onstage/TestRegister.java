@@ -4,6 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.pdrogfer.onstage.ui.PresentationActivity;
+import com.pdrogfer.onstage.ui.RegisterActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,11 +14,11 @@ import org.junit.runner.RunWith;
 public class TestRegister {
 
     @Rule
-    public ActivityTestRule<PresentationActivity> activityTestRule =
-            new ActivityTestRule<>(PresentationActivity.class);
+    public ActivityTestRule<RegisterActivity> activityTestRule =
+            new ActivityTestRule<>(RegisterActivity.class);
 
     @Test
     public void testRegisterSuccessful() {
-
+        // TODO: 29/11/2016 implement register and un-register tests
     }
 }

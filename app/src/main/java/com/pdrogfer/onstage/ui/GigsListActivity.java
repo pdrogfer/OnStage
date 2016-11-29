@@ -156,15 +156,45 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         switch(item.getItemId()) {
             case R.id.action_new_gig:
                 createNewGig();
-            case R.id.action_logout:
-                userOperationsSuperClient.signOut(this);
-                startActivity(new Intent(this, PresentationActivity.class));
-                finish();
-            case R.id.action_profile:
-                Toast.makeText(this, "Activity profile not implemented yet", Toast.LENGTH_SHORT).show();
+            case R.id.action_user_logout:
+                logOutUser();
+            case R.id.action_user_delete:
+                deleteProfileUser();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void logOutUser() {
+        userOperationsSuperClient.signOut(this);
+        startActivity(new Intent(this, PresentationActivity.class));
+        finish();
+    }
+
+    private void deleteProfileUser() {
+        userOperationsSuperClient.deleteUser();
+        startActivity(new Intent(this, PresentationActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
+        // do nothing here
+    }
+
+    @Override
+    public void onSignOut() {
+        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, PresentationActivity.class));
+    }
+
+    @Override
+    public void onUserDeleted() {
+
+    }
+
+    private boolean isUserFan() {
+        return Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN);
     }
 
     @Override
@@ -181,20 +211,5 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         if (mAdapter != null) {
             mAdapter.cleanup();
         }
-    }
-
-    @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
-        // do nothing here
-    }
-
-    @Override
-    public void onSignOut() {
-        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this, PresentationActivity.class));
-    }
-
-    private boolean isUserFan() {
-        return Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN);
     }
 }

@@ -78,6 +78,19 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
     }
 
     @Override
+    public void deleteUser() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    authFirebaseListener.onUserDeleted();
+                }
+            }
+        });
+    }
+
+    @Override
     public void registerUser(String email, String password, final String artisticName, String userType) {
 
         this.artisticName = artisticName;

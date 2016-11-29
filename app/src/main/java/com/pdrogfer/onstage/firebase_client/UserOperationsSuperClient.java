@@ -14,4 +14,6 @@ public interface UserOperationsSuperClient {
                       String userType);
 
     void signOut(GigsListActivity gigsListActivity);
+
+    void deleteUser();
 }

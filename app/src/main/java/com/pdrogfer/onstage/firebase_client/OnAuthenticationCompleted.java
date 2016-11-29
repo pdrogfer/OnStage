@@ -5,4 +5,6 @@ public interface OnAuthenticationCompleted {
     void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type);
 
     void onSignOut();
+
+    void onUserDeleted();
 }
