@@ -25,7 +25,6 @@ import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
-import com.pdrogfer.onstage.model.UserType;
 
 public class GigsListActivity extends AppCompatActivity implements OnAuthenticationCompleted{
 
@@ -104,9 +103,9 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     private void setFabGigList() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
-        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.DB_KEY_USER_TYPE, this));
+        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(this));
         // If the user is a fan, hyde the fab so it can not create gigs
-        if (Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN)) {
+        if (!Utils.isUserEditor(this)) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
@@ -142,12 +141,11 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItemAddGig = menu.findItem(R.id.action_new_gig);
-        if (isUserFan()) {
-            menuItemAddGig.setVisible(false);
+        if (Utils.isUserEditor(this)) {
+            getMenuInflater().inflate(R.menu.menu_gigs_list_musician, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_gigs_list_fan, menu);
         }
-        invalidateOptionsMenu();
-        getMenuInflater().inflate(R.menu.menu_gigs_list, menu);
         return true;
     }
 
@@ -155,14 +153,19 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_new_gig:
+                Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
                 createNewGig();
+                break;
             case R.id.action_user_logout:
                 logOutUser();
+                break;
             case R.id.action_user_delete:
                 deleteProfileUser();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private void logOutUser() {
@@ -191,10 +194,6 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     @Override
     public void onUserDeleted() {
 
-    }
-
-    private boolean isUserFan() {
-        return Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN);
     }
 
     @Override

@@ -52,8 +52,13 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 finish();
                 break;
             case R.id.btn_login_login:
-                String email = et_email.getText().toString();
-                String password = et_password.getText().toString();
+                // TODO: 04/12/2016 remove dummy login before publish
+                // String email = Utils.TEST_EMAIL_FAN;
+                // String password = Utils.TEST_PASSWORD_FAN;
+                String email = Utils.TEST_EMAIL_MUSICIAN;
+                String password = Utils.TEST_PASSWORD_MUSICIAN;
+                // String email = et_email.getText().toString();
+                // String password = et_password.getText().toString();
                 if (!validateForm(email, password)) {
                     return;
                 }
@@ -85,6 +90,8 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
         hideAuthProgressDialog();
         if (success) {
+            // TODO: 04/12/2016 get user details from Firebase Database using email
+            Utils.storeUserType(Utils.TEST_USER_TYPE_MUSICIAN, this);
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_LONG).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();

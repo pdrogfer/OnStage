@@ -18,7 +18,6 @@ import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
 import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
-import com.pdrogfer.onstage.model.UserType;
 
 // Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
@@ -151,24 +150,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.radioButtonFan:
                 if (checked) {
-                    userTypeValue = String.valueOf(UserType.FAN);
+                    userTypeValue = Utils.USER_FAN;
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonMusician:
                 if (checked) {
-                    userTypeValue = String.valueOf(UserType.MUSICIAN);
+                    userTypeValue = Utils.USER_MUSICIAN;
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonVenue:
                 if (checked) {
-                    userTypeValue = String.valueOf(UserType.VENUE);
+                    userTypeValue = Utils.USER_MUSICIAN;
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             default:
-                userTypeValue = String.valueOf(UserType.FAN);
+                userTypeValue = Utils.USER_FAN;
         }
     }
 

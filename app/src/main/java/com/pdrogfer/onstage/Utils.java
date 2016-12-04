@@ -3,6 +3,7 @@ package com.pdrogfer.onstage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.pdrogfer.onstage.model.Gig;
 
@@ -20,12 +21,17 @@ public class Utils {
     public static final String DB_KEY_USER_EMAIL = "email";
     public static final String DB_KEY_USER_PASSWORD = "password";
     public static final String DB_KEY_USER_TYPE = "user_type";
+    public static final String USER_MUSICIAN = "musician";
+    public static final String USER_FAN = "fan";
 
     // dummy user for testing
-    public static final String TEST_EMAIL = "testuser@hotmail.com";
-    public static final String TEST_PASSWORD = "aaaaaa";
+    public static final String TEST_EMAIL_MUSICIAN = "testmusician@hotmail.com";
+    public static final String TEST_EMAIL_FAN = "testfan@hotmail.com";
+    public static final String TEST_PASSWORD_MUSICIAN = "aaaaaa";
+    public static final String TEST_PASSWORD_FAN = "aaaaaa";
     public static final String TEST_NAME = "testuser";
-    public static final String TEST_USER_TYPE = "MUSICIAN";
+    public static final String TEST_USER_TYPE_MUSICIAN = USER_MUSICIAN;
+    public static final String TEST_USER_TYPE_FAN = USER_FAN;
 
     // camera intents
     public static final int INTENT_REQUEST_CAMERA = 1;
@@ -48,16 +54,16 @@ public class Utils {
         return prefs.getString(keyName, null);
     }
 
-    public static void storeUserType(String keyUserType, String userType, Context context) {
+    public static void storeUserType(String userType, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(keyUserType, userType);
+        editor.putString(DB_KEY_USER_TYPE, userType);
         editor.commit();
     }
 
-    public static String getUserType(String keyUserType, Context context) {
+    public static String getUserType(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(keyUserType, null);
+        return prefs.getString(DB_KEY_USER_TYPE, null);
     }
 
     public static void updateWidgetData(Gig gig) {
@@ -66,5 +72,10 @@ public class Utils {
             widgetData.remove(0);
         }
         widgetData.add(gig);
+    }
+
+    public static boolean isUserEditor(Context context) {
+        Log.i(TAG, "isUserEditor: " + getUserType(context) + " " + USER_MUSICIAN);
+        return (getUserType(context) == USER_MUSICIAN);
     }
 }
