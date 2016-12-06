@@ -87,7 +87,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
         hideAuthProgressDialog();
         if (success) {
             // TODO: 04/12/2016 get user details from Firebase Database using email

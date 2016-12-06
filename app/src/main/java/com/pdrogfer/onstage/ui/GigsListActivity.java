@@ -105,7 +105,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
         Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(this));
         // If the user is a fan, hyde the fab so it can not create gigs
-        if (!Utils.isUserEditor(this)) {
+        if (Utils.isUserEditor(this)) {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
@@ -141,7 +141,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (Utils.isUserEditor(this)) {
+        if (!Utils.isUserEditor(this)) {
             getMenuInflater().inflate(R.menu.menu_gigs_list_musician, menu);
         } else {
             getMenuInflater().inflate(R.menu.menu_gigs_list_fan, menu);
@@ -181,7 +181,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
         // do nothing here
     }
 

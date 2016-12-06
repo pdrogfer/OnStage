@@ -22,6 +22,7 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -139,11 +140,16 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
 
 
     @Override
-    public void onDbRequestCompleted(Gig gig) {
+    public void onDbGigRequestCompleted(Gig gig) {
         Toast.makeText(this, gig.getArtist() + getString(R.string.new_gig_confirmation) + gig.getVenue(),
                 Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, GigsListActivity.class));
         finish();
+    }
+
+    @Override
+    public void onDbUserRequestCompleted(User user) {
+        // Do nothing here, this callback is for RegisterActivity
     }
 
     public static class TimePickerFragment extends DialogFragment

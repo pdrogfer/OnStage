@@ -19,6 +19,7 @@ import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +98,12 @@ public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, 
 
 
     @Override
-    public void onDbRequestCompleted(Gig gig) {
+    public void onDbGigRequestCompleted(Gig gig) {
 
+    }
+
+    @Override
+    public void onDbUserRequestCompleted(User user) {
+        // Do nothing
     }
 }

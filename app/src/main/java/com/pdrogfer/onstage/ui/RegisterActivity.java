@@ -125,12 +125,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     // this method works ok for both auth and reg cases
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String userType) {
         hideRegProgressDialog();
         if (!success) {
             Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
+            String message = "Registration successful: " + name + " " + email + " " + userType;
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, GigsListActivity.class));
         }
     }

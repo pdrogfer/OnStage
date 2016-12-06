@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.Utils;
+import com.pdrogfer.onstage.model.Gig;
 import com.pdrogfer.onstage.model.User;
 import com.pdrogfer.onstage.ui.GigsListActivity;
 
@@ -20,11 +21,11 @@ import com.pdrogfer.onstage.ui.GigsListActivity;
  *
  * It includes a OnAuthenticationCompleted listener to update UI after tasks finished
  */
-public class UserAuthFirebaseClient implements UserOperationsSuperClient {
+public class UserAuthFirebaseClient implements UserOperationsSuperClient, OnDbRequestCompleted {
 
     private static UserAuthFirebaseClient uniqueAuthInstance;
 
-    private DatabaseReference mDatabase;
+    private DatabaseFirebaseClient databaseClient;
     private FirebaseAuth mAuth;
 
     private final OnAuthenticationCompleted authFirebaseListener;
@@ -33,7 +34,7 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
     private String userType;
 
     private UserAuthFirebaseClient(Context context,OnAuthenticationCompleted authListener) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        databaseClient = DatabaseFirebaseClient.getInstance(context, this);
         mAuth = FirebaseAuth.getInstance();
         this.context = context;
         this.authFirebaseListener = authListener;
@@ -112,19 +113,30 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient {
 
     private void onAuthFailed(String errorMessage) {
         // return result to RegisterActivity
-        authFirebaseListener.onAuthenticationCompleted(false, null, null, null, null);
+        authFirebaseListener.onAuthenticationCompleted(false, null, null, null);
         Log.e(Utils.LOG_IN, "onComplete: " + errorMessage);
     }
 
     private void onAuthSuccess(FirebaseUser user) {
         // TODO: 22/11/2016 maybe the null user field comes from here?
-        String username = user.getEmail();
         // return result to RegisterActivity. Firebase Auth only stores name and email
+        databaseClient.addUser(artisticName, user.getEmail(), userType);
+
+
+    }
+
+
+    @Override
+    public void onDbUserRequestCompleted(User user) {
         authFirebaseListener.onAuthenticationCompleted(
                 true,
-                username,
+                user.getName(),
                 user.getEmail(),
-                null,
-                null);
+                user.getUserType());
+    }
+
+    @Override
+    public void onDbGigRequestCompleted(Gig gig) {
+        // Do nothing here
     }
 }

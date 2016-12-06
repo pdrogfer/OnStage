@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.model.User;
 
 /**
  * Created by pedrogonzalezferrandez on 26/06/16.
@@ -18,7 +19,9 @@ public class DatabaseFirebaseClient {
 
     DatabaseReference mRootRef;
     DatabaseReference mGigsRef;
+    DatabaseReference mUsersRef;
     Gig tempGig; // to manipulate temporary gigs
+    User tempUser;
 
     private final OnDbRequestCompleted databaseListener;
     private final Context context;
@@ -26,6 +29,7 @@ public class DatabaseFirebaseClient {
     private DatabaseFirebaseClient(Context context, OnDbRequestCompleted databaseListener) {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mGigsRef = mRootRef.child(Utils.FIREBASE_GIGS);
+        mUsersRef = mRootRef.child(Utils.FIREBASE_USERS);
         this.context = context;
         this.databaseListener = databaseListener;
     }
@@ -54,8 +58,16 @@ public class DatabaseFirebaseClient {
                 description);
         mGigsRef.child(String.valueOf(timestamp)).setValue(tempGig);
         // notify back the UI of operation completed
-        databaseListener.onDbRequestCompleted(tempGig);
+        databaseListener.onDbGigRequestCompleted(tempGig);
     }
+
+    public void addUser(String name, String email, String userType) {
+        tempUser = new User(name, email, userType);
+        mUsersRef.child(name).setValue(tempUser);
+        // notify back the UI of operation completed
+        databaseListener.onDbUserRequestCompleted(tempUser);
+    }
+
 
     public DatabaseReference getGigsRef() {
         return mGigsRef;
@@ -63,5 +75,13 @@ public class DatabaseFirebaseClient {
 
     public void setGigsRef(DatabaseReference mGigsRef) {
         this.mGigsRef = mGigsRef;
+    }
+
+    public DatabaseReference getUsersRef() {
+        return mUsersRef;
+    }
+
+    public void setUsersRef(DatabaseReference mUsersRef) {
+        this.mUsersRef = mUsersRef;
     }
 }

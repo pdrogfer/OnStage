@@ -39,7 +39,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
+    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
         // Don't implement
     }
 
