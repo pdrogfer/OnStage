@@ -118,16 +118,14 @@ public class UserAuthFirebaseClient implements UserOperationsSuperClient, OnDbRe
     }
 
     private void onAuthSuccess(FirebaseUser user) {
-        // TODO: 22/11/2016 maybe the null user field comes from here?
-        // return result to RegisterActivity. Firebase Auth only stores name and email
+        // Store user details in Firebase Database
         databaseClient.addUser(artisticName, user.getEmail(), userType);
-
-
     }
 
 
     @Override
     public void onDbUserRequestCompleted(User user) {
+        // return result to RegisterActivity. Firebase Auth only stores name and email
         authFirebaseListener.onAuthenticationCompleted(
                 true,
                 user.getName(),

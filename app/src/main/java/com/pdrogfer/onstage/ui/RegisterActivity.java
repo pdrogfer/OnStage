@@ -88,10 +88,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void register() {
         showRegProgressDialog();
         Log.d(Utils.LOG_IN, "Register");
-        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
+        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, getUserType());
     }
 
-    private boolean validateForm(String email, String password, String artisticName, String userType) {
+    private boolean validateForm(String email, String password, String artisticName, String userTypeValue) {
         boolean result = true;
         if (TextUtils.isEmpty(email)) {
             emailField.setError(getString(R.string.field_required_warning));
@@ -119,6 +119,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             result = false;
         } else {
             nameField.setError(null);
+        }
+
+        if (userTypeValue == null) {
+            getUserType();
         }
         return result;
     }
@@ -151,25 +155,36 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         switch (view.getId()) {
             case R.id.radioButtonFan:
                 if (checked) {
-                    userTypeValue = Utils.USER_FAN;
+                    setUserType(Utils.USER_FAN);
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonMusician:
                 if (checked) {
-                    userTypeValue = Utils.USER_MUSICIAN;
+                    setUserType(Utils.USER_MUSICIAN);
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonVenue:
                 if (checked) {
-                    userTypeValue = Utils.USER_MUSICIAN;
+                    setUserType(Utils.USER_MUSICIAN);
                     Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             default:
                 userTypeValue = Utils.USER_FAN;
         }
+    }
+
+    private void setUserType(String newUserType) {
+        userTypeValue = newUserType;
+    }
+
+    private String getUserType() {
+        if (userTypeValue == null) {
+            userTypeValue = Utils.USER_FAN;
+        }
+        return userTypeValue;
     }
 
     // TODO: 22/11/2016 try to use BaseActivity methods instead
