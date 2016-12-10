@@ -116,7 +116,7 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
     private void onAuthSuccess(FirebaseUser user) {
         // User already exists, so Retrieve User from Firebase Database
         // callback goes to onDbUserRetrievedCompleted()
-        databaseClient.getUser(user.getEmail());
+        databaseClient.getUser(user.getUid());
     }
 
     private void onRegistrationFailed(String errorMessage) {
@@ -127,12 +127,12 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
 
     private void onRegistrationSuccess(FirebaseUser user, String userName, String userType) {
         // Store user details in Firebase Database
-        databaseClient.addUser(userName, user.getEmail(), userType);
+        databaseClient.addUser(user.getUid(), userName, user.getEmail(), userType);
     }
 
     @Override
-    public void getUserFromFirebaseDb(String email) {
-        databaseClient.getUser((email));
+    public void getUserFromFirebaseDb(String uid) {
+        databaseClient.getUser((uid));
     }
 
     @Override

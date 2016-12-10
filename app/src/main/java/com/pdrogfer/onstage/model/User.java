@@ -2,15 +2,17 @@ package com.pdrogfer.onstage.model;
 
 public class User {
 
-    public String name;
-    public String email;
-    public String userType;
+    private String uid;
+    private String name;
+    private String email;
+    private String userType;
 
     public User() {
         // Default constructor required for calls to Firebase DataSnapshot.getValue(User.class)
     }
 
-    public User(String name, String email, String userType) {
+    public User(String uid, String name, String email, String userType) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.userType = userType;

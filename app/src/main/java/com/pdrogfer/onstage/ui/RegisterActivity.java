@@ -28,9 +28,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
     private Button cancelButton, registerButton;
-
-    private String emailValue, passwordValue, artisticNameValue, userTypeValue, isUserActiveValue;
     private ProgressDialog regProgressDialog;
+
+    private String userTypeValue;
 
     private UserOperationsSuperClient userRegistration;
     Context context;
@@ -74,21 +74,22 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.btn_register_register:
-                emailValue = emailField.getText().toString();
-                passwordValue = passwordField.getText().toString();
-                artisticNameValue = nameField.getText().toString();
+                String emailValue = emailField.getText().toString();
+                String passwordValue = passwordField.getText().toString();
+                String artisticNameValue = nameField.getText().toString();
+                userTypeValue = getUserType();
                 if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
                     return;
                 }
-                register();
+                register(emailValue, passwordValue, artisticNameValue, userTypeValue);
                 break;
         }
     }
 
-    private void register() {
+    private void register(String emailValue, String passwordValue, String artisticNameValue, String userTypeValue) {
         showRegProgressDialog();
         Log.d(Utils.FIREBASE_CLIENT, "Register");
-        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, getUserType());
+        userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, userTypeValue);
     }
 
     private boolean validateForm(String email, String password, String artisticName, String userTypeValue) {
@@ -161,23 +162,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.radioButtonFan:
                 if (checked) {
                     setUserType(Utils.USER_FAN);
-                    Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonMusician:
                 if (checked) {
                     setUserType(Utils.USER_MUSICIAN);
-                    Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             case R.id.radioButtonVenue:
                 if (checked) {
                     setUserType(Utils.USER_MUSICIAN);
-                    Log.i(Utils.TAG, "onRadioBtnClick: UserType: " + userTypeValue);
                 }
                 break;
             default:
-                userTypeValue = Utils.USER_FAN;
+                setUserType(Utils.USER_FAN);
         }
     }
 

@@ -63,14 +63,15 @@ public class DatabaseFirebaseClient {
         databaseListener.onDbGigRequestCompleted(tempGig);
     }
 
-    public void addUser(String name, String email, String userType) {
-        mUsersRef.child(name).setValue(new User(name, email, userType));
+    public void addUser(String uid, String name, String email, String userType) {
+        User userAdded = new User(uid, name, email, userType);
+        mUsersRef.child(uid).setValue(userAdded);
         // notify back the UI of operation completed
-        databaseListener.onDbUserSavedCompleted(tempUser);
+        databaseListener.onDbUserSavedCompleted(userAdded);
     }
 
-    public void getUser(String email) {
-        mUsersRef.child(email).addListenerForSingleValueEvent(
+    public void getUser(String uid) {
+        mUsersRef.child(uid).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
