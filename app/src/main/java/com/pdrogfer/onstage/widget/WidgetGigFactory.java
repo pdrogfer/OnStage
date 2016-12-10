@@ -103,7 +103,12 @@ public class WidgetGigFactory implements RemoteViewsService.RemoteViewsFactory, 
     }
 
     @Override
-    public void onDbUserRequestCompleted(User user) {
+    public void onDbUserSavedCompleted(User user) {
         // Do nothing
+    }
+
+    @Override
+    public void onDbUserRetrievedCompleted(User user) {
+
     }
 }

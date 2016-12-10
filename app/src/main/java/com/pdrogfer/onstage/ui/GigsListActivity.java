@@ -21,12 +21,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
+import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
 
-public class GigsListActivity extends AppCompatActivity implements OnAuthenticationCompleted{
+public class GigsListActivity extends AppCompatActivity implements OnFirebaseUserCompleted {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
@@ -48,7 +48,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         setFabGigList();
 
         // this selects Firebase for user authentication
-        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
+        userOperationsSuperClient = UserFirebaseClient.getInstance(this, this);
 
         if (findViewById(R.id.gig_detail_container) != null) {
             usingMasterDetailFlow = true;
@@ -104,22 +104,20 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     private void setFabGigList() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
         Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(this));
-        // If the user is a fan, hyde the fab so it can not create gigs
-        if (Utils.isUserEditor(this)) {
+        if (Utils.isUserEditor(this) && fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    createNewGig();
+                }
+            });
+        } else {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.GONE);
-        } else {
-            if (fab != null) {
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        createNewGig();
-                    }
-                });
-            }
         }
+
     }
 
     @Override
@@ -141,7 +139,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!Utils.isUserEditor(this)) {
+        if (Utils.isUserEditor(this)) {
             getMenuInflater().inflate(R.menu.menu_gigs_list_musician, menu);
         } else {
             getMenuInflater().inflate(R.menu.menu_gigs_list_fan, menu);
@@ -169,7 +167,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     private void logOutUser() {
-        userOperationsSuperClient.signOut(this);
+        userOperationsSuperClient.signOut();
         startActivity(new Intent(this, PresentationActivity.class));
         finish();
     }
@@ -181,8 +179,13 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
+    public void onLogInCompleted(Boolean success, String name, String email, String user_type) {
         // do nothing here
+    }
+
+    @Override
+    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+
     }
 
     @Override

@@ -9,5 +9,6 @@ import com.pdrogfer.onstage.model.User;
 public interface OnDbRequestCompleted {
 
     void onDbGigRequestCompleted(Gig gig);
-    void onDbUserRequestCompleted(User user);
+    void onDbUserSavedCompleted(User user);
+    void onDbUserRetrievedCompleted(User user);
 }

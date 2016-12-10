@@ -1,9 +1,13 @@
 package com.pdrogfer.onstage.firebase_client;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
 import com.pdrogfer.onstage.model.User;
@@ -48,24 +52,38 @@ public class DatabaseFirebaseClient {
                         String startTime,
                         String price,
                         String description) {
-
-        tempGig = new Gig(timestamp,
+        mGigsRef.child(String.valueOf(timestamp)).setValue(new Gig(timestamp,
                 artisticName,
                 venue,
                 date,
                 startTime,
                 price,
-                description);
-        mGigsRef.child(String.valueOf(timestamp)).setValue(tempGig);
+                description));
         // notify back the UI of operation completed
         databaseListener.onDbGigRequestCompleted(tempGig);
     }
 
     public void addUser(String name, String email, String userType) {
-        tempUser = new User(name, email, userType);
-        mUsersRef.child(name).setValue(tempUser);
+        mUsersRef.child(name).setValue(new User(name, email, userType));
         // notify back the UI of operation completed
-        databaseListener.onDbUserRequestCompleted(tempUser);
+        databaseListener.onDbUserSavedCompleted(tempUser);
+    }
+
+    public void getUser(String email) {
+        mUsersRef.child(email).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        databaseListener.onDbUserRetrievedCompleted(user);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(Utils.TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                }
+        );
     }
 
 

@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
+import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, OnAuthenticationCompleted {
+public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener, OnFirebaseUserCompleted {
 
     Context context;
     Button btnProfileDelete;
@@ -29,7 +29,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         btnProfileDelete.setOnClickListener(this);
 
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+        userAuth = UserFirebaseClient.getInstance(this, this);
         context = this;
     }
 
@@ -39,8 +39,13 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
+    public void onLogInCompleted(Boolean success, String name, String email, String user_type) {
         // Don't implement
+    }
+
+    @Override
+    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+
     }
 
     @Override

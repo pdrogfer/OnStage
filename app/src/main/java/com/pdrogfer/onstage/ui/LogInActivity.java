@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
+import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
-public class LogInActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
+public class LogInActivity extends BaseActivity implements View.OnClickListener, OnFirebaseUserCompleted {
 
     private static final String TAG = "LogInActivity";
     private EditText et_email, et_password;
@@ -40,7 +40,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-        userAuth = UserAuthFirebaseClient.getInstance(this, this);
+        userAuth = UserFirebaseClient.getInstance(this, this);
         context = this;
     }
 
@@ -82,22 +82,28 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void logIn(String email, String password) {
-        Log.d(Utils.LOG_IN, "LogInActivity");
+        Log.d(Utils.FIREBASE_CLIENT, "LogInActivity");
         userAuth.signIn(email, password);
     }
 
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String user_type) {
+    public void onLogInCompleted(Boolean success, String name, String email, String user_type) {
         hideAuthProgressDialog();
         if (success) {
             // TODO: 04/12/2016 get user details from Firebase Database using email
-            Utils.storeUserType(Utils.TEST_USER_TYPE_MUSICIAN, this);
+            userAuth.getUserFromFirebaseDb(email);
+            Utils.storeUserType(user_type, this);
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_LONG).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
         } else {
             Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+        // do nothing here
     }
 
     @Override

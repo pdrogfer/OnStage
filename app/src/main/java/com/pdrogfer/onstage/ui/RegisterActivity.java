@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
+import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
+import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 
-// Using an Interface to receive updates from UserAuthFirebaseClient-UserAuthServerClient
-public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnAuthenticationCompleted {
+// Using an Interface to receive updates from UserFirebaseClient-UserAuthServerClient
+public class RegisterActivity extends BaseActivity implements View.OnClickListener, OnFirebaseUserCompleted {
 
     private static final String TAG = "RegisterActivity";
 
@@ -41,7 +41,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register);
 
         // do authentication using Firebase
-        userRegistration = UserAuthFirebaseClient.getInstance(this, this);
+        userRegistration = UserFirebaseClient.getInstance(this, this);
         context = this;
 
         // Views
@@ -87,7 +87,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void register() {
         showRegProgressDialog();
-        Log.d(Utils.LOG_IN, "Register");
+        Log.d(Utils.FIREBASE_CLIENT, "Register");
         userRegistration.registerUser(emailValue, passwordValue, artisticNameValue, getUserType());
     }
 
@@ -127,15 +127,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         return result;
     }
 
-    // this method works ok for both auth and reg cases
     @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String userType) {
+    public void onLogInCompleted(Boolean success, String name, String email, String userType) {
+        // do nothing here
+    }
+
+    @Override
+    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
         hideRegProgressDialog();
         if (!success) {
             Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
         } else {
             String message = "Registration successful: " + name + " " + email + " " + userType;
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Utils.storeUser(name, email, userType, this);
             startActivity(new Intent(this, GigsListActivity.class));
         }
     }

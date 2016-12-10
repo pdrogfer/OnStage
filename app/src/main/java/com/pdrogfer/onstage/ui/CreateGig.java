@@ -148,8 +148,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void onDbUserRequestCompleted(User user) {
+    public void onDbUserSavedCompleted(User user) {
         // Do nothing here, this callback is for RegisterActivity
+    }
+
+    @Override
+    public void onDbUserRetrievedCompleted(User user) {
+
     }
 
     public static class TimePickerFragment extends DialogFragment
