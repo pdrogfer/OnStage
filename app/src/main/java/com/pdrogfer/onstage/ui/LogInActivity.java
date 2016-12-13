@@ -55,10 +55,10 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 // TODO: 04/12/2016 remove dummy login before publish
                 // String email = Utils.TEST_EMAIL_FAN;
                 // String password = Utils.TEST_PASSWORD_FAN;
-                String email = Utils.TEST_EMAIL_MUSICIAN;
-                String password = Utils.TEST_PASSWORD_MUSICIAN;
-                // String email = et_email.getText().toString();
-                // String password = et_password.getText().toString();
+                // String email = Utils.TEST_EMAIL_MUSICIAN;
+                // String password = Utils.TEST_PASSWORD_MUSICIAN;
+                String email = et_email.getText().toString();
+                String password = et_password.getText().toString();
                 if (!validateForm(email, password)) {
                     return;
                 }
@@ -87,12 +87,12 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onLogInCompleted(Boolean success, String name, String email, String user_type) {
+    public void onLogInCompleted(Boolean success, String uid, String name, String email, String user_type) {
         hideAuthProgressDialog();
         if (success) {
-            // TODO: 04/12/2016 get user details from Firebase Database using email
-            userAuth.getUserFromFirebaseDb(email);
+            userAuth.getUserFromFirebaseDb(uid);
             Utils.storeUserType(user_type, this);
+            // TODO: 10/12/2016 store all details from user too
             Toast.makeText(this, name + " Logged in", Toast.LENGTH_LONG).show();
             startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
             finish();
@@ -102,7 +102,7 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+    public void onRegistrationCompleted(Boolean success, String uid, String name, String email, String userType) {
         // do nothing here
     }
 

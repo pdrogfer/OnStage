@@ -27,8 +27,6 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
 
     private final OnFirebaseUserCompleted firebaseListener;
     private final Context context;
-//    private String artisticName;
-//    private String userType;
 
     private UserFirebaseClient(Context context, OnFirebaseUserCompleted authListener) {
         databaseClient = DatabaseFirebaseClient.getInstance(context, this);
@@ -69,6 +67,18 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
                 });
     }
 
+    private void onAuthFailed(String errorMessage) {
+        // return result to RegisterActivity
+        firebaseListener.onLogInCompleted(false, null, null, null, null);
+        Log.e(Utils.FIREBASE_CLIENT, "onComplete: " + errorMessage);
+    }
+
+    private void onAuthSuccess(FirebaseUser user) {
+        // User already exists, so Retrieve User from Firebase Database
+        // callback goes to onDbUserRetrievedCompleted()
+        databaseClient.getUser(user.getUid());
+    }
+
     @Override
     public void signOut() {
         mAuth.signOut();
@@ -86,18 +96,16 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
                 }
             }
         });
+
+        // TODO: 10/12/2016 call firebase database to delete user details too
     }
 
     @Override
     public void registerUser(String email, String password, final String userName, final String userType) {
-//        this.artisticName = userName;
-//        this.userType = userType;
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(Utils.FIREBASE_CLIENT, "createUser:onComplete:" + task.isSuccessful());
-
                         if (task.isSuccessful()) {
                             onRegistrationSuccess(task.getResult().getUser(), userName, userType);
                         } else {
@@ -107,21 +115,9 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
                 });
     }
 
-    private void onAuthFailed(String errorMessage) {
-        // return result to RegisterActivity
-        firebaseListener.onLogInCompleted(false, null, null, null);
-        Log.e(Utils.FIREBASE_CLIENT, "onComplete: " + errorMessage);
-    }
-
-    private void onAuthSuccess(FirebaseUser user) {
-        // User already exists, so Retrieve User from Firebase Database
-        // callback goes to onDbUserRetrievedCompleted()
-        databaseClient.getUser(user.getUid());
-    }
-
     private void onRegistrationFailed(String errorMessage) {
         // return result to RegisterActivity
-        firebaseListener.onRegistrationCompleted(false, null, null, null);
+        firebaseListener.onRegistrationCompleted(false, null, null, null, null);
         Log.e(Utils.FIREBASE_CLIENT, "onRegistrationFailed: " + errorMessage);
     }
 
@@ -135,21 +131,24 @@ public class UserFirebaseClient implements UserOperationsSuperClient, OnDbReques
         databaseClient.getUser((uid));
     }
 
+    // callback for user login
     @Override
-    public void onDbUserSavedCompleted(User user) {
-        // return result to RegisterActivity. Firebase Auth only stores name and email
-        firebaseListener.onRegistrationCompleted(
+    public void onDbUserRetrievedCompleted(User user) {
+        firebaseListener.onLogInCompleted(
                 true,
+                user.getUid(),
                 user.getName(),
                 user.getEmail(),
                 user.getUserType());
     }
 
+    // callback for user registration
     @Override
-    public void onDbUserRetrievedCompleted(User user) {
-        // TODO: 10/12/2016 user from DB is received here
-        firebaseListener.onLogInCompleted(
+    public void onDbUserSavedCompleted(User user) {
+        // return result to RegisterActivity. Firebase Auth only stores name and email
+        firebaseListener.onRegistrationCompleted(
                 true,
+                user.getUid(),
                 user.getName(),
                 user.getEmail(),
                 user.getUserType());

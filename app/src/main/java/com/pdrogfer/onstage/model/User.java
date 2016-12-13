@@ -41,4 +41,12 @@ public class User {
     public void setUserType(String userType) {
         this.userType = userType;
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }

@@ -179,12 +179,12 @@ public class GigsListActivity extends AppCompatActivity implements OnFirebaseUse
     }
 
     @Override
-    public void onLogInCompleted(Boolean success, String name, String email, String user_type) {
+    public void onLogInCompleted(Boolean success, String uid, String name, String email, String user_type) {
         // do nothing here
     }
 
     @Override
-    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+    public void onRegistrationCompleted(Boolean success, String uid, String name, String email, String userType) {
 
     }
 

@@ -129,12 +129,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void onLogInCompleted(Boolean success, String name, String email, String userType) {
+    public void onLogInCompleted(Boolean success, String uid, String name, String email, String userType) {
         // do nothing here
     }
 
     @Override
-    public void onRegistrationCompleted(Boolean success, String name, String email, String userType) {
+    public void onRegistrationCompleted(Boolean success, String uid, String name, String email, String userType) {
         hideRegProgressDialog();
         if (!success) {
             Toast.makeText(this, "Error registering user", Toast.LENGTH_LONG).show();
