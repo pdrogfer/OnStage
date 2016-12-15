@@ -32,7 +32,7 @@ public class GigFragment extends Fragment {
     private ValueEventListener valueEventListenerBackup;
     private Activity activity;
 
-    private TextView tvVenue, tvTime, tvAddress, tvDate;
+    private TextView tvVenue, tvTime, tvAddress, tvDate, tvFee, tvDescription;
     private ImageView ivBanner;
 
     public GigFragment() {
@@ -52,7 +52,6 @@ public class GigFragment extends Fragment {
             // see GigDetailsActivity for implementation
             gigItem = FirebaseDatabase.getInstance().getReference()
                     .child(Utils.FIREBASE_GIGS).child(getArguments().getString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY));
-            // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
         } else {
         }
     }
@@ -71,8 +70,9 @@ public class GigFragment extends Fragment {
         tvVenue = (TextView) getView().findViewById(R.id.tv_details_venue);
         tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
         tvAddress = (TextView) getView().findViewById(R.id.tv_details_address);
+        tvFee = (TextView) getView().findViewById(R.id.tv_details_fee);
         tvDate = (TextView) getView().findViewById(R.id.tv_details_date);
-        ivBanner = (ImageView) getView().findViewById(R.id.ivBigImageTablet);
+        tvDescription = (TextView) getView().findViewById(R.id.tv_details_description);
 
         ValueEventListener gigListener = new ValueEventListener() {
             @Override
@@ -80,10 +80,11 @@ public class GigFragment extends Fragment {
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
                 tvVenue.setText(gig.getVenue());
-                tvTime.setText(gig.getStartTime());
+                tvTime.setText(gig.getStartTime() + " h");
                 tvAddress.setText(gig.getAddress());
                 tvDate.setText(gig.getDate());
-                // TODO: 22/09/2016 add description field
+                tvFee.setText(gig.getPrice());
+                tvDescription.setText(gig.getDescription());
             }
 
             @Override
