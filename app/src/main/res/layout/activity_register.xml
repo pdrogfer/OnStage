@@ -110,7 +110,7 @@
             android:layout_marginRight="8dp"
             android:layout_weight=".5"
             android:contentDescription="@string/btn_cancel"
-            android:text="@string/btn_cancel" />
+            android:text="Cancel" />
 
         <Button
             android:id="@+id/btn_register_register"

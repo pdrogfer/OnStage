@@ -26,7 +26,7 @@ import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
 
-public class GigsListActivity extends AppCompatActivity implements OnFirebaseUserCompleted {
+public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
@@ -48,7 +48,7 @@ public class GigsListActivity extends AppCompatActivity implements OnFirebaseUse
         setFabGigList();
 
         // this selects Firebase for user authentication
-        userOperationsSuperClient = UserFirebaseClient.getInstance(this, this);
+        // userOperationsSuperClient = UserFirebaseClient.getInstance(this, this);
 
         if (findViewById(R.id.gig_detail_container) != null) {
             usingMasterDetailFlow = true;
@@ -167,36 +167,15 @@ public class GigsListActivity extends AppCompatActivity implements OnFirebaseUse
     }
 
     private void logOutUser() {
-        userOperationsSuperClient.signOut();
+//        userOperationsSuperClient.signOut();
         startActivity(new Intent(this, PresentationActivity.class));
         finish();
     }
 
     private void deleteProfileUser() {
-        userOperationsSuperClient.deleteUser();
+//        userOperationsSuperClient.deleteUser();
         startActivity(new Intent(this, PresentationActivity.class));
         finish();
-    }
-
-    @Override
-    public void onLogInCompleted(Boolean success, String uid, String name, String email, String user_type) {
-        // do nothing here
-    }
-
-    @Override
-    public void onRegistrationCompleted(Boolean success, String uid, String name, String email, String userType) {
-
-    }
-
-    @Override
-    public void onSignOut() {
-        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this, PresentationActivity.class));
-    }
-
-    @Override
-    public void onUserDeleted() {
-
     }
 
     @Override

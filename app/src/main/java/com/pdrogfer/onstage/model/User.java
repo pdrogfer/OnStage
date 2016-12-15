@@ -8,7 +8,7 @@ public class User {
     private String userType;
 
     public User() {
-        // Default constructor required for calls to Firebase DataSnapshot.getValue(User.class)
+        // Default constructor required by Firebase
     }
 
     public User(String uid, String name, String email, String userType) {

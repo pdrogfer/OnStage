@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,20 +12,33 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
 import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
+import com.pdrogfer.onstage.model.User;
 
-public class LogInActivity extends BaseActivity implements View.OnClickListener, OnFirebaseUserCompleted {
+public class LogInActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "LogInActivity";
     private EditText et_email, et_password;
     private Button btn_cancel, btn_login;
 
     ProgressDialog authProgressDialog;
-    private UserOperationsSuperClient userAuth;
+    // private UserOperationsSuperClient userAuth;
+    FirebaseAuth fbAuth;
+    FirebaseDatabase fbDatabase;
     Context context;
 
     @Override
@@ -40,7 +54,9 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
 
         // do authentication using Firebase
-        userAuth = UserFirebaseClient.getInstance(this, this);
+//        userAuth = UserFirebaseClient.getInstance(this, this);
+        fbAuth = FirebaseAuth.getInstance();
+        fbDatabase = FirebaseDatabase.getInstance();
         context = this;
     }
 
@@ -55,14 +71,13 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
                 // TODO: 04/12/2016 remove dummy login before publish
                 // String email = Utils.TEST_EMAIL_FAN;
                 // String password = Utils.TEST_PASSWORD_FAN;
-                // String email = Utils.TEST_EMAIL_MUSICIAN;
-                // String password = Utils.TEST_PASSWORD_MUSICIAN;
-                String email = et_email.getText().toString();
-                String password = et_password.getText().toString();
+                String email = Utils.TEST_EMAIL_MUSICIAN;
+                String password = Utils.TEST_PASSWORD_MUSICIAN;
+//                String email = et_email.getText().toString();
+//                String password = et_password.getText().toString();
                 if (!validateForm(email, password)) {
                     return;
                 }
-                showAuthProgressDialog();
                 logIn(email, password);
                 break;
         }
@@ -82,38 +97,59 @@ public class LogInActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void logIn(String email, String password) {
+        showAuthProgressDialog();
         Log.d(Utils.FIREBASE_CLIENT, "LogInActivity");
-        userAuth.signIn(email, password);
+
+        fbAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    onLoginSuccessful(task.getResult().getUser());
+                } else {
+                    Toast.makeText(LogInActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onLogInCompleted(Boolean success, String uid, String name, String email, String user_type) {
-        hideAuthProgressDialog();
-        if (success) {
-            userAuth.getUserFromFirebaseDb(uid);
-            Utils.storeUserType(user_type, this);
-            // TODO: 10/12/2016 store all details from user too
-            Toast.makeText(this, name + " Logged in", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
-            finish();
+    private void onLoginSuccessful(FirebaseUser firebaseUser) {
+        String userName = extractNameFromEmail(firebaseUser.getEmail());
+        writeUserToDatabase(firebaseUser.getUid(), userName, firebaseUser.getEmail());
+
+        Toast.makeText(this, "Logged in", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(LogInActivity.this, GigsListActivity.class));
+        finish();
+    }
+
+    private void writeUserToDatabase(String uid, String userName, String email) {
+        fbDatabase.getReference().child("users").child(uid).setValue(new User(uid, userName, email, Utils.TEST_USER_TYPE_FAN));
+    }
+
+    private void getUserfromDatabase(String uid) {
+        fbDatabase.getReference().child(uid).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(Utils.TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                }
+        );
+    }
+
+    private String extractNameFromEmail(String email) {
+        if (email.contains("@")) {
+            String parts[] = email.split("@");
+            return parts[0];
         } else {
-            Toast.makeText(this, "Error in authentication process", Toast.LENGTH_LONG).show();
+            return email;
         }
-    }
-
-    @Override
-    public void onRegistrationCompleted(Boolean success, String uid, String name, String email, String userType) {
-        // do nothing here
-    }
-
-    @Override
-    public void onSignOut() {
-        // do nothing for the moment
-    }
-
-    @Override
-    public void onUserDeleted() {
-
     }
 
     private boolean validateForm(String email, String password) {
