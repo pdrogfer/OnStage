@@ -73,6 +73,8 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         et_email.setAdapter(adapter);
     }
 
+    // TODO: 15/12/2016 add OnStart to check auth and skip this activity
+
     @Override
     public void onClick(View view) {
         // TODO: 04/12/2016 remove dummy login before publish
@@ -80,8 +82,8 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         // String password = Utils.TEST_PASSWORD_FAN;
 //        String email = Utils.TEST_EMAIL_MUSICIAN;
 //        String password = Utils.TEST_PASSWORD_MUSICIAN;
-                String email = et_email.getText().toString();
-                String password = et_password.getText().toString();
+        String email = et_email.getText().toString();
+        String password = et_password.getText().toString();
         if (!validateForm(email, password)) {
             return;
         }
@@ -90,14 +92,18 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
                 logIn(email, password);
                 break;
             case R.id.button_register:
-                // register
-                userTypeRadioGroup.setVisibility(View.VISIBLE);
-                nameField.setVisibility(View.VISIBLE);
-//                Intent intentRegister = new Intent(PresentationActivity.this, RegisterActivity.class);
-//                intentRegister.putExtra("email", email);
-//                intentRegister.putExtra("password", password);
-//                startActivity(intentRegister);
-//                finish();
+                if (userTypeRadioGroup.getVisibility() == View.VISIBLE) {
+                    registerUser();
+
+                } else {
+                    // open register fields
+                    userTypeRadioGroup.setVisibility(View.VISIBLE);
+                    userFanRadioButton.setVisibility(View.VISIBLE);
+                    userMusicianRadioButton.setVisibility(View.VISIBLE);
+                    userVenueRadioButton.setVisibility(View.VISIBLE);
+                    nameField.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "Please fill in the details", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -129,6 +135,35 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         startActivity(new Intent(PresentationActivity.this, GigsListActivity.class));
         finish();
     }
+
+
+    private void registerUser() {
+        String emailValue = et_email.getText().toString();
+        String passwordValue = et_password.getText().toString();
+        String artisticNameValue = nameField.getText().toString();
+        String userTypeValue = getUserType();
+        if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
+            return;
+        }
+        Toast.makeText(this, "Register!", Toast.LENGTH_SHORT).show();
+    }
+
+    private String getUserType() {
+        if (userFanRadioButton.isChecked()) {
+            Toast.makeText(this, "user type = fan", Toast.LENGTH_SHORT).show();
+            return Utils.USER_FAN;
+        } else if (userMusicianRadioButton.isChecked()) {
+            Toast.makeText(this, "user type = musician", Toast.LENGTH_SHORT).show();
+            return Utils.USER_MUSICIAN;
+        } else if (userVenueRadioButton.isChecked()) {
+            Toast.makeText(this, "user type = venue", Toast.LENGTH_SHORT).show();
+            return Utils.USER_VENUE;
+        } else {
+            return null;
+        }
+
+    }
+
 
     private void writeUserToDatabase(String uid, String userName, String email) {
         fbDatabase.getReference().child("users").child(uid).setValue(new User(uid, userName, email, Utils.TEST_USER_TYPE_FAN));
@@ -164,6 +199,43 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
             result = false;
         } else {
             et_password.setError(null);
+        }
+        return result;
+    }
+
+    private boolean validateForm(String email, String password, String artisticName, String userTypeValue) {
+        boolean result = true;
+        if (TextUtils.isEmpty(email)) {
+            et_email.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_email.setError(null);
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            et_password.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+
+        if (TextUtils.getTrimmedLength(password) < 6) {
+            et_password.setError(getString(R.string.warning_pwd_too_short));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+
+        if (TextUtils.isEmpty(artisticName)) {
+            nameField.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            nameField.setError(null);
+        }
+
+        if (userTypeValue == null) {
+            Toast.makeText(this, "Please select a user type", Toast.LENGTH_SHORT).show();
+            result = false;
         }
         return result;
     }

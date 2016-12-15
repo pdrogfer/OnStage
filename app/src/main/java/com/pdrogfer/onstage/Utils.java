@@ -22,8 +22,9 @@ public class Utils {
     public static final String DB_KEY_USER_EMAIL = "email";
     public static final String DB_KEY_USER_PASSWORD = "password";
     public static final String DB_KEY_USER_TYPE = "user_type";
-    public static final String USER_MUSICIAN = "musician";
     public static final String USER_FAN = "fan";
+    public static final String USER_MUSICIAN = "musician";
+    public static final String USER_VENUE = "venue";
 
     // dummy user for testing
     public static final String TEST_EMAIL_MUSICIAN = "testmusician@hotmail.com";

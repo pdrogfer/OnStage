@@ -65,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:contentDescription="@string/select_fan_user_type"
-            android:onClick="onRadioBtnClick"
             android:text="@string/i_am_a_fan" />
 
         <RadioButton
@@ -74,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:contentDescription="@string/select_musician_user_type"
-            android:onClick="onRadioBtnClick"
             android:text="@string/i_am_a_musician_band" />
 
         <RadioButton
@@ -83,7 +81,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:contentDescription="@string/select_venue_user_type"
-            android:onClick="onRadioBtnClick"
             android:text="@string/i_have_a_venue" />
     </RadioGroup>
 
