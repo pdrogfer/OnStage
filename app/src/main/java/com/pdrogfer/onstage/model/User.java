@@ -49,4 +49,14 @@ public class User {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
+    }
 }

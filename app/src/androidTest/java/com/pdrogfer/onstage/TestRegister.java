@@ -3,9 +3,6 @@ package com.pdrogfer.onstage;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.pdrogfer.onstage.ui.PresentationActivity;
-import com.pdrogfer.onstage.ui.RegisterActivity;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

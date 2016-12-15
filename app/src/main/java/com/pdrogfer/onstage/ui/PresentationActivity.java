@@ -71,6 +71,14 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         fbDatabase = FirebaseDatabase.getInstance();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (fbAuth.getCurrentUser() != null) {
+            goToListActivity();
+        }
+    }
+
     private void setAutocomplete() {
         String[] emailProviders = getResources().getStringArray(R.array.emails_array);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -185,7 +193,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void getUserFromDatabase(String Uid) {
-        fbDatabase.getReference().child("users").addListenerForSingleValueEvent(
+        fbDatabase.getReference().child("users").child(Uid).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -203,8 +211,10 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
 
     private void onUserReceived(User user) {
 
-        Toast.makeText(this, "user logged and retrieved, name " + user.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "user logged and retrieved: " + user.toString(), Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onUserReceived: " + user.toString());
         // TODO: 15/12/2016 save user details to shared prefs
+        Utils.storeUserToSharedPrefs(user.getUid(), user.getName(), user.getEmail(), user.getUserType(), this);
         goToListActivity();
     }
 

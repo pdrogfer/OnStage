@@ -17,12 +17,11 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.OnFirebaseUserCompleted;
-import com.pdrogfer.onstage.firebase_client.UserFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
 
@@ -30,8 +29,10 @@ public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
-    private UserOperationsSuperClient userOperationsSuperClient;
+    FirebaseAuth refAuth;
+    final DatabaseReference refUsers = FirebaseDatabase.getInstance().getReference().child("users");
+    final DatabaseReference refGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
+    // private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
     private boolean usingMasterDetailFlow;
@@ -43,12 +44,11 @@ public class GigsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        refAuth = FirebaseAuth.getInstance();
+
         setBannerAdView();
         setRecyclerView();
         setFabGigList();
-
-        // this selects Firebase for user authentication
-        // userOperationsSuperClient = UserFirebaseClient.getInstance(this, this);
 
         if (findViewById(R.id.gig_detail_container) != null) {
             usingMasterDetailFlow = true;
@@ -70,7 +70,7 @@ public class GigsListActivity extends AppCompatActivity {
         mAdapter = new FirebaseRecyclerAdapter<Gig, GigViewHolder>(Gig.class,
                 R.layout.list_item_card,
                 GigViewHolder.class,
-                reference) {
+                refGigs) {
             @Override
             protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
                 final DatabaseReference gigRef = getRef(position);
@@ -103,7 +103,7 @@ public class GigsListActivity extends AppCompatActivity {
 
     private void setFabGigList() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
-        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(this));
+        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserTypeFromSharedPrefs(this));
         if (Utils.isUserEditor(this) && fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,7 +126,7 @@ public class GigsListActivity extends AppCompatActivity {
         if (requestCode == Utils.NEW_GIG_REQUEST) {
             if (resultCode == Utils.NEW_GIG_RESULT_OK) {
                 Gig tempGig = new Gig();
-                reference.push().setValue(tempGig);
+                refGigs.push().setValue(tempGig);
                 Toast.makeText(this, R.string.confirmation_gig_created, Toast.LENGTH_LONG).show();
             }
         }
@@ -168,14 +168,17 @@ public class GigsListActivity extends AppCompatActivity {
 
     private void logOutUser() {
 //        userOperationsSuperClient.signOut();
+        refAuth.signOut();
         startActivity(new Intent(this, PresentationActivity.class));
         finish();
     }
 
     private void deleteProfileUser() {
 //        userOperationsSuperClient.deleteUser();
-        startActivity(new Intent(this, PresentationActivity.class));
-        finish();
+        // TODO: 15/12/2016
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+        // startActivity(new Intent(this, PresentationActivity.class));
+        // finish();
     }
 
     @Override

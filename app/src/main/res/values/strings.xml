@@ -67,10 +67,10 @@
     <string name="warning_duplicated_user">Error, duplicated user. Please contact OnStage</string>
 
     <string-array name="emails_array">
-        <item>\@gmail.com</item>
-        <item>\@hotmail.com</item>
-        <item>\@yahoo.es</item>
-        <item>\@yahoo.com</item>
+        <item>gmail.com</item>
+        <item>hotmail.com</item>
+        <item>yahoo.es</item>
+        <item>yahoo.com</item>
     </string-array>
 
 </resources>

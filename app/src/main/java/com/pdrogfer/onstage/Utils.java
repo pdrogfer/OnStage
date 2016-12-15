@@ -18,6 +18,7 @@ public class Utils {
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
     public static final String FIREBASE_CLIENT = "UserFirebaseClient";
+    public static final String DB_KEY_USER_UID = "uid";
     public static final String DB_KEY_USER_NAME = "name";
     public static final String DB_KEY_USER_EMAIL = "email";
     public static final String DB_KEY_USER_PASSWORD = "password";
@@ -43,36 +44,17 @@ public class Utils {
 
     public static List<Gig> widgetData = new ArrayList<>();
 
-    public static void storeUser(String name, String email, String userType, Context context) {
+    public static void storeUserToSharedPrefs(String uid, String name, String email, String userType, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(DB_KEY_USER_UID, uid);
         editor.putString(DB_KEY_USER_NAME, name);
         editor.putString(DB_KEY_USER_EMAIL, email);
         editor.putString(DB_KEY_USER_TYPE, userType);
         editor.commit();
     }
 
-    // Helper functions to get artisticName and userType anywhere
-    public static void storeArtisticName(String keyName, String value, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(keyName, value);
-        editor.commit();
-    }
-
-    public static String getArtisticName(String keyName, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(keyName, null);
-    }
-
-    public static void storeUserType(String userType, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(DB_KEY_USER_TYPE, userType);
-        editor.commit();
-    }
-
-    public static String getUserType(Context context) {
+    public static String getUserTypeFromSharedPrefs(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(DB_KEY_USER_TYPE, null);
     }
@@ -86,9 +68,7 @@ public class Utils {
     }
 
     public static boolean isUserEditor(Context context) {
-
-        // TODO: 06/12/2016 get user type from user saved to preferences
-        Log.i(TAG, "isUserEditor: " + getUserType(context) + " " + USER_MUSICIAN);
-        return (getUserType(context) == USER_MUSICIAN);
+        Log.i(TAG, "isUserEditor: " + getUserTypeFromSharedPrefs(context) + " " + USER_MUSICIAN);
+        return (getUserTypeFromSharedPrefs(context).equals(USER_MUSICIAN));
     }
 }
