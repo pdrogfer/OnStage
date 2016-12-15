@@ -23,12 +23,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.User;
 
 public class PresentationActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "PresentationActivity";
 
     ProgressDialog authProgressDialog;
     private AutoCompleteTextView et_email;
@@ -68,7 +73,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
 
     private void setAutocomplete() {
         String[] emailProviders = getResources().getStringArray(R.array.emails_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, emailProviders);
         et_email.setAdapter(adapter);
     }
@@ -127,17 +132,12 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void onLoginSuccessful(FirebaseUser firebaseUser) {
-        String userName = extractNameFromEmail(firebaseUser.getEmail());
-        writeUserToDatabase(firebaseUser.getUid(), userName, firebaseUser.getEmail());
-
-        Toast.makeText(this, "Logged in", Toast.LENGTH_LONG).show();
-        hideAuthProgressDialog();
-        startActivity(new Intent(PresentationActivity.this, GigsListActivity.class));
-        finish();
+        getUserFromDatabase(firebaseUser.getUid()); // callback received in onUserReceived()
     }
 
 
     private void registerUser() {
+        showAuthProgressDialog();
         String emailValue = et_email.getText().toString();
         String passwordValue = et_password.getText().toString();
         String artisticNameValue = nameField.getText().toString();
@@ -145,18 +145,38 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
             return;
         }
-        Toast.makeText(this, "Register!", Toast.LENGTH_SHORT).show();
+        fbAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    onRegistrationSuccessful(task.getResult().getUser());
+                } else {
+                    Toast.makeText(PresentationActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void onRegistrationSuccessful(FirebaseUser user) {
+        // Write user to Firebase Database
+        String userEmail = et_email.getText().toString();
+        String userName = nameField.getText().toString();
+        String userType = getUserType();
+        fbDatabase.getReference().child("users").child(user.getUid()).setValue(
+                new User(user.getUid(), userName, userEmail, userType));
+        getUserFromDatabase(user.getUid());
     }
 
     private String getUserType() {
         if (userFanRadioButton.isChecked()) {
-            Toast.makeText(this, "user type = fan", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "user type = fan", Toast.LENGTH_SHORT).show();
             return Utils.USER_FAN;
         } else if (userMusicianRadioButton.isChecked()) {
-            Toast.makeText(this, "user type = musician", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "user type = musician", Toast.LENGTH_SHORT).show();
             return Utils.USER_MUSICIAN;
         } else if (userVenueRadioButton.isChecked()) {
-            Toast.makeText(this, "user type = venue", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "user type = venue", Toast.LENGTH_SHORT).show();
             return Utils.USER_VENUE;
         } else {
             return null;
@@ -164,18 +184,28 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    private void getUserFromDatabase(String Uid) {
+        fbDatabase.getReference().child("users").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        onUserReceived(user);
+                    }
 
-    private void writeUserToDatabase(String uid, String userName, String email) {
-        fbDatabase.getReference().child("users").child(uid).setValue(new User(uid, userName, email, Utils.TEST_USER_TYPE_FAN));
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                }
+        );
     }
 
-    private String extractNameFromEmail(String email) {
-        if (email.contains("@")) {
-            String parts[] = email.split("@");
-            return parts[0];
-        } else {
-            return email;
-        }
+    private void onUserReceived(User user) {
+
+        Toast.makeText(this, "user logged and retrieved, name " + user.getName(), Toast.LENGTH_SHORT).show();
+        // TODO: 15/12/2016 save user details to shared prefs
+        goToListActivity();
     }
 
     private boolean validateForm(String email, String password) {
@@ -238,6 +268,12 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
             result = false;
         }
         return result;
+    }
+
+    private void goToListActivity() {
+        hideAuthProgressDialog();
+        startActivity(new Intent(PresentationActivity.this, GigsListActivity.class));
+        finish();
     }
 
     private void showAuthProgressDialog() {
