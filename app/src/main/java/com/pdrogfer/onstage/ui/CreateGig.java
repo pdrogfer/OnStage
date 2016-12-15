@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -18,7 +19,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
+import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.firebase_client.DatabaseFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.OnDbRequestCompleted;
 import com.pdrogfer.onstage.model.Gig;
@@ -28,7 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreateGig extends AppCompatActivity implements View.OnClickListener, OnDbRequestCompleted {
+public class CreateGig extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "CreateGig";
 
@@ -36,21 +43,18 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     private static final String DATE_PICKER = "datePicker";
     private static final String TIME_PICKER = "timePicker";
     protected static TextView tvArtisticName, tvDate, tvTime;
-    protected static EditText etName, etVenue, etFee, etDescription;
+    protected static EditText etName, etVenue, etAddress, etFee, etDescription;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
-    protected static String artisticName, venue, price, description, timeString, dateString;
+    protected static String artisticName, venue, price, address, description, timeString, dateString;
 
-    private DatabaseFirebaseClient databaseClient;
+    private DatabaseReference fbDatabaseGigs;
     Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_gig);
-
-        databaseClient = DatabaseFirebaseClient.getInstance(this, this);
-        context = this;
 
         gigDate = new Date();
 
@@ -64,6 +68,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
         etName = (EditText) findViewById(R.id.etCreateGigName);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
+        etAddress = (EditText) findViewById(R.id.etCreateGigAddress);
         etFee = (EditText) findViewById(R.id.etCreateGigPrice);
         etDescription = (EditText) findViewById(R.id.etCreateGigDescription);
 
@@ -72,6 +77,8 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+
+        fbDatabaseGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
     }
 
     @Override
@@ -89,27 +96,38 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 artisticName = etName.getText().toString();
                 venue = etVenue.getText().toString();
                 price = etFee.getText().toString();
+                address = etAddress.getText().toString();
                 description = etDescription.getText().toString();
-                if (!validateInputGig(artisticName, venue, price, description)) {
+                if (!validateInputGig(artisticName, venue, address, price, description)) {
                     Toast.makeText(this, R.string.warning_fill_all_fields, Toast.LENGTH_LONG).show();
                     break;
                 }
                 long timestamp = System.currentTimeMillis();
 
-                databaseClient.addGig(timestamp,
+                fbDatabaseGigs.child(String.valueOf(timestamp)).setValue(new Gig(timestamp,
                         artisticName,
                         venue,
+                        address,
                         dateString,
                         timeString,
                         price,
-                        description);
+                        description)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            returnToListActivity();
+                        } else {
+                            Toast.makeText(context, "Error creating event", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 break;
             case R.id.btnCancelGigCreate:
                 startActivity(new Intent(this, GigsListActivity.class));
         }
     }
 
-    private boolean validateInputGig(String artisticName, String venue, String fee, String description) {
+    private boolean validateInputGig(String artisticName, String venue, String address, String fee, String description) {
         boolean validation = true;
         if (TextUtils.isEmpty(artisticName)) {
             etName.setError(getString(R.string.field_required_warning));
@@ -118,6 +136,12 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
             etName.setError(null);
         }
         if (TextUtils.isEmpty(venue)) {
+            etVenue.setError(getString(R.string.field_required_warning));
+            validation = false;
+        } else {
+            etVenue.setError(null);
+        }
+        if (TextUtils.isEmpty(address)) {
             etVenue.setError(getString(R.string.field_required_warning));
             validation = false;
         } else {
@@ -138,23 +162,9 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         return validation;
     }
 
-
-    @Override
-    public void onDbGigRequestCompleted(Gig gig) {
-        Toast.makeText(this, gig.getArtist() + getString(R.string.new_gig_confirmation) + gig.getVenue(),
-                Toast.LENGTH_LONG).show();
+    private void returnToListActivity() {
         startActivity(new Intent(this, GigsListActivity.class));
         finish();
-    }
-
-    @Override
-    public void onDbUserSavedCompleted(User user) {
-        // Do nothing here, this callback is for RegisterActivity
-    }
-
-    @Override
-    public void onDbUserRetrievedCompleted(User user) {
-
     }
 
     public static class TimePickerFragment extends DialogFragment

@@ -5,7 +5,7 @@
     <string name="btn_register">Register</string>
     <string name="hint_password">password</string>
     <string name="hint_email">email</string>
-    <string name="title_activity_gigs_list">Next Gigs</string>
+    <string name="title_activity_gigs_list">Next Live Events</string>
     <string name="menu_logout">Log Out</string>
     <string name="hint_name">Name, Band\'s name, or Venue</string>
     <string name="field_required_warning">Required</string>
@@ -18,7 +18,7 @@
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="create_a_new_gig">Create a New Gig</string>
+    <string name="create_a_new_gig">New Gig</string>
     <string name="name">Name</string>
     <string name="band_s_name">Band\'s Name</string>
     <string name="date">Date</string>

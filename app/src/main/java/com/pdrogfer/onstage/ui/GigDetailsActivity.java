@@ -29,7 +29,7 @@ public class GigDetailsActivity extends AppCompatActivity {
     private ValueEventListener valueEventListenerBackup;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private TextView tvVenue, tvTime, tvCity, tvDate, tvDescription;
+    private TextView tvVenue, tvTime, tvAddress, tvDate, tvFee, tvDescription;
 
 
     @Override
@@ -65,8 +65,9 @@ public class GigDetailsActivity extends AppCompatActivity {
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         tvVenue = (TextView) findViewById(R.id.tv_details_venue);
         tvTime = (TextView) findViewById(R.id.tv_details_time);
-        tvCity = (TextView) findViewById(R.id.tv_details_city);
+        tvAddress = (TextView) findViewById(R.id.tv_details_address);
         tvDate = (TextView) findViewById(R.id.tv_details_date);
+        tvFee = (TextView) findViewById(R.id.tv_details_fee);
         tvDescription = (TextView) findViewById(R.id.tv_details_description);
 
     }
@@ -82,9 +83,10 @@ public class GigDetailsActivity extends AppCompatActivity {
 
                 collapsingToolbarLayout.setTitle(gig.getArtist());
                 tvVenue.setText(gig.getVenue());
-                tvTime.setText(gig.getStartTime());
-                tvCity.setText(gig.getCity());
+                tvTime.setText(gig.getStartTime() + " h");
+                tvAddress.setText(gig.getAddress());
                 tvDate.setText(gig.getDate());
+                tvFee.setText(gig.getPrice());
                 tvDescription.setText(gig.getDescription());
             }
 

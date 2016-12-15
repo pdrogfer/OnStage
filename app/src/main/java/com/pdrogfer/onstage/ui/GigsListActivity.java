@@ -30,7 +30,7 @@ public class GigsListActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
     FirebaseAuth refAuth;
-    final DatabaseReference refUsers = FirebaseDatabase.getInstance().getReference().child("users");
+    final DatabaseReference refUsers = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_USERS);
     final DatabaseReference refGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
     // private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;

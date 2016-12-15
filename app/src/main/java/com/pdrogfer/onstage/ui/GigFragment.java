@@ -3,8 +3,6 @@ package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
-import com.squareup.picasso.Picasso;
-
-import static com.pdrogfer.onstage.ui.CreateGig.tvDate;
-import static com.pdrogfer.onstage.ui.CreateGig.tvTime;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +32,7 @@ public class GigFragment extends Fragment {
     private ValueEventListener valueEventListenerBackup;
     private Activity activity;
 
-    private TextView tvVenue, tvTime, tvCity, tvDate;
+    private TextView tvVenue, tvTime, tvAddress, tvDate;
     private ImageView ivBanner;
 
     public GigFragment() {
@@ -76,7 +70,7 @@ public class GigFragment extends Fragment {
 
         tvVenue = (TextView) getView().findViewById(R.id.tv_details_venue);
         tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
-        tvCity = (TextView) getView().findViewById(R.id.tv_details_city);
+        tvAddress = (TextView) getView().findViewById(R.id.tv_details_address);
         tvDate = (TextView) getView().findViewById(R.id.tv_details_date);
         ivBanner = (ImageView) getView().findViewById(R.id.ivBigImageTablet);
 
@@ -87,7 +81,7 @@ public class GigFragment extends Fragment {
 
                 tvVenue.setText(gig.getVenue());
                 tvTime.setText(gig.getStartTime());
-                tvCity.setText(gig.getCity());
+                tvAddress.setText(gig.getAddress());
                 tvDate.setText(gig.getDate());
                 // TODO: 22/09/2016 add description field
             }
