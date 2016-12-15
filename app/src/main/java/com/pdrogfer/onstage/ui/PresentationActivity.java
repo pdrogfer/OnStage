@@ -35,6 +35,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
     private EditText et_password;
     private RadioGroup userTypeRadioGroup;
     private RadioButton userFanRadioButton, userMusicianRadioButton, userVenueRadioButton;
+    private EditText nameField;
     Button btnLogin, btnRegister;
 
     FirebaseAuth fbAuth;
@@ -53,6 +54,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         userFanRadioButton = (RadioButton) findViewById(R.id.radioButtonFan);
         userMusicianRadioButton = (RadioButton) findViewById(R.id.radioButtonMusician);
         userVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
+        nameField = (EditText) findViewById(R.id.field_name);
         btnLogin = (Button) findViewById(R.id.btn_goto_login);
         btnRegister = (Button) findViewById(R.id.button_register);
         btnLogin.setOnClickListener(this);
@@ -89,7 +91,8 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.button_register:
                 // register
-                tv_here.setVisibility(View.VISIBLE);
+                userTypeRadioGroup.setVisibility(View.VISIBLE);
+                nameField.setVisibility(View.VISIBLE);
 //                Intent intentRegister = new Intent(PresentationActivity.this, RegisterActivity.class);
 //                intentRegister.putExtra("email", email);
 //                intentRegister.putExtra("password", password);
