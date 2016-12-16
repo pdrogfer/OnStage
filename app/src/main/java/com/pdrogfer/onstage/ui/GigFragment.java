@@ -3,6 +3,7 @@ package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class GigFragment extends Fragment {
     private ValueEventListener valueEventListenerBackup;
     private Activity activity;
 
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private TextView tvVenue, tvTime, tvAddress, tvDate, tvFee, tvDescription;
     private ImageView ivBanner;
 
@@ -67,6 +69,7 @@ public class GigFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        collapsingToolbarLayout = (CollapsingToolbarLayout) getView().findViewById(R.id.toolbar_layout);
         tvVenue = (TextView) getView().findViewById(R.id.tv_details_venue);
         tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
         tvAddress = (TextView) getView().findViewById(R.id.tv_details_address);
@@ -79,6 +82,7 @@ public class GigFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
+                collapsingToolbarLayout.setTitle(gig.getArtist());
                 tvVenue.setText(gig.getVenue());
                 tvTime.setText(gig.getStartTime() + " h");
                 tvAddress.setText(gig.getAddress());
