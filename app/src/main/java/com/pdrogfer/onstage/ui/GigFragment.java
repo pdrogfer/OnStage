@@ -35,7 +35,7 @@ public class GigFragment extends Fragment {
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private TextView tvVenue, tvTime, tvAddress, tvDate, tvFee, tvDescription;
-    private ImageView ivBanner;
+    // private ImageView ivBanner; // not implemented yet
 
     public GigFragment() {
         // Required empty public constructor
@@ -47,10 +47,8 @@ public class GigFragment extends Fragment {
 
         activity = this.getActivity();
 
-
         if (getArguments().containsKey(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY)) {
             // all this according FirebaseSamples - database
-
             // see GigDetailsActivity for implementation
             gigItem = FirebaseDatabase.getInstance().getReference()
                     .child(Utils.FIREBASE_GIGS).child(getArguments().getString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY));

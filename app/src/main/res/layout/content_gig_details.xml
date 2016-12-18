@@ -90,7 +90,7 @@
             android:id="@+id/tv_details_description"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:text="@string/event_description"/>
+            android:text="@string/no_description_available"/>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

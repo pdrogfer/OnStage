@@ -1,11 +1,14 @@
 package com.pdrogfer.onstage.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -39,14 +42,12 @@ public class GigDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_share_gig);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: 27/10/2016 replace this when implementing SHARE action
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    shareOnStageEvent();
                 }
             });
         }
@@ -70,6 +71,24 @@ public class GigDetailsActivity extends AppCompatActivity {
         tvFee = (TextView) findViewById(R.id.tv_details_fee);
         tvDescription = (TextView) findViewById(R.id.tv_details_description);
 
+    }
+
+    private void shareOnStageEvent() {
+        String OnStageGooglePlayUrl = "market://details?id=pgf.sonicbubblesii";
+        try {
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            String shareBody = "New live event of " + collapsingToolbarLayout.getTitle() +  " from https://play.google.com/store/apps/details?id=pgf.sonicbubblesii";
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "OnStage Live!");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+//            sharingIntent.setClassName("com.pdrogfer.onstage.ui", "com.pdrogfer.onstage.ui.GigDetailsActivity");
+//            sharingIntent.putExtra(EXTRA_GIG_DETAILS_KEY, gigIntentKey);
+//            startActivity(sharingIntent);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error Sharing Event", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
