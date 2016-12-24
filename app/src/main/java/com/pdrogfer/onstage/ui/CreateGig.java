@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -19,6 +20,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,15 +43,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreateGig extends AppCompatActivity implements View.OnClickListener {
+public class CreateGig extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "CreateGig";
 
-    Button btnTime, btnDate, btnCreateGig, btnCancel;
+    private GoogleApiClient googleApiClient;
+
+    Button btnTime, btnDate, btnCreateGig, btnCancel, btnAddress;
     private static final String DATE_PICKER = "datePicker";
     private static final String TIME_PICKER = "timePicker";
-    protected static TextView tvArtisticName, tvDate, tvTime;
-    protected static EditText etName, etVenue, etAddress, etFee, etDescription;
+    private static final int PLACE_PICKER_REQUEST = 1;
+    protected static TextView tvArtisticName, tvDate, tvTime, tvAddress;
+    protected static EditText etName, etVenue, etFee, etDescription;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
     protected static String artisticName, venue, price, address, description, timeString, dateString;
@@ -63,12 +74,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnDate = (Button) findViewById(R.id.btnCreateGigDate);
         btnCreateGig = (Button) findViewById(R.id.btnCreateGigCreate);
         btnCancel = (Button) findViewById(R.id.btnCancelGigCreate);
+        btnAddress = (Button) findViewById(R.id.btnAddress);
         tvArtisticName = (TextView) findViewById(R.id.tvCreateGigArtisticName);
         tvDate = (TextView) findViewById(R.id.tvCreateGigDate);
         tvTime = (TextView) findViewById(R.id.tvCreateGigTime);
+        tvAddress = (TextView) findViewById(R.id.tvCreateGigAddress);
         etName = (EditText) findViewById(R.id.etCreateGigName);
         etVenue = (EditText) findViewById(R.id.etCreateGigWhere);
-        etAddress = (EditText) findViewById(R.id.etCreateGigAddress);
         etFee = (EditText) findViewById(R.id.etCreateGigPrice);
         etDescription = (EditText) findViewById(R.id.etCreateGigDescription);
 
@@ -77,8 +89,43 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnDate.setOnClickListener(this);
         btnCreateGig.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
+        btnAddress.setOnClickListener(this);
 
         fbDatabaseGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -96,7 +143,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 artisticName = etName.getText().toString();
                 venue = etVenue.getText().toString();
                 price = etFee.getText().toString();
-                address = etAddress.getText().toString();
+                address = tvAddress.getText().toString();
                 description = etDescription.getText().toString();
                 if (!validateInputGig(artisticName, venue, address, price, description)) {
                     Toast.makeText(this, R.string.warning_fill_all_fields, Toast.LENGTH_LONG).show();
@@ -124,6 +171,32 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.btnCancelGigCreate:
                 startActivity(new Intent(this, GigsListActivity.class));
+                finish();
+                break;
+            case R.id.btnAddress:
+                getPlace();
+        }
+    }
+
+    private void getPlace() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String resultAddress = String.format("Place: %s, %s", place.getName(), place.getAddress());
+                Toast.makeText(this, resultAddress, Toast.LENGTH_LONG).show();
+                tvAddress.setText(resultAddress);
+            }
         }
     }
 

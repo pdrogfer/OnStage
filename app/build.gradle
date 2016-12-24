@@ -61,11 +61,11 @@ dependencies {
     // Gson
     compile 'com.google.code.gson:gson:2.4'
 
-    // Maps
-    // compile 'com.google.android.gms:play-services-maps:9.4.0'
+    // Google Places API
+    compile 'com.google.android.gms:play-services-places:9.4.0'
 
     // Loopj
-    compile 'com.loopj.android:android-async-http:1.4.9'
+    // compile 'com.loopj.android:android-async-http:1.4.9'
 
     compile 'com.google.android.gms:play-services-appindexing:9.4.0'
 

@@ -66,6 +66,8 @@
     <string name="warning_no_user">No user match our database. Please register</string>
     <string name="warning_duplicated_user">Error, duplicated user. Please contact OnStage</string>
     <string name="about">About OnStage</string>
+    <string name="click_button_to_set_address">Click Button to set Address</string>
+    <string name="address">Address</string>
 
     <string-array name="emails_array">
         <item>gmail.com</item>

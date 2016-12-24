@@ -143,23 +143,25 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/btnAddress"
+                style="@style/button_color"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/btn_select_time"
+                android:text="@string/address" />
+
             <TextView
                 android:id="@+id/tvCreateGigAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Address"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/etCreateGigAddress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:hint="How to get there"
+                android:hint="@string/click_button_to_set_address"
                 android:textSize="16dp" />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -199,7 +201,7 @@
             android:inputType="textMultiLine"
             android:lines="6"
             android:maxLines="10"
-            android:minLines="4"
+            android:minLines="2"
             android:scrollbars="vertical" />
 
         <LinearLayout
