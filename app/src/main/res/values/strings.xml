@@ -65,6 +65,7 @@
     <string name="warning_error_loggin_out">Error logging out</string>
     <string name="warning_no_user">No user match our database. Please register</string>
     <string name="warning_duplicated_user">Error, duplicated user. Please contact OnStage</string>
+    <string name="about">About OnStage</string>
 
     <string-array name="emails_array">
         <item>gmail.com</item>

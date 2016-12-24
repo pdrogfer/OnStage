@@ -1,9 +1,12 @@
 package com.pdrogfer.onstage.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -160,10 +163,31 @@ public class GigsListActivity extends AppCompatActivity {
             case R.id.action_user_delete:
                 deleteProfileUser();
                 break;
+            case R.id.action_about:
+                displayInfo();
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void displayInfo() {
+        PackageManager manager = this.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(
+                    this.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = info.versionName;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("About OnStage");
+        builder.setMessage("App Version: v" + version);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void logOutUser() {
