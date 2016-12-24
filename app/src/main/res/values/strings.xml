@@ -18,7 +18,7 @@
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="create_a_new_gig">New Gig</string>
+    <string name="create_a_new_gig">New Live Event</string>
     <string name="name">Name</string>
     <string name="band_s_name">Band\'s Name</string>
     <string name="date">Date</string>

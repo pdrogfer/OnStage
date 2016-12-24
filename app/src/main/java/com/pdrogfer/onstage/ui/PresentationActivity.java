@@ -86,18 +86,11 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         et_email.setAdapter(adapter);
     }
 
-    // TODO: 15/12/2016 add OnStart to check auth and skip this activity
-
     @Override
     public void onClick(View view) {
-        // TODO: 04/12/2016 remove dummy login before publish
-        // String email = Utils.TEST_EMAIL_FAN;
-        // String password = Utils.TEST_PASSWORD_FAN;
-//        String email = Utils.TEST_EMAIL_MUSICIAN;
-//        String password = Utils.TEST_PASSWORD_MUSICIAN;
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
-        if (!validateForm(email, password)) {
+        if (!validateFormLogin(email, password)) {
             return;
         }
         switch (view.getId()) {
@@ -150,20 +143,24 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         String passwordValue = et_password.getText().toString();
         String artisticNameValue = nameField.getText().toString();
         String userTypeValue = getUserType();
-        if (!validateForm(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
+        if (validateFormRegister(emailValue, passwordValue, artisticNameValue, userTypeValue)) {
+            fbAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                onRegistrationSuccessful(task.getResult().getUser());
+                            } else {
+                                Toast.makeText(PresentationActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
+                                hideAuthProgressDialog();
+                            }
+                        }
+                    });
+        } else {
+            hideAuthProgressDialog();
             return;
         }
-        fbAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    onRegistrationSuccessful(task.getResult().getUser());
-                } else {
-                    Toast.makeText(PresentationActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
     }
 
     private void onRegistrationSuccessful(FirebaseUser user) {
@@ -174,6 +171,68 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         fbDatabase.getReference().child("users").child(user.getUid()).setValue(
                 new User(user.getUid(), userName, userEmail, userType));
         getUserFromDatabase(user.getUid());
+    }
+
+    private boolean validateFormLogin(String email, String password) {
+        boolean result = true;
+        if (TextUtils.isEmpty(email)) {
+            et_email.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_email.setError(null);
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            et_password.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+
+        if (TextUtils.getTrimmedLength(password) < 6) {
+            et_password.setError(getString(R.string.warning_pwd_too_short));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+        return result;
+    }
+
+    private boolean validateFormRegister(String email, String password, String artisticName, String userTypeValue) {
+        boolean result = true;
+        if (TextUtils.isEmpty(email)) {
+            et_email.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_email.setError(null);
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            et_password.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+
+        if (TextUtils.getTrimmedLength(password) < 6) {
+            et_password.setError(getString(R.string.warning_pwd_too_short));
+            result = false;
+        } else {
+            et_password.setError(null);
+        }
+
+        if (TextUtils.isEmpty(artisticName)) {
+            nameField.setError(getString(R.string.field_required_warning));
+            result = false;
+        } else {
+            nameField.setError(null);
+        }
+
+        if (userTypeValue == null) {
+            Toast.makeText(this, "Please select a user type", Toast.LENGTH_SHORT).show();
+            result = false;
+        }
+        return result;
     }
 
     private String getUserType() {
@@ -211,73 +270,10 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
 
     private void onUserReceived(User user) {
 
-        Toast.makeText(this, "user logged and retrieved: " + user.toString(), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "user logged and retrieved: " + user.toString(), Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onUserReceived: " + user.toString());
-        // TODO: 15/12/2016 save user details to shared prefs
         Utils.storeUserToSharedPrefs(user.getUid(), user.getName(), user.getEmail(), user.getUserType(), this);
         goToListActivity();
-    }
-
-    private boolean validateForm(String email, String password) {
-        boolean result = true;
-        if (TextUtils.isEmpty(email)) {
-            et_email.setError(getString(R.string.field_required_warning));
-            result = false;
-        } else {
-            et_email.setError(null);
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            et_password.setError(getString(R.string.field_required_warning));
-            result = false;
-        } else {
-            et_password.setError(null);
-        }
-
-        if (TextUtils.getTrimmedLength(password) < 6) {
-            et_password.setError(getString(R.string.warning_pwd_too_short));
-            result = false;
-        } else {
-            et_password.setError(null);
-        }
-        return result;
-    }
-
-    private boolean validateForm(String email, String password, String artisticName, String userTypeValue) {
-        boolean result = true;
-        if (TextUtils.isEmpty(email)) {
-            et_email.setError(getString(R.string.field_required_warning));
-            result = false;
-        } else {
-            et_email.setError(null);
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            et_password.setError(getString(R.string.field_required_warning));
-            result = false;
-        } else {
-            et_password.setError(null);
-        }
-
-        if (TextUtils.getTrimmedLength(password) < 6) {
-            et_password.setError(getString(R.string.warning_pwd_too_short));
-            result = false;
-        } else {
-            et_password.setError(null);
-        }
-
-        if (TextUtils.isEmpty(artisticName)) {
-            nameField.setError(getString(R.string.field_required_warning));
-            result = false;
-        } else {
-            nameField.setError(null);
-        }
-
-        if (userTypeValue == null) {
-            Toast.makeText(this, "Please select a user type", Toast.LENGTH_SHORT).show();
-            result = false;
-        }
-        return result;
     }
 
     private void goToListActivity() {
