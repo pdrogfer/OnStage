@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -30,6 +32,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
@@ -57,9 +60,11 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected static EditText etName, etVenue, etFee, etDescription;
     protected static int gYear, gMonth, gDay, gHour, gMinute;
     private Date gigDate;
+    private Place place;
     protected static String artisticName, venue, price, address, description, timeString, dateString;
 
     private DatabaseReference fbDatabaseGigs;
+    private DatabaseReference fbDatabaseGeoFire;
     Context context;
 
     @Override
@@ -92,6 +97,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
         btnAddress.setOnClickListener(this);
 
         fbDatabaseGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
+        fbDatabaseGeoFire = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GEOFIRE);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -140,34 +146,7 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER);
                 break;
             case R.id.btnCreateGigCreate:
-                artisticName = etName.getText().toString();
-                venue = etVenue.getText().toString();
-                price = etFee.getText().toString();
-                address = tvAddress.getText().toString();
-                description = etDescription.getText().toString();
-                if (!validateInputGig(artisticName, venue, address, price, description)) {
-                    Toast.makeText(this, R.string.warning_fill_all_fields, Toast.LENGTH_LONG).show();
-                    break;
-                }
-                long timestamp = System.currentTimeMillis();
-
-                fbDatabaseGigs.child(String.valueOf(timestamp)).setValue(new Gig(timestamp,
-                        artisticName,
-                        venue,
-                        address,
-                        dateString,
-                        timeString,
-                        price,
-                        description)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            returnToListActivity();
-                        } else {
-                            Toast.makeText(context, "Error creating event", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                createGig();
                 break;
             case R.id.btnCancelGigCreate:
                 startActivity(new Intent(this, GigsListActivity.class));
@@ -175,6 +154,54 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.btnAddress:
                 getPlace();
+        }
+    }
+
+    private void createGig() {
+        artisticName = etName.getText().toString();
+        venue = etVenue.getText().toString();
+        price = etFee.getText().toString();
+        address = tvAddress.getText().toString();
+        description = etDescription.getText().toString();
+        if (!validateInputGig(artisticName, venue, address, price, description)) {
+            Toast.makeText(this, R.string.warning_fill_all_fields, Toast.LENGTH_LONG).show();
+            return;
+        }
+        long timestamp = System.currentTimeMillis();
+
+        fbDatabaseGigs.child(String.valueOf(timestamp)).setValue(new Gig(timestamp,
+                artisticName,
+                venue,
+                address,
+                dateString,
+                timeString,
+                price,
+                description)).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    returnToListActivity();
+                } else {
+                    Toast.makeText(context, "Error creating event", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // TODO: 26/12/2016 store location in GeoFire
+        GeoFire geoFire = new GeoFire(fbDatabaseGeoFire);
+        if (place != null) {
+            geoFire.setLocation(String.valueOf(timestamp),
+                    new GeoLocation(place.getLatLng().latitude, place.getLatLng().longitude),
+                    new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+                            if (error != null) {
+                                System.err.println("There was an error saving the location to GeoFire: " + error);
+                            } else {
+                                System.out.println("Location saved on server successfully!");
+                            }
+                        }
+                    });
         }
     }
 
@@ -192,10 +219,13 @@ public class CreateGig extends AppCompatActivity implements View.OnClickListener
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
+                place = PlacePicker.getPlace(data, this);
                 String resultAddress = String.format("Place: %s, %s", place.getName(), place.getAddress());
                 Toast.makeText(this, resultAddress, Toast.LENGTH_LONG).show();
                 tvAddress.setText(resultAddress);
+
+                // TODO: 26/12/2016 set place Latitude and Longitude
+
             }
         }
     }

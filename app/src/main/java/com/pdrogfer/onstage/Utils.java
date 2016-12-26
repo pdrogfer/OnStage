@@ -14,6 +14,7 @@ import java.util.List;
 public class Utils {
     public static final String FIREBASE_GIGS = "gigs";
     public static final String FIREBASE_USERS = "users";
+    public static final String FIREBASE_GEOFIRE = "places";
     public static final String TAG = "OnStage";
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
