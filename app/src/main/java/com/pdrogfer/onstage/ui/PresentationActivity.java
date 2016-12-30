@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,7 +59,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
         userMusicianRadioButton = (RadioButton) findViewById(R.id.radioButtonMusician);
         userVenueRadioButton = (RadioButton) findViewById(R.id.radioButtonVenue);
         nameField = (EditText) findViewById(R.id.field_name);
-        btnLogin = (Button) findViewById(R.id.btn_goto_login);
+        btnLogin = (Button) findViewById(R.id.btn_login);
         btnRegister = (Button) findViewById(R.id.button_register);
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
@@ -94,7 +93,7 @@ public class PresentationActivity extends AppCompatActivity implements View.OnCl
             return;
         }
         switch (view.getId()) {
-            case R.id.btn_goto_login:
+            case R.id.btn_login:
                 logIn(email, password);
                 break;
             case R.id.button_register:
