@@ -9,4 +9,4 @@ android:
     - extra-google-m2repository # for Google Play Services
 
 script:
-   - ./gradlew build connectedCheck
+   - ./gradlew build testLogin
