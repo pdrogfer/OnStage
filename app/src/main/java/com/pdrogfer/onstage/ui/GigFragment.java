@@ -3,7 +3,6 @@ package com.pdrogfer.onstage.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,10 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
 import com.pdrogfer.onstage.model.Gig;
-import com.squareup.picasso.Picasso;
-
-import static com.pdrogfer.onstage.ui.CreateGig.tvDate;
-import static com.pdrogfer.onstage.ui.CreateGig.tvTime;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,8 +33,9 @@ public class GigFragment extends Fragment {
     private ValueEventListener valueEventListenerBackup;
     private Activity activity;
 
-    private TextView tvVenue, tvTime, tvCity, tvDate;
-    private ImageView ivBanner;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private TextView tvVenue, tvTime, tvAddress, tvDate, tvFee, tvDescription;
+    // private ImageView ivBanner; // not implemented yet
 
     public GigFragment() {
         // Required empty public constructor
@@ -51,14 +47,11 @@ public class GigFragment extends Fragment {
 
         activity = this.getActivity();
 
-
         if (getArguments().containsKey(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY)) {
             // all this according FirebaseSamples - database
-
             // see GigDetailsActivity for implementation
             gigItem = FirebaseDatabase.getInstance().getReference()
                     .child(Utils.FIREBASE_GIGS).child(getArguments().getString(GigDetailsActivity.EXTRA_GIG_DETAILS_KEY));
-            // TODO: 09/09/2016 Initialize views from details layout, override OnStart and assign values to UI fields
         } else {
         }
     }
@@ -74,22 +67,26 @@ public class GigFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        collapsingToolbarLayout = (CollapsingToolbarLayout) getView().findViewById(R.id.toolbar_layout);
         tvVenue = (TextView) getView().findViewById(R.id.tv_details_venue);
         tvTime = (TextView) getView().findViewById(R.id.tv_details_time);
-        tvCity = (TextView) getView().findViewById(R.id.tv_details_city);
+        tvAddress = (TextView) getView().findViewById(R.id.tv_details_address);
+        tvFee = (TextView) getView().findViewById(R.id.tv_details_fee);
         tvDate = (TextView) getView().findViewById(R.id.tv_details_date);
-        ivBanner = (ImageView) getView().findViewById(R.id.ivBigImageTablet);
+        tvDescription = (TextView) getView().findViewById(R.id.tv_details_description);
 
         ValueEventListener gigListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Gig gig = dataSnapshot.getValue(Gig.class);
 
+                collapsingToolbarLayout.setTitle(gig.getArtist());
                 tvVenue.setText(gig.getVenue());
-                tvTime.setText(gig.getStartTime());
-                tvCity.setText(gig.getCity());
+                tvTime.setText(gig.getStartTime() + " h");
+                tvAddress.setText(gig.getAddress());
                 tvDate.setText(gig.getDate());
-                // TODO: 22/09/2016 add description field
+                tvFee.setText(gig.getPrice());
+                tvDescription.setText(gig.getDescription());
             }
 
             @Override

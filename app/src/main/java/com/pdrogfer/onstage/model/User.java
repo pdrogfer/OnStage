@@ -2,15 +2,17 @@ package com.pdrogfer.onstage.model;
 
 public class User {
 
-    public String name;
-    public String email;
-    public String userType;
+    private String uid;
+    private String name;
+    private String email;
+    private String userType;
 
     public User() {
-        // Default constructor required for calls to Firebase DataSnapshot.getValue(User.class)
+        // Default constructor required by Firebase
     }
 
-    public User(String name, String email, String userType) {
+    public User(String uid, String name, String email, String userType) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.userType = userType;
@@ -38,5 +40,23 @@ public class User {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
     }
 }

@@ -3,8 +3,10 @@ package com.pdrogfer.onstage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.pdrogfer.onstage.model.Gig;
+import com.pdrogfer.onstage.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +17,24 @@ public class Utils {
     public static final String TAG = "OnStage";
     public static final int NEW_GIG_REQUEST = 1;
     public static final int NEW_GIG_RESULT_OK = 200;
-    public static final String LOG_IN = "RegisterActivity";
+    public static final String FIREBASE_CLIENT = "UserFirebaseClient";
+    public static final String DB_KEY_USER_UID = "uid";
     public static final String DB_KEY_USER_NAME = "name";
     public static final String DB_KEY_USER_EMAIL = "email";
     public static final String DB_KEY_USER_PASSWORD = "password";
     public static final String DB_KEY_USER_TYPE = "user_type";
+    public static final String USER_FAN = "fan";
+    public static final String USER_MUSICIAN = "musician";
+    public static final String USER_VENUE = "venue";
 
     // dummy user for testing
-    public static final String TEST_EMAIL = "testuser@hotmail.com";
-    public static final String TEST_PASSWORD = "aaaaaa";
+    public static final String TEST_EMAIL_MUSICIAN = "testmusician@hotmail.com";
+    public static final String TEST_EMAIL_FAN = "testfan@hotmail.com";
+    public static final String TEST_PASSWORD_MUSICIAN = "aaaaaa";
+    public static final String TEST_PASSWORD_FAN = "aaaaaa";
     public static final String TEST_NAME = "testuser";
-    public static final String TEST_USER_TYPE = "MUSICIAN";
+    public static final String TEST_USER_TYPE_MUSICIAN = USER_MUSICIAN;
+    public static final String TEST_USER_TYPE_FAN = USER_FAN;
 
     // camera intents
     public static final int INTENT_REQUEST_CAMERA = 1;
@@ -35,29 +44,19 @@ public class Utils {
 
     public static List<Gig> widgetData = new ArrayList<>();
 
-    // Helper functions to get artisticName and userType anywhere
-    public static void storeArtisticName(String keyName, String value, Context context) {
+    public static void storeUserToSharedPrefs(String uid, String name, String email, String userType, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(keyName, value);
+        editor.putString(DB_KEY_USER_UID, uid);
+        editor.putString(DB_KEY_USER_NAME, name);
+        editor.putString(DB_KEY_USER_EMAIL, email);
+        editor.putString(DB_KEY_USER_TYPE, userType);
         editor.commit();
     }
 
-    public static String getArtisticName(String keyName, Context context) {
+    public static String getUserTypeFromSharedPrefs(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(keyName, null);
-    }
-
-    public static void storeUserType(String keyUserType, String userType, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(keyUserType, userType);
-        editor.commit();
-    }
-
-    public static String getUserType(String keyUserType, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(keyUserType, null);
+        return prefs.getString(DB_KEY_USER_TYPE, null);
     }
 
     public static void updateWidgetData(Gig gig) {
@@ -66,5 +65,10 @@ public class Utils {
             widgetData.remove(0);
         }
         widgetData.add(gig);
+    }
+
+    public static boolean isUserEditor(Context context) {
+        Log.i(TAG, "isUserEditor: " + getUserTypeFromSharedPrefs(context) + " " + USER_MUSICIAN);
+        return (getUserTypeFromSharedPrefs(context).equals(USER_MUSICIAN));
     }
 }

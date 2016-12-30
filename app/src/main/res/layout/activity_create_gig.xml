@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -47,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:textSize="16dp"
-                android:hint="@string/band_s_name"/>
+                android:hint="@string/band_s_name"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,10 +61,10 @@
 
             <Button
                 android:id="@+id/btnCreateGigDate"
+                style="@style/button_color"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/button_color"
                 android:contentDescription="@string/btn_select_date"
                 android:text="@string/date" />
 
@@ -75,8 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:textSize="16dp"
-                android:hint="@string/click_button_to_set_date"/>
+                android:hint="@string/click_button_to_set_date"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,10 +89,10 @@
 
             <Button
                 android:id="@+id/btnCreateGigTime"
+                style="@style/button_color"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/button_color"
                 android:contentDescription="@string/btn_select_time"
                 android:text="@string/time" />
 
@@ -101,10 +100,10 @@
                 android:id="@+id/tvCreateGigTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
                 android:layout_weight="3"
-                android:textSize="16dp"
-                android:hint="@string/click_button_to_set_time"/>
+                android:gravity="end"
+                android:hint="@string/click_button_to_set_time"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -131,8 +130,36 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:textSize="16dp"
-                android:hint="@string/where_is_the_event"/>
+                android:hint="@string/where_is_the_event"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvCreateGigTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvCreateGigAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Address"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/etCreateGigAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="end"
+                android:hint="How to get there"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,27 +180,27 @@
                 android:text="@string/fee"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <EditText
+            <com.blackcat.currencyedittext.CurrencyEditText
                 android:id="@+id/etCreateGigPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="end"
-                android:textSize="16dp"
-                android:hint="@string/set_event_price"/>
+                android:hint="0.00"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/etCreateGigDescription"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/event_description"
             android:inputType="textMultiLine"
             android:lines="6"
-            android:minLines="4"
-            android:gravity="top|start"
             android:maxLines="10"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:scrollbars="vertical"
-            android:hint="@string/event_description"/>
+            android:minLines="4"
+            android:scrollbars="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -182,23 +209,23 @@
 
             <Button
                 android:id="@+id/btnCancelGigCreate"
+                style="@style/button_color"
                 android:layout_width="0dp"
-                android:layout_weight=".5"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                style="@style/button_color"
+                android:layout_weight=".5"
                 android:contentDescription="@string/btn_cancel"
                 android:text="@string/btn_cancel" />
 
             <Button
                 android:id="@+id/btnCreateGigCreate"
-                android:layout_width="0dp"
-                android:layout_weight=".5"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 style="@style/button_color"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight=".5"
                 android:contentDescription="@string/btn_create_gig"
                 android:text="@string/create" />
         </LinearLayout>

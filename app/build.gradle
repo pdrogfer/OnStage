@@ -19,8 +19,8 @@ android {
         applicationId "com.pdrogfer.onstage"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2"
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -68,6 +68,9 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
 
     compile 'com.google.android.gms:play-services-appindexing:9.4.0'
+
+    // Currency Edit Text
+    compile 'com.github.BlacKCaT27:CurrencyEditText:v1.4.4'
 }
 
 // Firebase

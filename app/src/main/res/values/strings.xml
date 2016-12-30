@@ -5,7 +5,7 @@
     <string name="btn_register">Register</string>
     <string name="hint_password">password</string>
     <string name="hint_email">email</string>
-    <string name="title_activity_gigs_list">Next Gigs</string>
+    <string name="title_activity_gigs_list">Next Live Events</string>
     <string name="menu_logout">Log Out</string>
     <string name="hint_name">Name, Band\'s name, or Venue</string>
     <string name="field_required_warning">Required</string>
@@ -18,7 +18,7 @@
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="create_a_new_gig">Create a New Gig</string>
+    <string name="create_a_new_gig">New Live Event</string>
     <string name="name">Name</string>
     <string name="band_s_name">Band\'s Name</string>
     <string name="date">Date</string>
@@ -39,11 +39,11 @@
     <string name="artist_name">Artist Name</string>
     <string name="email">Email</string>
     <string name="user_type">User Type</string>
-    <string name="profile">Profile</string>
+    <string name="delete_user">Delete User</string>
     <string name="btn_select_time">Select Time</string>
     <string name="btn_select_date">Select Date</string>
     <string name="btn_create_gig">Create Gig</string>
-    <string name="btn_cancel">btn_cancel</string>
+    <string name="btn_cancel">Cancel</string>
     <string name="fab_share_gig">Share Gig</string>
     <string name="fab_create_gig">Fab Create Gig</string>
     <string name="select_fan_user_type">Select Fan User Type</string>
@@ -65,4 +65,13 @@
     <string name="warning_error_loggin_out">Error logging out</string>
     <string name="warning_no_user">No user match our database. Please register</string>
     <string name="warning_duplicated_user">Error, duplicated user. Please contact OnStage</string>
+    <string name="about">About OnStage</string>
+
+    <string-array name="emails_array">
+        <item>gmail.com</item>
+        <item>hotmail.com</item>
+        <item>yahoo.es</item>
+        <item>yahoo.com</item>
+    </string-array>
+
 </resources>

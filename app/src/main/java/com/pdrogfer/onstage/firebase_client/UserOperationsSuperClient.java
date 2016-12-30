@@ -1,5 +1,6 @@
 package com.pdrogfer.onstage.firebase_client;
 
+import com.pdrogfer.onstage.model.User;
 import com.pdrogfer.onstage.ui.GigsListActivity;
 
 public interface UserOperationsSuperClient {
@@ -13,5 +14,9 @@ public interface UserOperationsSuperClient {
                       final String artisticName,
                       String userType);
 
-    void signOut(GigsListActivity gigsListActivity);
+    void signOut();
+
+    void deleteUser();
+
+    void getUserFromFirebaseDb(String email);
 }

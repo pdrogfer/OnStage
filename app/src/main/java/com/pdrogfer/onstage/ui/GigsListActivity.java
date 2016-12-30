@@ -1,9 +1,12 @@
 package com.pdrogfer.onstage.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,22 +20,22 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pdrogfer.onstage.R;
 import com.pdrogfer.onstage.Utils;
-import com.pdrogfer.onstage.firebase_client.OnAuthenticationCompleted;
-import com.pdrogfer.onstage.firebase_client.UserAuthFirebaseClient;
 import com.pdrogfer.onstage.firebase_client.UserOperationsSuperClient;
 import com.pdrogfer.onstage.model.Gig;
-import com.pdrogfer.onstage.model.UserType;
 
-public class GigsListActivity extends AppCompatActivity implements OnAuthenticationCompleted{
+public class GigsListActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FirebaseRecyclerAdapter<Gig, GigViewHolder> mAdapter;
-    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
-    private UserOperationsSuperClient userOperationsSuperClient;
+    FirebaseAuth refAuth;
+    final DatabaseReference refUsers = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_USERS);
+    final DatabaseReference refGigs = FirebaseDatabase.getInstance().getReference().child(Utils.FIREBASE_GIGS);
+    // private UserOperationsSuperClient userOperationsSuperClient;
     private AdView bannerAdView;
 
     private boolean usingMasterDetailFlow;
@@ -44,12 +47,11 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        refAuth = FirebaseAuth.getInstance();
+
         setBannerAdView();
         setRecyclerView();
         setFabGigList();
-
-        // this selects Firebase for user authentication
-        userOperationsSuperClient = UserAuthFirebaseClient.getInstance(this, this);
 
         if (findViewById(R.id.gig_detail_container) != null) {
             usingMasterDetailFlow = true;
@@ -71,7 +73,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         mAdapter = new FirebaseRecyclerAdapter<Gig, GigViewHolder>(Gig.class,
                 R.layout.list_item_card,
                 GigViewHolder.class,
-                reference) {
+                refGigs) {
             @Override
             protected void populateViewHolder(final GigViewHolder viewGig, Gig model, final int position) {
                 final DatabaseReference gigRef = getRef(position);
@@ -104,23 +106,21 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     private void setFabGigList() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_gig);
-        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserType(Utils.DB_KEY_USER_TYPE, this));
-        // If the user is a fan, hyde the fab so it can not create gigs
-        if (Utils.getUserType(Utils.DB_KEY_USER_TYPE, this) == String.valueOf(UserType.FAN)) {
+        Log.i(Utils.TAG, "setFabGigList: USER TYPE " + Utils.getUserTypeFromSharedPrefs(this));
+        if (Utils.isUserEditor(this) && fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    createNewGig();
+                }
+            });
+        } else {
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.GONE);
-        } else {
-            if (fab != null) {
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        createNewGig();
-                    }
-                });
-            }
         }
+
     }
 
     @Override
@@ -129,7 +129,7 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         if (requestCode == Utils.NEW_GIG_REQUEST) {
             if (resultCode == Utils.NEW_GIG_RESULT_OK) {
                 Gig tempGig = new Gig();
-                reference.push().setValue(tempGig);
+                refGigs.push().setValue(tempGig);
                 Toast.makeText(this, R.string.confirmation_gig_created, Toast.LENGTH_LONG).show();
             }
         }
@@ -142,22 +142,67 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_gigs_list, menu);
+        if (Utils.isUserEditor(this)) {
+            getMenuInflater().inflate(R.menu.menu_gigs_list_musician, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_gigs_list_fan, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_logout:
-                userOperationsSuperClient.signOut(this);
-                startActivity(new Intent(this, PresentationActivity.class));
-                finish();
-            case R.id.action_profile:
-                Toast.makeText(this, "Activity profile not implemented yet", Toast.LENGTH_SHORT).show();
+            case R.id.action_new_gig:
+                Toast.makeText(this, "click", Toast.LENGTH_SHORT).show();
+                createNewGig();
+                break;
+            case R.id.action_user_logout:
+                logOutUser();
+                break;
+            case R.id.action_user_delete:
+                deleteProfileUser();
+                break;
+            case R.id.action_about:
+                displayInfo();
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
+    }
+
+    private void displayInfo() {
+        PackageManager manager = this.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(
+                    this.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String version = info.versionName;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("About OnStage");
+        builder.setMessage("App Version: v" + version);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void logOutUser() {
+//        userOperationsSuperClient.signOut();
+        refAuth.signOut();
+        startActivity(new Intent(this, PresentationActivity.class));
+        finish();
+    }
+
+    private void deleteProfileUser() {
+//        userOperationsSuperClient.deleteUser();
+        // TODO: 15/12/2016
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+        // startActivity(new Intent(this, PresentationActivity.class));
+        // finish();
     }
 
     @Override
@@ -174,16 +219,5 @@ public class GigsListActivity extends AppCompatActivity implements OnAuthenticat
         if (mAdapter != null) {
             mAdapter.cleanup();
         }
-    }
-
-    @Override
-    public void onAuthenticationCompleted(Boolean success, String name, String email, String password, String user_type) {
-        // do nothing here
-    }
-
-    @Override
-    public void onSignOut() {
-        Toast.makeText(this, R.string.confirmation_log_out, Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this, PresentationActivity.class));
     }
 }
